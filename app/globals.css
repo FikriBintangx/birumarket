@@ -1,26 +1,23 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  body {
+    background-color: #D3DCDD;
+    color: #171A1C;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+.hero-teal-canvas {
+  background: linear-gradient(145deg, #3B5763 0%, #304954 60%, #273D47 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.clay-tree {
+  filter: drop-shadow(0 15px 25px rgba(236, 72, 153, 0.25));
+}
+
+.clay-house {
+  filter: drop-shadow(0 20px 30px rgba(15, 23, 42, 0.35));
 }

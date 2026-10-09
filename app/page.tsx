@@ -2,7 +2,7 @@
 
 import Navbar from '@/components/Navbar';
 import Link from 'next/link';
-import { ArrowUpRight, ShieldCheck, Zap, Lock, ChevronLeft, ChevronRight, ExternalLink } from 'lucide-react';
+import { ArrowUpRight, ShieldCheck, Zap, Lock, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 export default function Home() {
@@ -48,7 +48,7 @@ export default function Home() {
       {/* Top Navbar */}
       <Navbar />
 
-      {/* Hero Section Card (Teal / Blue-Gray 3D Claymorphic Canvas) */}
+      {/* Hero Section Card (Deep Blue 3D Claymorphic Canvas) */}
       <section className="hero-teal-canvas rounded-[2.2rem] md:rounded-[2.8rem] p-7 md:p-12 min-h-[500px] md:min-h-[560px] flex flex-col justify-between text-white relative shadow-inner">
         {/* 3D Claymation Background Scene */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
@@ -56,60 +56,60 @@ export default function Home() {
 
           <svg viewBox="0 0 1000 600" className="absolute right-0 bottom-0 w-full h-full opacity-90 object-cover" preserveAspectRatio="xMidYMid slice">
             <defs>
-              <radialGradient id="pinkCloudGrad1" cx="40%" cy="40%" r="60%">
-                <stop offset="0%" stopColor="#FFCAD4" />
-                <stop offset="50%" stopColor="#F49097" />
-                <stop offset="100%" stopColor="#DF5E6C" />
+              <radialGradient id="blueCloudGrad1" cx="40%" cy="40%" r="60%">
+                <stop offset="0%" stopColor="#E0F2FE" />
+                <stop offset="50%" stopColor="#60A5FA" />
+                <stop offset="100%" stopColor="#2563EB" />
               </radialGradient>
-              <radialGradient id="pinkCloudGrad2" cx="35%" cy="35%" r="65%">
-                <stop offset="0%" stopColor="#FFDFD3" />
-                <stop offset="60%" stopColor="#F28B82" />
-                <stop offset="100%" stopColor="#C54E57" />
+              <radialGradient id="blueCloudGrad2" cx="35%" cy="35%" r="65%">
+                <stop offset="0%" stopColor="#BAE6FD" />
+                <stop offset="60%" stopColor="#38BDF8" />
+                <stop offset="100%" stopColor="#0284C7" />
               </radialGradient>
               <linearGradient id="buildingRoof" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#E76F51" />
-                <stop offset="100%" stopColor="#B83B1D" />
+                <stop offset="0%" stopColor="#3B82F6" />
+                <stop offset="100%" stopColor="#1D4ED8" />
               </linearGradient>
               <linearGradient id="buildingWall" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stopColor="#FDFBF7" />
-                <stop offset="100%" stopColor="#E2DDD5" />
+                <stop offset="0%" stopColor="#F8FAFC" />
+                <stop offset="100%" stopColor="#E2E8F0" />
               </linearGradient>
               <linearGradient id="classicalColumn" x1="0%" y1="0%" x2="100%" y2="0%">
                 <stop offset="0%" stopColor="#FFFFFF" />
-                <stop offset="50%" stopColor="#F0EDE6" />
-                <stop offset="100%" stopColor="#D4CEC3" />
+                <stop offset="50%" stopColor="#F1F5F9" />
+                <stop offset="100%" stopColor="#CBD5E1" />
               </linearGradient>
             </defs>
 
             <g className="clay-tree">
-              <path d="M 460 280 C 440 200, 520 150, 580 180 C 640 140, 720 180, 730 240 C 780 250, 800 320, 760 360 C 720 400, 600 420, 520 380 C 460 350, 470 310, 460 280 Z" fill="url(#pinkCloudGrad1)" opacity="0.95" />
-              <circle cx="780" cy="280" r="85" fill="url(#pinkCloudGrad2)" opacity="0.9" />
-              <circle cx="850" cy="320" r="70" fill="url(#pinkCloudGrad1)" opacity="0.85" />
-              <circle cx="700" cy="220" r="60" fill="url(#pinkCloudGrad2)" opacity="0.95" />
-              <circle cx="610" cy="180" r="50" fill="url(#pinkCloudGrad1)" opacity="0.95" />
+              <path d="M 460 280 C 440 200, 520 150, 580 180 C 640 140, 720 180, 730 240 C 780 250, 800 320, 760 360 C 720 400, 600 420, 520 380 C 460 350, 470 310, 460 280 Z" fill="url(#blueCloudGrad1)" opacity="0.95" />
+              <circle cx="780" cy="280" r="85" fill="url(#blueCloudGrad2)" opacity="0.9" />
+              <circle cx="850" cy="320" r="70" fill="url(#blueCloudGrad1)" opacity="0.85" />
+              <circle cx="700" cy="220" r="60" fill="url(#blueCloudGrad2)" opacity="0.95" />
+              <circle cx="610" cy="180" r="50" fill="url(#blueCloudGrad1)" opacity="0.95" />
             </g>
 
             <g className="clay-house" transform="translate(480, 210)">
               <polygon points="120,40 260,40 190,0" fill="url(#buildingRoof)" />
-              <rect x="125" y="40" width="130" height="15" fill="#EAE5DC" />
+              <rect x="125" y="40" width="130" height="15" fill="#E2E8F0" />
               <rect x="135" y="55" width="12" height="70" rx="3" fill="url(#classicalColumn)" />
               <rect x="165" y="55" width="12" height="70" rx="3" fill="url(#classicalColumn)" />
               <rect x="205" y="55" width="12" height="70" rx="3" fill="url(#classicalColumn)" />
               <rect x="235" y="55" width="12" height="70" rx="3" fill="url(#classicalColumn)" />
-              <rect x="120" y="125" width="140" height="15" rx="2" fill="#EAE5DC" />
+              <rect x="120" y="125" width="140" height="15" rx="2" fill="#E2E8F0" />
 
               <g transform="translate(160, 45)">
-                <polygon points="40,25 150,25 95,-15" fill="#D9534F" />
+                <polygon points="40,25 150,25 95,-15" fill="#2563EB" />
                 <rect x="45" y="25" width="100" height="90" rx="6" fill="url(#buildingWall)" />
-                <rect x="85" y="70" width="22" height="45" rx="3" fill="#3B5763" />
-                <rect x="55" y="45" width="22" height="22" rx="4" fill="#64B5F6" />
-                <rect x="115" y="45" width="22" height="22" rx="4" fill="#64B5F6" />
+                <rect x="85" y="70" width="22" height="45" rx="3" fill="#1E3A8A" />
+                <rect x="55" y="45" width="22" height="22" rx="4" fill="#38BDF8" />
+                <rect x="115" y="45" width="22" height="22" rx="4" fill="#38BDF8" />
               </g>
             </g>
 
-            <ellipse cx="620" cy="480" rx="140" ry="65" fill="#E5989B" opacity="0.9" />
-            <ellipse cx="820" cy="510" rx="180" ry="75" fill="#E07A5F" opacity="0.95" />
-            <ellipse cx="490" cy="520" rx="90" ry="50" fill="#F4A261" opacity="0.8" />
+            <ellipse cx="620" cy="480" rx="140" ry="65" fill="#93C5FD" opacity="0.9" />
+            <ellipse cx="820" cy="510" rx="180" ry="75" fill="#3B82F6" opacity="0.95" />
+            <ellipse cx="490" cy="520" rx="90" ry="50" fill="#60A5FA" opacity="0.8" />
           </svg>
         </div>
 
@@ -117,7 +117,7 @@ export default function Home() {
         <div className="relative z-10 max-w-4xl pt-2 sm:pt-4">
           <h1 className="font-['Syne',sans-serif] text-3xl sm:text-5xl lg:text-7xl font-black uppercase tracking-tight leading-[1.1] text-white">
             <span>GET RID OF ANY</span><br />
-            <span className="text-white">RISKS TO APPS & WEBS</span>
+            <span className="text-blue-200">RISKS TO APPS & WEBS</span>
           </h1>
 
           <div className="inline-block mt-3 bg-white/10 backdrop-blur-md px-3 sm:px-3.5 py-1 rounded-full text-[10px] sm:text-xs font-bold tracking-widest uppercase text-white/90 border border-white/20">
@@ -131,16 +131,16 @@ export default function Home() {
 
         {/* Horizontal Pill Filters */}
         <div className="relative z-10 mt-8 sm:mt-12 flex items-center gap-2 sm:gap-3 overflow-x-auto max-w-full pb-2 no-scrollbar">
-          <Link href="/catalog?category=E-COMMERCE" className="bg-white text-slate-900 px-5 sm:px-7 py-2.5 sm:py-3 rounded-full font-black text-xs sm:text-sm tracking-wider uppercase shadow-lg hover:bg-slate-100 transition whitespace-nowrap shrink-0">
+          <Link href="/catalog?category=E-COMMERCE" className="bg-white text-blue-900 px-5 sm:px-7 py-2.5 sm:py-3 rounded-full font-black text-xs sm:text-sm tracking-wider uppercase shadow-lg hover:bg-blue-50 transition whitespace-nowrap shrink-0">
             E-COMMERCE
           </Link>
-          <Link href="/catalog?category=SAAS+WEB" className="bg-transparent border border-white/50 text-white hover:bg-white/10 px-5 sm:px-7 py-2.5 sm:py-3 rounded-full font-bold text-xs sm:text-sm tracking-wider uppercase transition whitespace-nowrap shrink-0">
+          <Link href="/catalog?category=SAAS+WEB" className="bg-white/10 backdrop-blur-md border border-white/40 text-white hover:bg-white/20 px-5 sm:px-7 py-2.5 sm:py-3 rounded-full font-bold text-xs sm:text-sm tracking-wider uppercase transition whitespace-nowrap shrink-0">
             SAAS WEB
           </Link>
-          <Link href="/catalog?category=MOBILE+APPS" className="bg-transparent border border-white/50 text-white hover:bg-white/10 px-5 sm:px-7 py-2.5 sm:py-3 rounded-full font-bold text-xs sm:text-sm tracking-wider uppercase transition whitespace-nowrap shrink-0">
+          <Link href="/catalog?category=MOBILE+APPS" className="bg-white/10 backdrop-blur-md border border-white/40 text-white hover:bg-white/20 px-5 sm:px-7 py-2.5 sm:py-3 rounded-full font-bold text-xs sm:text-sm tracking-wider uppercase transition whitespace-nowrap shrink-0">
             MOBILE APPS
           </Link>
-          <Link href="/catalog?category=SCRIPTS+%26+BOTS" className="bg-transparent border border-white/50 text-white hover:bg-white/10 px-5 sm:px-7 py-2.5 sm:py-3 rounded-full font-bold text-xs sm:text-sm tracking-wider uppercase transition whitespace-nowrap shrink-0">
+          <Link href="/catalog?category=SCRIPTS+%26+BOTS" className="bg-white/10 backdrop-blur-md border border-white/40 text-white hover:bg-white/20 px-5 sm:px-7 py-2.5 sm:py-3 rounded-full font-bold text-xs sm:text-sm tracking-wider uppercase transition whitespace-nowrap shrink-0">
             SCRIPTS & BOTS
           </Link>
         </div>
@@ -167,16 +167,16 @@ export default function Home() {
             </p>
           </div>
 
-          {/* Featured Product Highlight Card (Matches user reference mockup) */}
-          <div className="bg-[#F8E3E3] rounded-[2rem] p-4 sm:p-5 relative overflow-hidden shadow-sm border border-rose-100 group">
+          {/* Featured Product Highlight Card (Icy Blue Theme) */}
+          <div className="bg-[#E0F2FE] rounded-[2rem] p-4 sm:p-5 relative overflow-hidden shadow-sm border border-sky-200 group">
             
             {/* Top Occasions Header inside Col */}
-            <div className="min-h-[260px] sm:h-72 rounded-2xl bg-gradient-to-b from-[#FAD2E1] via-[#F69988] to-[#E76F51] flex items-center justify-center relative overflow-hidden p-4 sm:p-6 mb-4 shadow-inner">
+            <div className="min-h-[260px] sm:h-72 rounded-2xl bg-gradient-to-b from-[#DBEAFE] via-[#60A5FA] to-[#1D4ED8] flex items-center justify-center relative overflow-hidden p-4 sm:p-6 mb-4 shadow-inner">
               
               {/* Circular Link Button (Top Right) */}
               <Link
                 href="/catalog"
-                className="absolute top-3 right-3 sm:top-4 sm:right-4 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white flex items-center justify-center text-slate-900 shadow-md hover:scale-110 hover:bg-[#1C2024] hover:text-white transition duration-200 z-20"
+                className="absolute top-3 right-3 sm:top-4 sm:right-4 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white flex items-center justify-center text-slate-900 shadow-md hover:scale-110 hover:bg-blue-600 hover:text-white transition duration-200 z-20"
                 title="Lihat di Katalog"
               >
                 <ArrowUpRight className="w-4 h-4 sm:w-5 sm:h-5 stroke-[2.5]" />
@@ -202,8 +202,8 @@ export default function Home() {
               {/* Floating White Card */}
               <div className="relative z-10 w-[88%] sm:w-full max-w-[280px] sm:max-w-xs bg-white rounded-2xl p-4 sm:p-5 shadow-2xl border border-white/80 text-left transition-all duration-300">
                 
-                {/* Red Overlapping Top Badge */}
-                <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-[#D9534F] text-white text-[9px] sm:text-[10px] font-black uppercase tracking-wider px-3 sm:px-3.5 py-1 rounded-full shadow-sm whitespace-nowrap">
+                {/* Blue Overlapping Top Badge */}
+                <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-blue-600 text-white text-[9px] sm:text-[10px] font-black uppercase tracking-wider px-3 sm:px-3.5 py-1 rounded-full shadow-md whitespace-nowrap">
                   FEATURED APP
                 </div>
 
@@ -222,7 +222,7 @@ export default function Home() {
                   <span className="text-[10px] sm:text-[11px] font-bold text-slate-700">
                     {currentHighlight.is_portfolio ? 'Showcase' : 'Ready to Deploy'}
                   </span>
-                  <span className="text-xs font-black text-[#D9534F]">
+                  <span className="text-xs font-black text-blue-600">
                     {currentHighlight.is_portfolio
                       ? 'Portfolio'
                       : `Rp ${Number(currentHighlight.price).toLocaleString('id-ID')}`}
@@ -243,7 +243,7 @@ export default function Home() {
                   ? 'Cross-Platform App Native'
                   : 'Automated Bot & Script'}
               </span>
-              <span className="text-xs font-bold text-[#D9534F]">
+              <span className="text-xs font-bold text-blue-600">
                 100% Verified SQLite
               </span>
             </div>
@@ -258,7 +258,7 @@ export default function Home() {
               BENEFITS YOU CAN GET BY USING OUR SERVICES
             </h2>
             <div className="mt-4">
-              <span className="border border-slate-300 text-slate-700 px-6 py-2 rounded-full font-bold text-xs uppercase tracking-widest inline-block">
+              <span className="border border-blue-200 bg-blue-50 text-blue-700 px-6 py-2 rounded-full font-bold text-xs uppercase tracking-widest inline-block">
                 MAIN RISKS
               </span>
             </div>
@@ -267,7 +267,7 @@ export default function Home() {
           <div className="divide-y divide-slate-100">
             {/* Benefit 1 */}
             <div className="py-5 first:pt-2 flex items-start gap-5">
-              <div className="w-14 h-14 rounded-2xl bg-[#FDE8E8] flex items-center justify-center shrink-0 shadow-sm border border-rose-100 text-rose-600">
+              <div className="w-14 h-14 rounded-2xl bg-blue-50 flex items-center justify-center shrink-0 shadow-sm border border-blue-100 text-blue-600">
                 <Zap className="w-7 h-7 stroke-[2]" />
               </div>
               <div>
@@ -282,7 +282,7 @@ export default function Home() {
 
             {/* Benefit 2 */}
             <div className="py-5 flex items-start gap-5">
-              <div className="w-14 h-14 rounded-2xl bg-[#E2EEF2] flex items-center justify-center shrink-0 shadow-sm border border-sky-100 text-[#3B5763]">
+              <div className="w-14 h-14 rounded-2xl bg-sky-50 flex items-center justify-center shrink-0 shadow-sm border border-sky-100 text-sky-600">
                 <ShieldCheck className="w-7 h-7 stroke-[2]" />
               </div>
               <div>
@@ -297,7 +297,7 @@ export default function Home() {
 
             {/* Benefit 3 */}
             <div className="py-5 last:pb-2 flex items-start gap-5">
-              <div className="w-14 h-14 rounded-2xl bg-[#F8E7E1] flex items-center justify-center shrink-0 shadow-sm border border-orange-100 text-orange-600">
+              <div className="w-14 h-14 rounded-2xl bg-indigo-50 flex items-center justify-center shrink-0 shadow-sm border border-indigo-100 text-indigo-600">
                 <Lock className="w-7 h-7 stroke-[2]" />
               </div>
               <div>
@@ -314,7 +314,7 @@ export default function Home() {
           <div className="pt-2 flex justify-end">
             <Link
               href="/catalog"
-              className="bg-[#1C2024] hover:bg-slate-800 text-white font-bold px-8 py-3.5 rounded-full inline-flex items-center gap-2 text-sm shadow-md transition"
+              className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-8 py-3.5 rounded-full inline-flex items-center gap-2 text-sm shadow-md transition"
             >
               <span>Explore All Catalog Products</span>
               <ArrowUpRight className="w-4 h-4" />

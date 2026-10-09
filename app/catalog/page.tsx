@@ -55,7 +55,7 @@ function CatalogContent() {
               onClick={() => setCategory(cat)}
               className={`px-4 sm:px-5 py-2 sm:py-2.5 rounded-full font-bold text-xs tracking-wider transition whitespace-nowrap shrink-0 ${
                 category === cat
-                  ? 'bg-slate-900 text-white shadow-md'
+                  ? 'bg-blue-600 text-white shadow-md'
                   : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
               }`}
             >
@@ -137,21 +137,21 @@ function CatalogContent() {
               <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
                 <div>
                   <span className="block text-[10px] text-slate-400 font-medium">Harga</span>
-                  <span className="font-extrabold text-[#D9534F]">
+                  <span className="font-extrabold text-blue-600">
                     {p.is_portfolio ? 'Showcase Only' : `Rp ${p.price.toLocaleString('id-ID')}`}
                   </span>
                 </div>
                 
                 <div className="flex gap-2">
                   {p.demo_url && (
-                    <Link href={p.demo_url} target="_blank" className="w-9 h-9 flex items-center justify-center rounded-full border border-slate-200 text-slate-600 hover:bg-slate-50 transition">
+                    <Link href={p.demo_url} target="_blank" className="w-9 h-9 flex items-center justify-center rounded-full border border-blue-200 text-blue-600 hover:bg-blue-50 transition">
                       <ExternalLink className="w-4 h-4" />
                     </Link>
                   )}
                   <Link 
                     href={`https://wa.me/6281234567890?text=Halo%20saya%20tertarik%20dengan%20${encodeURIComponent(p.title)}`} 
                     target="_blank"
-                    className="w-9 h-9 flex items-center justify-center rounded-full bg-slate-900 text-white hover:bg-slate-800 transition"
+                    className="w-9 h-9 flex items-center justify-center rounded-full bg-blue-600 text-white hover:bg-blue-700 shadow-sm transition"
                   >
                     <MessageCircle className="w-4 h-4" />
                   </Link>

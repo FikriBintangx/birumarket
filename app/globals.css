@@ -2,22 +2,31 @@
 
 @layer base {
   body {
-    background-color: #D3DCDD;
-    color: #171A1C;
+    background-color: #E2E8F0;
+    color: #0F172A;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   }
 }
 
 .hero-teal-canvas {
-  background: linear-gradient(145deg, #3B5763 0%, #304954 60%, #273D47 100%);
+  background: linear-gradient(145deg, #0F172A 0%, #1E3A8A 45%, #2563EB 100%);
   position: relative;
   overflow: hidden;
 }
 
 .clay-tree {
-  filter: drop-shadow(0 15px 25px rgba(236, 72, 153, 0.25));
+  filter: drop-shadow(0 15px 25px rgba(59, 130, 246, 0.35));
 }
 
 .clay-house {
-  filter: drop-shadow(0 20px 30px rgba(15, 23, 42, 0.35));
+  filter: drop-shadow(0 20px 30px rgba(15, 23, 42, 0.4));
+}
+
+/* Custom scrollbar utility for horizontal chips */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }

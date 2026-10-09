@@ -16,13 +16,13 @@ export default function Navbar() {
           <svg viewBox="0 0 100 100" className="w-full h-full">
             <defs>
               <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stop-color="#E17B77" />
-                <stop offset="50%" stop-color="#F4A261" />
-                <stop offset="100%" stop-color="#3B5763" />
+                <stop offset="0%" stopColor="#38BDF8" />
+                <stop offset="50%" stopColor="#2563EB" />
+                <stop offset="100%" stopColor="#1E3A8A" />
               </linearGradient>
             </defs>
             <circle cx="50" cy="50" r="38" fill="none" stroke="url(#logoGrad)" strokeWidth="14" strokeLinecap="round" strokeDasharray="190" strokeDashoffset="40" />
-            <circle cx="50" cy="50" r="14" fill="#E17B77" />
+            <circle cx="50" cy="50" r="14" fill="#2563EB" />
           </svg>
         </Link>
 
@@ -32,7 +32,7 @@ export default function Navbar() {
             href="/"
             className={`px-3.5 sm:px-6 py-2 sm:py-2.5 rounded-full font-bold text-xs sm:text-sm tracking-wide transition shadow-sm whitespace-nowrap ${
               pathname === '/'
-                ? 'bg-[#1C2024] text-white'
+                ? 'bg-blue-600 text-white shadow-blue-200'
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
@@ -42,7 +42,7 @@ export default function Navbar() {
             href="/catalog"
             className={`px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full font-semibold text-xs sm:text-sm transition whitespace-nowrap ${
               pathname === '/catalog'
-                ? 'bg-[#1C2024] text-white'
+                ? 'bg-blue-600 text-white shadow-blue-200'
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
@@ -52,7 +52,7 @@ export default function Navbar() {
             href="/about"
             className={`px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full font-semibold text-xs sm:text-sm transition whitespace-nowrap ${
               pathname === '/about'
-                ? 'bg-[#1C2024] text-white'
+                ? 'bg-blue-600 text-white shadow-blue-200'
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
@@ -68,7 +68,7 @@ export default function Navbar() {
           target="_blank"
           className="bg-white hover:bg-slate-50 border border-slate-200/90 text-slate-800 font-bold px-6 py-3 rounded-full flex items-center gap-3 shadow-sm text-sm transition group"
         >
-          <span className="w-7 h-7 rounded-full bg-slate-100 flex items-center justify-center group-hover:bg-[#3B5763] group-hover:text-white transition">
+          <span className="w-7 h-7 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition">
             <Phone className="w-3.5 h-3.5" />
           </span>
           <span>Book a call with BiruMarket</span>

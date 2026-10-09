@@ -16,7 +16,7 @@ export default function AboutPage() {
 
         <div className="bg-white rounded-3xl p-8 shadow-sm border border-slate-200/80 mb-8 space-y-6">
           <div className="flex items-center gap-4">
-            <div className="w-16 h-16 rounded-full bg-[#3B5763] text-white font-extrabold text-xl flex items-center justify-center">
+            <div className="w-16 h-16 rounded-full bg-blue-600 text-white font-extrabold text-xl flex items-center justify-center shadow-md shadow-blue-200">
               FB
             </div>
             <div>
@@ -30,18 +30,18 @@ export default function AboutPage() {
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 border-t border-slate-100">
-            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100">
-              <Code className="w-6 h-6 text-[#3B5763] mb-2" />
+            <div className="p-4 rounded-2xl bg-blue-50/60 border border-blue-100/60">
+              <Code className="w-6 h-6 text-blue-600 mb-2" />
               <h3 className="font-bold text-sm text-slate-800">Clean Architecture</h3>
               <p className="text-xs text-slate-500 mt-1">Kode terstruktur, tanpa bloatware, siap diserahterimakan.</p>
             </div>
-            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100">
-              <Terminal className="w-6 h-6 text-[#3B5763] mb-2" />
+            <div className="p-4 rounded-2xl bg-blue-50/60 border border-blue-100/60">
+              <Terminal className="w-6 h-6 text-blue-600 mb-2" />
               <h3 className="font-bold text-sm text-slate-800">Verified Security</h3>
               <p className="text-xs text-slate-500 mt-1">Setiap project telah melalui tahap pengujian E2E & security audit.</p>
             </div>
-            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100">
-              <Layers className="w-6 h-6 text-[#3B5763] mb-2" />
+            <div className="p-4 rounded-2xl bg-blue-50/60 border border-blue-100/60">
+              <Layers className="w-6 h-6 text-blue-600 mb-2" />
               <h3 className="font-bold text-sm text-slate-800">Escrow Ready</h3>
               <p className="text-xs text-slate-500 mt-1">Garansi masa inspeksi transfer domain & source code 72 jam.</p>
             </div>
@@ -51,7 +51,7 @@ export default function AboutPage() {
             <Link 
               href="https://github.com/FikriBintangx" 
               target="_blank" 
-              className="bg-slate-900 text-white font-bold px-6 py-3 rounded-full flex items-center gap-2 text-sm hover:bg-slate-800 transition"
+              className="bg-blue-600 text-white font-bold px-6 py-3 rounded-full flex items-center gap-2 text-sm hover:bg-blue-700 shadow-md shadow-blue-200 transition"
             >
               <Globe className="w-4 h-4" />
               <span>GitHub FikriBintangx</span>

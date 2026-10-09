@@ -27,10 +27,10 @@ export default function Navbar() {
         </Link>
 
         {/* Floating Pill Menu (Home, Catalog, About Us) */}
-        <nav className="bg-white px-2 py-1.5 rounded-full shadow-sm border border-slate-200/70 flex items-center gap-1">
+        <nav className="bg-white px-1.5 py-1 sm:px-2 sm:py-1.5 rounded-full shadow-sm border border-slate-200/70 flex items-center gap-0.5 sm:gap-1 overflow-x-auto max-w-full">
           <Link
             href="/"
-            className={`px-6 py-2.5 rounded-full font-bold text-sm tracking-wide transition shadow-sm ${
+            className={`px-3.5 sm:px-6 py-2 sm:py-2.5 rounded-full font-bold text-xs sm:text-sm tracking-wide transition shadow-sm whitespace-nowrap ${
               pathname === '/'
                 ? 'bg-[#1C2024] text-white'
                 : 'text-slate-600 hover:text-slate-900'
@@ -40,7 +40,7 @@ export default function Navbar() {
           </Link>
           <Link
             href="/catalog"
-            className={`px-5 py-2.5 rounded-full font-semibold text-sm transition ${
+            className={`px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full font-semibold text-xs sm:text-sm transition whitespace-nowrap ${
               pathname === '/catalog'
                 ? 'bg-[#1C2024] text-white'
                 : 'text-slate-600 hover:text-slate-900'
@@ -50,7 +50,7 @@ export default function Navbar() {
           </Link>
           <Link
             href="/about"
-            className={`px-5 py-2.5 rounded-full font-semibold text-sm transition ${
+            className={`px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full font-semibold text-xs sm:text-sm transition whitespace-nowrap ${
               pathname === '/about'
                 ? 'bg-[#1C2024] text-white'
                 : 'text-slate-600 hover:text-slate-900'

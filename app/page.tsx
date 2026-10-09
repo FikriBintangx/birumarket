@@ -114,33 +114,33 @@ export default function Home() {
         </div>
 
         {/* Hero Content */}
-        <div className="relative z-10 max-w-4xl pt-4">
-          <h1 className="font-['Syne',sans-serif] text-4xl sm:text-6xl lg:text-7xl font-black uppercase tracking-tight leading-[1.05] text-white">
+        <div className="relative z-10 max-w-4xl pt-2 sm:pt-4">
+          <h1 className="font-['Syne',sans-serif] text-3xl sm:text-5xl lg:text-7xl font-black uppercase tracking-tight leading-[1.1] text-white">
             <span>GET RID OF ANY</span><br />
             <span className="text-white">RISKS TO APPS & WEBS</span>
           </h1>
 
-          <div className="inline-block mt-3 bg-white/10 backdrop-blur-md px-3.5 py-1 rounded-full text-xs font-bold tracking-widest uppercase text-white/90 border border-white/20">
+          <div className="inline-block mt-3 bg-white/10 backdrop-blur-md px-3 sm:px-3.5 py-1 rounded-full text-[10px] sm:text-xs font-bold tracking-widest uppercase text-white/90 border border-white/20">
             Marketplace BiruMarket — Web & Mobile Apps Ready-to-Run
           </div>
 
-          <p className="mt-4 text-white/90 text-sm sm:text-base md:text-lg max-w-xl font-normal leading-relaxed">
+          <p className="mt-3 sm:mt-4 text-white/90 text-xs sm:text-base md:text-lg max-w-xl font-normal leading-relaxed">
             Protect your digital acquisitions from unverified code, fake revenue, and transfer disputes life may throw your way.
           </p>
         </div>
 
         {/* Horizontal Pill Filters */}
-        <div className="relative z-10 mt-12 flex flex-wrap items-center gap-3">
-          <Link href="/catalog?category=E-COMMERCE" className="bg-white text-slate-900 px-7 py-3 rounded-full font-black text-xs sm:text-sm tracking-wider uppercase shadow-lg hover:bg-slate-100 transition">
+        <div className="relative z-10 mt-8 sm:mt-12 flex items-center gap-2 sm:gap-3 overflow-x-auto max-w-full pb-2 no-scrollbar">
+          <Link href="/catalog?category=E-COMMERCE" className="bg-white text-slate-900 px-5 sm:px-7 py-2.5 sm:py-3 rounded-full font-black text-xs sm:text-sm tracking-wider uppercase shadow-lg hover:bg-slate-100 transition whitespace-nowrap shrink-0">
             E-COMMERCE
           </Link>
-          <Link href="/catalog?category=SAAS+WEB" className="bg-transparent border border-white/50 text-white hover:bg-white/10 px-7 py-3 rounded-full font-bold text-xs sm:text-sm tracking-wider uppercase transition">
+          <Link href="/catalog?category=SAAS+WEB" className="bg-transparent border border-white/50 text-white hover:bg-white/10 px-5 sm:px-7 py-2.5 sm:py-3 rounded-full font-bold text-xs sm:text-sm tracking-wider uppercase transition whitespace-nowrap shrink-0">
             SAAS WEB
           </Link>
-          <Link href="/catalog?category=MOBILE+APPS" className="bg-transparent border border-white/50 text-white hover:bg-white/10 px-7 py-3 rounded-full font-bold text-xs sm:text-sm tracking-wider uppercase transition">
+          <Link href="/catalog?category=MOBILE+APPS" className="bg-transparent border border-white/50 text-white hover:bg-white/10 px-5 sm:px-7 py-2.5 sm:py-3 rounded-full font-bold text-xs sm:text-sm tracking-wider uppercase transition whitespace-nowrap shrink-0">
             MOBILE APPS
           </Link>
-          <Link href="/catalog?category=SCRIPTS+%26+BOTS" className="bg-transparent border border-white/50 text-white hover:bg-white/10 px-7 py-3 rounded-full font-bold text-xs sm:text-sm tracking-wider uppercase transition">
+          <Link href="/catalog?category=SCRIPTS+%26+BOTS" className="bg-transparent border border-white/50 text-white hover:bg-white/10 px-5 sm:px-7 py-2.5 sm:py-3 rounded-full font-bold text-xs sm:text-sm tracking-wider uppercase transition whitespace-nowrap shrink-0">
             SCRIPTS & BOTS
           </Link>
         </div>
@@ -168,24 +168,24 @@ export default function Home() {
           </div>
 
           {/* Featured Product Highlight Card (Matches user reference mockup) */}
-          <div className="bg-[#F8E3E3] rounded-[2rem] p-5 relative overflow-hidden shadow-sm border border-rose-100 group">
+          <div className="bg-[#F8E3E3] rounded-[2rem] p-4 sm:p-5 relative overflow-hidden shadow-sm border border-rose-100 group">
             
             {/* Top Occasions Header inside Col */}
-            <div className="h-64 sm:h-72 rounded-2xl bg-gradient-to-b from-[#FAD2E1] via-[#F69988] to-[#E76F51] flex items-center justify-center relative overflow-hidden p-6 mb-4 shadow-inner">
+            <div className="min-h-[260px] sm:h-72 rounded-2xl bg-gradient-to-b from-[#FAD2E1] via-[#F69988] to-[#E76F51] flex items-center justify-center relative overflow-hidden p-4 sm:p-6 mb-4 shadow-inner">
               
               {/* Circular Link Button (Top Right) */}
               <Link
                 href="/catalog"
-                className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white flex items-center justify-center text-slate-900 shadow-md hover:scale-110 hover:bg-[#1C2024] hover:text-white transition duration-200 z-20"
+                className="absolute top-3 right-3 sm:top-4 sm:right-4 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white flex items-center justify-center text-slate-900 shadow-md hover:scale-110 hover:bg-[#1C2024] hover:text-white transition duration-200 z-20"
                 title="Lihat di Katalog"
               >
-                <ArrowUpRight className="w-5 h-5 stroke-[2.5]" />
+                <ArrowUpRight className="w-4 h-4 sm:w-5 sm:h-5 stroke-[2.5]" />
               </Link>
 
               {/* Prev / Next Controls */}
               <button
                 onClick={prevHighlight}
-                className="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white/80 hover:bg-white text-slate-800 flex items-center justify-center shadow-md transition z-20"
+                className="absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white/90 hover:bg-white text-slate-800 flex items-center justify-center shadow-md transition z-20"
                 title="Produk Sebelumnya"
               >
                 <ChevronLeft className="w-4 h-4" />
@@ -193,22 +193,22 @@ export default function Home() {
 
               <button
                 onClick={nextHighlight}
-                className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white/80 hover:bg-white text-slate-800 flex items-center justify-center shadow-md transition z-20"
+                className="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white/90 hover:bg-white text-slate-800 flex items-center justify-center shadow-md transition z-20"
                 title="Produk Berikutnya"
               >
                 <ChevronRight className="w-4 h-4" />
               </button>
 
               {/* Floating White Card */}
-              <div className="relative z-10 w-60 sm:w-64 bg-white rounded-2xl p-5 shadow-2xl border border-white/80 text-center sm:text-left transition-all duration-300">
+              <div className="relative z-10 w-[88%] sm:w-full max-w-[280px] sm:max-w-xs bg-white rounded-2xl p-4 sm:p-5 shadow-2xl border border-white/80 text-left transition-all duration-300">
                 
                 {/* Red Overlapping Top Badge */}
-                <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-[#D9534F] text-white text-[10px] font-black uppercase tracking-wider px-3.5 py-1 rounded-full shadow-sm whitespace-nowrap">
+                <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-[#D9534F] text-white text-[9px] sm:text-[10px] font-black uppercase tracking-wider px-3 sm:px-3.5 py-1 rounded-full shadow-sm whitespace-nowrap">
                   FEATURED APP
                 </div>
 
-                <div className="pt-1">
-                  <h4 className="text-sm font-extrabold text-slate-900 line-clamp-1">
+                <div className="pt-2">
+                  <h4 className="text-sm font-extrabold text-slate-900 line-clamp-2">
                     {currentHighlight.title}
                   </h4>
                   <p className="text-[11px] text-slate-500 mt-1 line-clamp-2 leading-relaxed">
@@ -216,10 +216,10 @@ export default function Home() {
                   </p>
                 </div>
 
-                <div className="my-3 border-t border-slate-100"></div>
+                <div className="my-2.5 sm:my-3 border-t border-slate-100"></div>
 
-                <div className="flex items-center justify-between">
-                  <span className="text-[11px] font-bold text-slate-700">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-1 sm:gap-0">
+                  <span className="text-[10px] sm:text-[11px] font-bold text-slate-700">
                     {currentHighlight.is_portfolio ? 'Showcase' : 'Ready to Deploy'}
                   </span>
                   <span className="text-xs font-black text-[#D9534F]">
@@ -233,7 +233,7 @@ export default function Home() {
             </div>
 
             {/* Bottom Footer Text */}
-            <div className="flex items-center justify-between px-2 pt-1">
+            <div className="flex items-center justify-between px-1 sm:px-2 pt-1">
               <span className="font-bold text-xs text-slate-900">
                 {currentHighlight.category === 'E-COMMERCE'
                   ? 'Turnkey E-commerce Property'

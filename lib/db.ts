@@ -2,7 +2,7 @@ import { createClient, Client } from '@libsql/client';
 
 let client: Client;
 
-const dbUrl = process.env.TURSO_DATABASE_URL || 'file:birumarket.db';
+const dbUrl = process.env.TURSO_DATABASE_URL || (process.env.VERCEL ? 'file:/tmp/birumarket.db' : 'file:birumarket.db');
 const authToken = process.env.TURSO_AUTH_TOKEN || undefined;
 
 client = createClient({

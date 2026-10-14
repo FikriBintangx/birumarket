@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import client from '@/lib/db';
+import { supabase } from '@/lib/supabase';
 
 export async function DELETE(
   req: NextRequest,
@@ -15,10 +15,14 @@ export async function DELETE(
       return NextResponse.json({ success: false, error: 'Unauthorized: Invalid Admin PIN' }, { status: 401 });
     }
 
-    await client.execute({
-      sql: 'DELETE FROM products WHERE id = ?',
-      args: [id],
-    });
+    const { error } = await supabase
+      .from('products')
+      .delete()
+      .eq('id', id);
+
+    if (error) {
+      return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+    }
 
     return NextResponse.json({ success: true, message: 'Product deleted' });
   } catch (error: any) {
@@ -40,6 +44,7 @@ export async function PUT(
       price,
       is_portfolio,
       thumbnail_url,
+      preview_images,
       demo_url,
       github_url,
       description,
@@ -52,27 +57,36 @@ export async function PUT(
       return NextResponse.json({ success: false, error: 'Unauthorized: Invalid Admin PIN' }, { status: 401 });
     }
 
-    const techStackJson = JSON.stringify(Array.isArray(tech_stack) ? tech_stack : (tech_stack ? tech_stack.split(',').map((s: string) => s.trim()) : []));
+    const techStackArray = Array.isArray(tech_stack)
+      ? tech_stack
+      : (tech_stack ? tech_stack.split(',').map((s: string) => s.trim()).filter(Boolean) : []);
 
-    await client.execute({
-      sql: `UPDATE products SET 
-              title = ?, category = ?, tech_stack = ?, price = ?, is_portfolio = ?,
-              thumbnail_url = ?, demo_url = ?, github_url = ?, description = ?, status = ?
-            WHERE id = ?`,
-      args: [
-        title,
-        category,
-        techStackJson,
-        Number(price) || 0,
-        is_portfolio ? 1 : 0,
-        thumbnail_url,
-        demo_url,
-        github_url,
-        description,
-        status || 'ACTIVE',
-        id,
-      ],
-    });
+    const updateData: any = {
+      title,
+      category,
+      tech_stack: techStackArray,
+      price: Number(price) || 0,
+      is_portfolio: Boolean(is_portfolio),
+      thumbnail_url,
+      demo_url: demo_url || '',
+      github_url: github_url || '',
+      description: description || '',
+      status: status || 'ACTIVE',
+      updated_at: new Date().toISOString(),
+    };
+
+    if (preview_images) {
+      updateData.preview_images = Array.isArray(preview_images) ? preview_images : [thumbnail_url];
+    }
+
+    const { error } = await supabase
+      .from('products')
+      .update(updateData)
+      .eq('id', id);
+
+    if (error) {
+      return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+    }
 
     return NextResponse.json({ success: true, message: 'Product updated' });
   } catch (error: any) {

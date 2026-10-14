@@ -2,13 +2,14 @@
 
 import { useState, useEffect } from 'react';
 import Navbar from '@/components/Navbar';
-import { Plus, Trash2, Edit, Upload, CheckCircle2, AlertCircle, RefreshCw } from 'lucide-react';
+import { Plus, Trash2, Upload, CheckCircle2, AlertCircle, RefreshCw, Image as ImageIcon, Database, X, ExternalLink, Loader2 } from 'lucide-react';
 
 export default function AdminPage() {
   const [pin, setPin] = useState('');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [message, setMessage] = useState<{ text: string; type: 'success' | 'error' } | null>(null);
 
   // Form State
@@ -18,6 +19,7 @@ export default function AdminPage() {
   const [price, setPrice] = useState('');
   const [isPortfolio, setIsPortfolio] = useState(false);
   const [thumbnailUrl, setThumbnailUrl] = useState('');
+  const [previewImages, setPreviewImages] = useState<string[]>([]);
   const [demoUrl, setDemoUrl] = useState('');
   const [githubUrl, setGithubUrl] = useState('');
   const [description, setDescription] = useState('');
@@ -56,15 +58,65 @@ export default function AdminPage() {
     setLoading(false);
   };
 
-  const handleImageFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  // Upload file / photo directly to Supabase Storage via /api/upload
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
+    if (!file) return;
+
+    setUploading(true);
+    setMessage(null);
+
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('bucket', 'catalog');
+
+      const res = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const data = await res.json();
+      if (data.success && data.url) {
+        setThumbnailUrl(data.url);
+        setPreviewImages((prev) => [...prev, data.url]);
+        setMessage({ text: `File "${file.name}" berhasil diupload ke Supabase Storage!`, type: 'success' });
+      } else {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          const localUrl = reader.result as string;
+          setThumbnailUrl(localUrl);
+          setPreviewImages((prev) => [...prev, localUrl]);
+        };
+        reader.readAsDataURL(file);
+        setMessage({ 
+          text: `${data.error || 'Upload gagal'}. Preview lokal sementara disimpan. Pastikan bucket 'catalog' dibuat di Supabase.`, 
+          type: 'error' 
+        });
+      }
+    } catch (err: any) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setThumbnailUrl(reader.result as string);
+        const localUrl = reader.result as string;
+        setThumbnailUrl(localUrl);
       };
       reader.readAsDataURL(file);
+      setMessage({ text: `Upload gagal: ${err.message}. Digunakan preview lokal.`, type: 'error' });
+    } finally {
+      setUploading(false);
     }
+  };
+
+  const handleRemoveImage = (indexToRemove: number) => {
+    setPreviewImages((prev) => {
+      const updated = prev.filter((_, idx) => idx !== indexToRemove);
+      if (updated.length > 0 && thumbnailUrl === prev[indexToRemove]) {
+        setThumbnailUrl(updated[0]);
+      } else if (updated.length === 0) {
+        setThumbnailUrl('');
+      }
+      return updated;
+    });
   };
 
   const handleAddProduct = async (e: React.FormEvent) => {
@@ -83,21 +135,24 @@ export default function AdminPage() {
           price: Number(price) || 0,
           is_portfolio: isPortfolio,
           thumbnail_url: thumbnailUrl,
+          preview_images: previewImages.length > 0 ? previewImages : [thumbnailUrl],
           demo_url: demoUrl,
           github_url: githubUrl,
           description,
           admin_pin: pin,
+          pin: pin,
         }),
       });
 
       const data = await res.json();
       if (data.success) {
-        setMessage({ text: 'Produk berhasil ditambahkan!', type: 'success' });
+        setMessage({ text: 'Produk berhasil ditambahkan ke Supabase!', type: 'success' });
         // Reset form
         setTitle('');
         setTechStack('');
         setPrice('');
         setThumbnailUrl('');
+        setPreviewImages([]);
         setDemoUrl('');
         setGithubUrl('');
         setDescription('');
@@ -264,28 +319,78 @@ export default function AdminPage() {
               />
             </div>
 
-            {/* Upload Gambar Preview */}
+            {/* Upload File / Gambar ke Supabase Storage */}
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Upload Gambar Preview</label>
+              <div className="flex items-center justify-between mb-1">
+                <label className="block text-xs font-bold text-slate-700 uppercase">Upload Gambar / File</label>
+                <span className="text-[11px] text-[#3B5763] font-medium">Supabase Storage</span>
+              </div>
+              
               <div className="space-y-2">
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageFileChange}
-                  className="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-slate-100 file:text-slate-700 hover:file:bg-slate-200 cursor-pointer"
-                />
-                <input
-                  type="url"
-                  placeholder="Atau tempel Link URL Gambar..."
-                  value={thumbnailUrl}
-                  onChange={(e) => setThumbnailUrl(e.target.value)}
-                  className="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-[#3B5763]"
-                />
+                <div className="relative border-2 border-dashed border-slate-200 hover:border-[#3B5763] rounded-2xl p-4 transition text-center bg-slate-50/50">
+                  <input
+                    type="file"
+                    accept="image/*,.pdf,.zip"
+                    onChange={handleFileUpload}
+                    disabled={uploading}
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer disabled:cursor-not-allowed"
+                  />
+                  <div className="flex flex-col items-center justify-center gap-1.5 pointer-events-none">
+                    {uploading ? (
+                      <>
+                        <Loader2 className="w-6 h-6 text-[#3B5763] animate-spin" />
+                        <span className="text-xs font-semibold text-slate-600">Mengupload ke Supabase Storage...</span>
+                      </>
+                    ) : (
+                      <>
+                        <ImageIcon className="w-6 h-6 text-slate-400" />
+                        <span className="text-xs font-semibold text-slate-700">Klik atau Drag foto/file ke sini</span>
+                        <span className="text-[10px] text-slate-400">PNG, JPG, WEBP, ZIP (Bucket: catalog)</span>
+                      </>
+                    )}
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <input
+                    type="url"
+                    placeholder="Atau tempel Link URL Gambar..."
+                    value={thumbnailUrl}
+                    onChange={(e) => {
+                      setThumbnailUrl(e.target.value);
+                      if (e.target.value && !previewImages.includes(e.target.value)) {
+                        setPreviewImages(prev => [...prev, e.target.value]);
+                      }
+                    }}
+                    className="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-[#3B5763]"
+                  />
+                </div>
               </div>
 
-              {thumbnailUrl && (
-                <div className="mt-2 h-28 w-full rounded-xl overflow-hidden border border-slate-200 bg-slate-50">
-                  <img src={thumbnailUrl} alt="Preview" className="w-full h-full object-cover" />
+              {/* Preview List Gallery */}
+              {previewImages.length > 0 && (
+                <div className="mt-3 space-y-1.5">
+                  <span className="text-[11px] font-bold text-slate-500 uppercase">Preview Foto Catalog ({previewImages.length}):</span>
+                  <div className="grid grid-cols-3 gap-2">
+                    {previewImages.map((img, idx) => (
+                      <div key={idx} className="relative group rounded-xl overflow-hidden border border-slate-200 h-20 bg-slate-100">
+                        <img src={img} alt={`Preview ${idx + 1}`} className="w-full h-full object-cover" />
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveImage(idx)}
+                          className="absolute top-1 right-1 bg-black/60 hover:bg-rose-600 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition"
+                          title="Hapus Gambar"
+                        >
+                          <X className="w-3 h-3" />
+                        </button>
+                        {thumbnailUrl === img && (
+                          <span className="absolute bottom-1 left-1 bg-[#3B5763] text-white text-[9px] px-1.5 py-0.5 rounded font-black">
+                            MAIN
+                          </span>
+                        )}
+                      </div>
+                    ))}
+                  </div>
                 </div>
               )}
             </div>
@@ -340,11 +445,15 @@ export default function AdminPage() {
 
             <button
               type="submit"
-              disabled={loading}
-              className="w-full bg-[#3B5763] hover:bg-[#2F4752] text-white font-bold py-3.5 rounded-xl transition shadow flex items-center justify-center gap-2"
+              disabled={loading || uploading}
+              className="w-full bg-[#3B5763] hover:bg-[#2F4752] text-white font-bold py-3.5 rounded-xl transition shadow flex items-center justify-center gap-2 disabled:opacity-50"
             >
-              <Upload className="w-4 h-4" />
-              <span>Simpan ke Database SQLite</span>
+              {loading ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <Upload className="w-4 h-4" />
+              )}
+              <span>Simpan ke Database Supabase</span>
             </button>
           </form>
         </div>
@@ -352,9 +461,19 @@ export default function AdminPage() {
         {/* Tabel / Card List Produk */}
         <div className="lg:col-span-7 space-y-4">
           <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-200/80">
-            <h3 className="font-bold text-lg text-slate-900 mb-4">
-              Daftar Produk di Database ({products.length})
-            </h3>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="font-bold text-lg text-slate-900">
+                Daftar Produk di Supabase ({products.length})
+              </h3>
+              <a
+                href="/catalog"
+                target="_blank"
+                className="text-xs text-[#3B5763] font-bold flex items-center gap-1 hover:underline"
+              >
+                <span>Lihat Catalog Live</span>
+                <ExternalLink className="w-3 h-3" />
+              </a>
+            </div>
 
             <div className="divide-y divide-slate-100 max-h-[700px] overflow-y-auto pr-2">
               {products.map((p) => (

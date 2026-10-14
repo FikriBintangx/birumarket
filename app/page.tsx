@@ -244,7 +244,7 @@ export default function Home() {
                   : 'Automated Bot & Script'}
               </span>
               <span className="text-xs font-bold text-blue-600">
-                100% Verified SQLite
+                100% Verified Supabase
               </span>
             </div>
 

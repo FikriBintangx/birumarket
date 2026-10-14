@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { Phone } from 'lucide-react';
 
@@ -11,19 +12,30 @@ export default function Navbar() {
     <header className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6 md:mb-8">
       {/* Left: Logo & Pill Navigation Links */}
       <div className="flex items-center gap-3 w-full sm:w-auto">
-        {/* Circular Brand Icon */}
-        <Link href="/" className="w-12 h-12 rounded-full bg-white shadow-sm flex items-center justify-center p-2 shrink-0 border border-slate-200/70 hover:scale-105 transition">
-          <svg viewBox="0 0 100 100" className="w-full h-full">
-            <defs>
-              <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#38BDF8" />
-                <stop offset="50%" stopColor="#2563EB" />
-                <stop offset="100%" stopColor="#1E3A8A" />
-              </linearGradient>
-            </defs>
-            <circle cx="50" cy="50" r="38" fill="none" stroke="url(#logoGrad)" strokeWidth="14" strokeLinecap="round" strokeDasharray="190" strokeDashoffset="40" />
-            <circle cx="50" cy="50" r="14" fill="#2563EB" />
-          </svg>
+        {/* Circular Brand Icon with Hover Swap (1.png default -> 2.png hover) */}
+        <Link 
+          href="/" 
+          className="group relative w-12 h-12 rounded-full bg-white shadow-sm flex items-center justify-center p-2 shrink-0 border border-slate-200/70 hover:border-blue-400 hover:shadow-md transition-all duration-300 overflow-hidden"
+          title="BiruMarket"
+        >
+          {/* Default Logo (1.png) */}
+          <Image
+            src="/logo/logo-1.webp"
+            alt="BiruMarket Logo"
+            width={40}
+            height={40}
+            className="w-8 h-8 object-contain transition-all duration-300 group-hover:opacity-0 group-hover:scale-90"
+            priority
+          />
+          {/* Hover Inverted Logo (2.png) */}
+          <Image
+            src="/logo/logo-2.webp"
+            alt="BiruMarket Logo Active"
+            width={40}
+            height={40}
+            className="w-8 h-8 object-contain absolute transition-all duration-300 opacity-0 scale-90 group-hover:opacity-100 group-hover:scale-100"
+            priority
+          />
         </Link>
 
         {/* Floating Pill Menu (Home, Catalog, About Us) */}

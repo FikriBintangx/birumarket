@@ -17,20 +17,20 @@ export default function AboutPage() {
 
         <div className="bg-white rounded-3xl p-8 shadow-sm border border-slate-200/80 mb-8 space-y-6">
           <div className="flex items-center gap-4">
-            <div className="group relative w-16 h-16 rounded-full bg-slate-50 border border-slate-200 shadow-sm flex items-center justify-center p-2.5 overflow-hidden transition-all duration-300 hover:border-blue-500 hover:shadow-md cursor-pointer">
+            <div className="group relative w-16 h-16 rounded-full bg-slate-50 border border-slate-200 shadow-sm flex items-center justify-center p-2.5 overflow-hidden transition-all duration-300 hover:border-blue-500 hover:shadow-md cursor-pointer [&:hover_.logo-default]:opacity-0 [&:hover_.logo-default]:scale-90 [&:hover_.logo-hover]:opacity-100 [&:hover_.logo-hover]:scale-100">
               <Image
                 src="/logo/logo-1.webp"
                 alt="BiruMarket"
                 width={56}
                 height={56}
-                className="w-10 h-10 object-contain transition-all duration-300 group-hover:opacity-0 group-hover:scale-90"
+                className="logo-default w-10 h-10 object-contain transition-all duration-300"
               />
               <Image
                 src="/logo/logo-2.webp"
                 alt="BiruMarket Inverted"
                 width={56}
                 height={56}
-                className="w-10 h-10 object-contain absolute transition-all duration-300 opacity-0 scale-90 group-hover:opacity-100 group-hover:scale-100"
+                className="logo-hover w-10 h-10 object-contain absolute transition-all duration-300 opacity-0 scale-90"
               />
             </div>
             <div>

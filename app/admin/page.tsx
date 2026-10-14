@@ -58,53 +58,90 @@ export default function AdminPage() {
     setLoading(false);
   };
 
-  // Upload file / photo directly to Supabase Storage via /api/upload
+  // Upload file / photo directly to Supabase Storage via /api/upload (supports multiple files)
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
 
     setUploading(true);
     setMessage(null);
 
-    try {
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('bucket', 'catalog');
+    const uploadedUrls: string[] = [];
+    let errorCount = 0;
 
-      const res = await fetch('/api/upload', {
-        method: 'POST',
-        body: formData,
-      });
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      try {
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('bucket', 'catalog');
 
-      const data = await res.json();
-      if (data.success && data.url) {
-        setThumbnailUrl(data.url);
-        setPreviewImages((prev) => [...prev, data.url]);
-        setMessage({ text: `File "${file.name}" berhasil diupload ke Supabase Storage!`, type: 'success' });
-      } else {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          const localUrl = reader.result as string;
-          setThumbnailUrl(localUrl);
-          setPreviewImages((prev) => [...prev, localUrl]);
-        };
-        reader.readAsDataURL(file);
-        setMessage({ 
-          text: `${data.error || 'Upload gagal'}. Preview lokal sementara disimpan. Pastikan bucket 'catalog' dibuat di Supabase.`, 
-          type: 'error' 
+        const res = await fetch('/api/upload', {
+          method: 'POST',
+          body: formData,
+        });
+
+        const data = await res.json();
+        if (data.success && data.url) {
+          uploadedUrls.push(data.url);
+        } else {
+          errorCount++;
+          // Fallback local reader for preview
+          await new Promise<void>((resolve) => {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+              const localUrl = reader.result as string;
+              uploadedUrls.push(localUrl);
+              resolve();
+            };
+            reader.onerror = () => resolve();
+            reader.readAsDataURL(file);
+          });
+        }
+      } catch (err: any) {
+        errorCount++;
+        await new Promise<void>((resolve) => {
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            const localUrl = reader.result as string;
+            uploadedUrls.push(localUrl);
+            resolve();
+          };
+          reader.onerror = () => resolve();
+          reader.readAsDataURL(file);
         });
       }
-    } catch (err: any) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const localUrl = reader.result as string;
-        setThumbnailUrl(localUrl);
-      };
-      reader.readAsDataURL(file);
-      setMessage({ text: `Upload gagal: ${err.message}. Digunakan preview lokal.`, type: 'error' });
-    } finally {
-      setUploading(false);
     }
+
+    if (uploadedUrls.length > 0) {
+      setPreviewImages((prev) => {
+        const combined = [...prev, ...uploadedUrls];
+        if (!thumbnailUrl && combined.length > 0) {
+          setThumbnailUrl(combined[0]);
+        }
+        return combined;
+      });
+
+      if (!thumbnailUrl) {
+        setThumbnailUrl(uploadedUrls[0]);
+      }
+
+      if (errorCount === 0) {
+        setMessage({
+          text: `${uploadedUrls.length} file/foto berhasil diupload ke Supabase Storage!`,
+          type: 'success',
+        });
+      } else {
+        setMessage({
+          text: `${uploadedUrls.length - errorCount} berhasil, ${errorCount} file menggunakan preview lokal.`,
+          type: 'error',
+        });
+      }
+    }
+
+    setUploading(false);
+    // Reset file input value so user can upload the same files again if needed
+    e.target.value = '';
   };
 
   const handleRemoveImage = (indexToRemove: number) => {
@@ -331,6 +368,7 @@ export default function AdminPage() {
                   <input
                     type="file"
                     accept="image/*,.pdf,.zip"
+                    multiple
                     onChange={handleFileUpload}
                     disabled={uploading}
                     className="absolute inset-0 w-full h-full opacity-0 cursor-pointer disabled:cursor-not-allowed"
@@ -344,8 +382,8 @@ export default function AdminPage() {
                     ) : (
                       <>
                         <ImageIcon className="w-6 h-6 text-slate-400" />
-                        <span className="text-xs font-semibold text-slate-700">Klik atau Drag foto/file ke sini</span>
-                        <span className="text-[10px] text-slate-400">PNG, JPG, WEBP, ZIP (Bucket: catalog)</span>
+                        <span className="text-xs font-semibold text-slate-700">Klik atau Drag satu / beberapa foto ke sini</span>
+                        <span className="text-[10px] text-slate-400">Pilih multi-file (PNG, JPG, WEBP, ZIP) • Bucket: catalog</span>
                       </>
                     )}
                   </div>

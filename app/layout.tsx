@@ -1,5 +1,33 @@
 import type { Metadata } from 'next';
+import ChatWidget, { type Product } from '@/components/ChatWidget';
 import './globals.css';
+
+const chatProducts: Product[] = [
+  {
+    id: 'prod-1',
+    name: 'QRIS Digital Dropship Platform',
+    price: 650000,
+    kind: 'codingan',
+  },
+  {
+    id: 'prod-2',
+    name: 'AI Telegram Content Generator Bot',
+    price: 450000,
+    kind: 'codingan',
+  },
+  {
+    id: 'prod-3',
+    name: 'Modern SaaS Landing Page & Dashboard',
+    price: 350000,
+    kind: 'project',
+  },
+  {
+    id: 'prod-4',
+    name: 'Creative Brand Identity & Canva Pitch Deck',
+    price: 150000,
+    kind: 'canva',
+  },
+];
 
 export const metadata: Metadata = {
   title: 'BiruMarket — Marketplace & Showcase Aplikasi / Web',
@@ -25,6 +53,7 @@ export default function RootLayout({
         <div className="w-full max-w-[1360px] bg-[#F1F4F5] rounded-[2.5rem] md:rounded-[3.2rem] p-4 md:p-8 shadow-2xl border border-white/60">
           {children}
         </div>
+        <ChatWidget products={chatProducts} qrisImageUrl="/qris.png" />
       </body>
     </html>
   );

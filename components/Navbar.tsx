@@ -15,25 +15,25 @@ export default function Navbar() {
         {/* Circular Brand Icon with Hover Swap (1.png default -> 2.png hover) */}
         <Link 
           href="/" 
-          className="group relative w-12 h-12 rounded-full bg-white shadow-sm flex items-center justify-center p-2 shrink-0 border border-slate-200/70 hover:border-blue-400 hover:shadow-md transition-all duration-300 overflow-hidden [&:hover_.logo-default]:opacity-0 [&:hover_.logo-default]:scale-90 [&:hover_.logo-hover]:opacity-100 [&:hover_.logo-hover]:scale-100"
+          className="group relative w-11 h-11 sm:w-12 sm:h-12 flex items-center justify-center shrink-0 transition-all duration-300 [&:hover_.logo-default]:opacity-0 [&:hover_.logo-default]:scale-90 [&:hover_.logo-hover]:opacity-100 [&:hover_.logo-hover]:scale-100"
           title="BiruMarket"
         >
           {/* Default Logo (1.png) */}
           <Image
             src="/logo/logo-1.webp"
             alt="BiruMarket Logo"
-            width={40}
-            height={40}
-            className="logo-default w-8 h-8 object-contain transition-all duration-300"
+            width={48}
+            height={48}
+            className="logo-default w-10 h-10 sm:w-11 sm:h-11 object-contain transition-all duration-300"
             priority
           />
           {/* Hover Inverted Logo (2.png) */}
           <Image
             src="/logo/logo-2.webp"
             alt="BiruMarket Logo Active"
-            width={40}
-            height={40}
-            className="logo-hover w-8 h-8 object-contain absolute transition-all duration-300 opacity-0 scale-90"
+            width={48}
+            height={48}
+            className="logo-hover w-10 h-10 sm:w-11 sm:h-11 object-contain absolute transition-all duration-300 opacity-0 scale-90"
             priority
           />
         </Link>

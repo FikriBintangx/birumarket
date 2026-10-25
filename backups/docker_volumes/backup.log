@@ -1,0 +1,37 @@
+[2026-10-11 10:32:38] [INFO] ==================================================
+[2026-10-11 10:32:38] [INFO] Starting Docker volume backup & rotation process
+[2026-10-11 10:32:38] [INFO] Backup Directory: /home/isagi/backups/docker_volumes
+[2026-10-11 10:32:38] [INFO] Retention Period: 7 days
+[2026-10-11 10:32:38] [INFO] Dry Run Mode:     false
+[2026-10-11 10:32:38] [INFO] Backing up Docker volume: 'test_dummy_vol' -> 'test_dummy_vol_20261011_103238.tar.gz'
+[2026-10-11 10:32:38] [INFO] Successfully backed up volume 'test_dummy_vol' (Size: 4.0K)
+[2026-10-11 10:32:38] [INFO] Starting retention rotation (cleaning archives older than 7 days)...
+[2026-10-11 10:32:38] [INFO] No expired archives found for rotation.
+[2026-10-11 10:32:38] [INFO] Backup summary: 1 succeeded, 0 failed.
+[2026-10-11 10:32:38] [INFO] Docker volume backup & rotation process finished.
+[2026-10-11 10:32:38] [INFO] ==================================================
+[2026-10-11 10:32:55] [INFO] ==================================================
+[2026-10-11 10:32:55] [INFO] Starting Docker volume backup & rotation process
+[2026-10-11 10:32:55] [INFO] Backup Directory: /home/isagi/backups/docker_volumes
+[2026-10-11 10:32:55] [INFO] Retention Period: 7 days
+[2026-10-11 10:32:55] [INFO] Dry Run Mode:     false
+[2026-10-11 10:32:55] [INFO] Backing up target directory: '/tmp/test_backup_dir' -> 'test_backup_dir_20261011_103255.tar.gz'
+[2026-10-11 10:32:55] [INFO] Successfully backed up directory '/tmp/test_backup_dir' (Size: 4.0K)
+[2026-10-11 10:32:55] [INFO] Starting retention rotation (cleaning archives older than 7 days)...
+[2026-10-11 10:32:55] [INFO] No expired archives found for rotation.
+[2026-10-11 10:32:55] [INFO] Backup summary: 1 succeeded, 0 failed.
+[2026-10-11 10:32:55] [INFO] Docker volume backup & rotation process finished.
+[2026-10-11 10:32:55] [INFO] ==================================================
+[2026-10-11 10:33:09] [INFO] ==================================================
+[2026-10-11 10:33:09] [INFO] Starting Docker volume backup & rotation process
+[2026-10-11 10:33:09] [INFO] Backup Directory: /home/isagi/backups/docker_volumes
+[2026-10-11 10:33:09] [INFO] Retention Period: 7 days
+[2026-10-11 10:33:09] [INFO] Dry Run Mode:     false
+[2026-10-11 10:33:09] [INFO] Backing up Docker volume: 'test_dummy_vol' -> 'test_dummy_vol_20261011_103309.tar.gz'
+[2026-10-11 10:33:10] [INFO] Successfully backed up volume 'test_dummy_vol' (Size: 4.0K)
+[2026-10-11 10:33:10] [INFO] Starting retention rotation (cleaning archives older than 7 days)...
+[2026-10-11 10:33:10] [INFO] Found 1 archive(s) older than 7 days.
+[2026-10-11 10:33:10] [INFO] Deleted expired archive: old_archive_20260101_000000.tar.gz
+[2026-10-11 10:33:10] [INFO] Backup summary: 1 succeeded, 0 failed.
+[2026-10-11 10:33:10] [INFO] Docker volume backup & rotation process finished.
+[2026-10-11 10:33:10] [INFO] ==================================================

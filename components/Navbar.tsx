@@ -3,97 +3,109 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { Phone } from 'lucide-react';
+import { MessageCircle, Settings } from 'lucide-react';
+import { CONTACT_INFO } from '@/lib/catalog-data';
 
 export default function Navbar() {
   const pathname = usePathname();
 
+  const navLinks = [
+    { href: '/', label: 'Home' },
+    { href: '/catalog', label: 'Catalog' },
+    { href: '/about', label: 'About & Lisensi' },
+  ];
+
   return (
-    <header className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6 md:mb-8">
-      {/* Left: Logo & Pill Navigation Links */}
-      <div className="flex items-center gap-3 w-full sm:w-auto">
-        {/* Circular Brand Icon with Hover Swap (1.png default -> 2.png hover) */}
-        <Link 
-          href="/" 
-          className="group relative w-11 h-11 sm:w-12 sm:h-12 flex items-center justify-center shrink-0 transition-all duration-300 [&:hover_.logo-default]:opacity-0 [&:hover_.logo-default]:scale-90 [&:hover_.logo-hover]:opacity-100 [&:hover_.logo-hover]:scale-100"
-          title="BiruMarket"
+    <header className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4 mb-6 md:mb-8">
+      {/* Left: Brand Logo + Navigation */}
+      <div className="flex flex-wrap sm:flex-nowrap items-center justify-between sm:justify-start gap-3 sm:gap-4">
+        <Link
+          href="/"
+          className="group relative flex items-center gap-3 shrink-0 rounded-xl p-1 pr-2 transition [&:hover_.logo-default]:opacity-0 [&:hover_.logo-default]:scale-90 [&:hover_.logo-hover]:opacity-100 [&:hover_.logo-hover]:scale-100"
+          title="BiruMarket Home"
         >
-          {/* Default Logo (1.png) */}
-          <Image
-            src="/logo/logo-1.webp"
-            alt="BiruMarket Logo"
-            width={48}
-            height={48}
-            className="logo-default w-10 h-10 sm:w-11 sm:h-11 object-contain transition-all duration-300"
-            priority
-          />
-          {/* Hover Inverted Logo (2.png) */}
-          <Image
-            src="/logo/logo-2.webp"
-            alt="BiruMarket Logo Active"
-            width={48}
-            height={48}
-            className="logo-hover w-10 h-10 sm:w-11 sm:h-11 object-contain absolute transition-all duration-300 opacity-0 scale-90"
-            priority
-          />
+          <div className="relative w-10 h-10 sm:w-11 sm:h-11 flex items-center justify-center shrink-0">
+            <Image
+              src="/logo/logo-1.webp"
+              alt="BiruMarket Logo"
+              width={44}
+              height={44}
+              className="logo-default w-10 h-10 object-contain transition-all duration-300"
+              priority
+            />
+            <Image
+              src="/logo/logo-2.webp"
+              alt="BiruMarket Logo Active"
+              width={44}
+              height={44}
+              className="logo-hover w-10 h-10 object-contain absolute transition-all duration-300 opacity-0 scale-90"
+              priority
+            />
+          </div>
+          <div className="leading-none">
+            <span className="font-['Syne',sans-serif] font-extrabold text-base sm:text-lg text-[#0B2545] tracking-tight block">
+              BiruMarket
+            </span>
+            <span className="font-mono text-[10px] font-medium text-slate-500 tracking-wide">
+              {CONTACT_INFO.domain}
+            </span>
+          </div>
         </Link>
 
-        {/* Floating Pill Menu (Home, Catalog, About Us) */}
-        <nav className="bg-white px-1.5 py-1 sm:px-2 sm:py-1.5 rounded-full shadow-sm border border-slate-200/70 flex items-center gap-0.5 sm:gap-1 overflow-x-auto max-w-full">
+        {/* Pill Menu */}
+        <nav
+          aria-label="Navigasi utama"
+          className="bg-white p-1 rounded-full border border-slate-200 flex items-center gap-1 overflow-x-auto max-w-full no-scrollbar"
+        >
+          {navLinks.map((item) => {
+            const active = pathname === item.href;
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`min-h-[40px] px-4 sm:px-5 py-2 rounded-full font-bold text-xs sm:text-sm tracking-wide transition whitespace-nowrap flex items-center ${
+                  active
+                    ? 'bg-[#0B2545] text-white'
+                    : 'text-slate-600 hover:text-[#0B2545] hover:bg-slate-50'
+                }`}
+              >
+                {item.label}
+              </Link>
+            );
+          })}
           <Link
-            href="/"
-            className={`px-3.5 sm:px-6 py-2 sm:py-2.5 rounded-full font-bold text-xs sm:text-sm tracking-wide transition shadow-sm whitespace-nowrap ${
-              pathname === '/'
-                ? 'bg-blue-600 text-white shadow-blue-200'
-                : 'text-slate-600 hover:text-slate-900'
+            href="/admin"
+            className={`min-h-[40px] px-3.5 py-2 rounded-full font-semibold text-xs transition whitespace-nowrap flex items-center gap-1.5 ${
+              pathname === '/admin'
+                ? 'bg-[#1D4ED8] text-white'
+                : 'text-slate-500 hover:text-[#0B2545] hover:bg-slate-50'
             }`}
+            title="Admin Backoffice"
           >
-            Home
-          </Link>
-          <Link
-            href="/catalog"
-            className={`px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full font-semibold text-xs sm:text-sm transition whitespace-nowrap ${
-              pathname === '/catalog'
-                ? 'bg-blue-600 text-white shadow-blue-200'
-                : 'text-slate-600 hover:text-slate-900'
-            }`}
-          >
-            Catalog
-          </Link>
-          <Link
-            href="/about"
-            className={`px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full font-semibold text-xs sm:text-sm transition whitespace-nowrap ${
-              pathname === '/about'
-                ? 'bg-blue-600 text-white shadow-blue-200'
-                : 'text-slate-600 hover:text-slate-900'
-            }`}
-          >
-            About us
+            <Settings className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">Admin</span>
           </Link>
         </nav>
       </div>
 
-      {/* Right: CTA Button */}
-      <div className="w-full sm:w-auto flex items-center justify-end gap-3">
-        <Link
-          href="https://wa.me/6281234567890?text=Halo%20Fikri,%20saya%20tertarik%20dengan%20aplikasi%20di%20BiruMarket!"
+      {/* Right: Direct WhatsApp CTA */}
+      <div className="flex items-center justify-end gap-2.5">
+        <a
+          href={`https://wa.me/${CONTACT_INFO.whatsappNumber}?text=${encodeURIComponent(
+            `Halo Fikri, saya ingin konsultasi produk atau custom project di BiruMarket (${CONTACT_INFO.domain}).`
+          )}`}
           target="_blank"
-          className="bg-white hover:bg-slate-50 border border-slate-200/90 text-slate-800 font-bold px-6 py-3 rounded-full flex items-center gap-3 shadow-sm text-sm transition group"
+          rel="noopener noreferrer"
+          className="w-full sm:w-auto min-h-[44px] bg-white hover:bg-slate-50 border border-slate-200 text-[#0B2545] font-bold px-4 sm:px-5 py-2.5 rounded-full flex items-center justify-center gap-2.5 text-xs sm:text-sm transition group"
         >
-          <span className="w-7 h-7 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition">
-            <Phone className="w-3.5 h-3.5" />
+          <span className="w-7 h-7 rounded-full bg-blue-50 text-[#1D4ED8] flex items-center justify-center group-hover:bg-[#1D4ED8] group-hover:text-white transition shrink-0">
+            <MessageCircle className="w-3.5 h-3.5" />
           </span>
-          <span>Book a call with BiruMarket</span>
-        </Link>
-
-        {/* Secret Backoffice Link */}
-        <Link
-          href="/admin"
-          className="text-xs text-slate-400 hover:text-slate-700 px-2 py-1 rounded transition"
-          title="Backoffice Admin"
-        >
-          ⚙️
-        </Link>
+          <span>Konsultasi WA</span>
+          <span className="hidden md:inline font-mono text-[11px] text-slate-500">
+            {CONTACT_INFO.whatsappDisplay}
+          </span>
+        </a>
       </div>
     </header>
   );

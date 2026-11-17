@@ -2,19 +2,41 @@
 
 import { useState, useEffect } from 'react';
 import Navbar from '@/components/Navbar';
-import { Plus, Trash2, Upload, CheckCircle2, AlertCircle, RefreshCw, Image as ImageIcon, Database, X, ExternalLink, Loader2 } from 'lucide-react';
+import Footer from '@/components/Footer';
+import {
+  Plus,
+  Trash2,
+  Upload,
+  CheckCircle2,
+  AlertCircle,
+  RefreshCw,
+  Image as ImageIcon,
+  Database,
+  X,
+  ExternalLink,
+  Loader2,
+  Pencil,
+} from 'lucide-react';
+import { ProductItem } from '@/lib/catalog-data';
 
 export default function AdminPage() {
   const [pin, setPin] = useState('');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [products, setProducts] = useState<any[]>([]);
+  const [products, setProducts] = useState<ProductItem[]>([]);
   const [loading, setLoading] = useState(false);
+  const [seeding, setSeeding] = useState(false);
   const [uploading, setUploading] = useState(false);
-  const [message, setMessage] = useState<{ text: string; type: 'success' | 'error' } | null>(null);
+  const [message, setMessage] = useState<{
+    text: string;
+    type: 'success' | 'error';
+  } | null>(null);
+
+  // Edit state
+  const [editingId, setEditingId] = useState<string | null>(null);
 
   // Form State
   const [title, setTitle] = useState('');
-  const [category, setCategory] = useState('E-COMMERCE');
+  const [category, setCategory] = useState('SAAS WEB');
   const [techStack, setTechStack] = useState('');
   const [price, setPrice] = useState('');
   const [isPortfolio, setIsPortfolio] = useState(false);
@@ -35,12 +57,16 @@ export default function AdminPage() {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (pin === '123456' || pin.length >= 4) {
-      localStorage.setItem('bm_admin_pin', pin);
+    if (pin.trim().length >= 4) {
+      localStorage.setItem('bm_admin_pin', pin.trim());
       setIsAuthenticated(true);
+      setMessage(null);
       fetchProducts();
     } else {
-      setMessage({ text: 'PIN salah! Coba default PIN: 123456', type: 'error' });
+      setMessage({
+        text: 'Masukkan PIN minimal 4 karakter (default: 123456).',
+        type: 'error',
+      });
     }
   };
 
@@ -49,16 +75,85 @@ export default function AdminPage() {
     try {
       const res = await fetch('/api/products');
       const data = await res.json();
-      if (data.success) {
+      if (data.success && Array.isArray(data.data)) {
         setProducts(data.data);
       }
     } catch (err: any) {
-      setMessage({ text: err.message, type: 'error' });
+      setMessage({ text: err.message || 'Gagal mengambil data.', type: 'error' });
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
-  // Upload file / photo directly to Supabase Storage via /api/upload (supports multiple files)
+  const resetForm = () => {
+    setEditingId(null);
+    setTitle('');
+    setCategory('SAAS WEB');
+    setTechStack('');
+    setPrice('');
+    setIsPortfolio(false);
+    setThumbnailUrl('');
+    setPreviewImages([]);
+    setDemoUrl('');
+    setGithubUrl('');
+    setDescription('');
+  };
+
+  const startEdit = (product: ProductItem) => {
+    setEditingId(product.id);
+    setTitle(product.title);
+    setCategory(product.category || 'SAAS WEB');
+    setTechStack(
+      Array.isArray(product.tech_stack) ? product.tech_stack.join(', ') : ''
+    );
+    setPrice(String(product.price || 0));
+    setIsPortfolio(Boolean(product.is_portfolio));
+    setThumbnailUrl(product.thumbnail_url || '');
+    setPreviewImages(
+      Array.isArray(product.preview_images) && product.preview_images.length > 0
+        ? product.preview_images
+        : product.thumbnail_url
+          ? [product.thumbnail_url]
+          : []
+    );
+    setDemoUrl(product.demo_url || '');
+    setGithubUrl(product.github_url || '');
+    setDescription(product.description || '');
+    setMessage(null);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleSyncDefaultCatalog = async () => {
+    setSeeding(true);
+    setMessage(null);
+    try {
+      const res = await fetch('/api/products', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'SEED_DEFAULTS',
+          admin_pin: pin,
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setMessage({
+          text:
+            data.message ||
+            '12 produk default BiruMarket berhasil disinkronkan ke Supabase!',
+          type: 'success',
+        });
+        fetchProducts();
+      } else {
+        setMessage({ text: data.error || 'Gagal sync katalog.', type: 'error' });
+      }
+    } catch (err: any) {
+      setMessage({ text: err.message, type: 'error' });
+    } finally {
+      setSeeding(false);
+    }
+  };
+
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
@@ -86,30 +181,20 @@ export default function AdminPage() {
           uploadedUrls.push(data.url);
         } else {
           errorCount++;
-          // Fallback local reader for preview
           await new Promise<void>((resolve) => {
             const reader = new FileReader();
             reader.onloadend = () => {
-              const localUrl = reader.result as string;
-              uploadedUrls.push(localUrl);
+              if (typeof reader.result === 'string') {
+                uploadedUrls.push(reader.result);
+              }
               resolve();
             };
             reader.onerror = () => resolve();
             reader.readAsDataURL(file);
           });
         }
-      } catch (err: any) {
+      } catch {
         errorCount++;
-        await new Promise<void>((resolve) => {
-          const reader = new FileReader();
-          reader.onloadend = () => {
-            const localUrl = reader.result as string;
-            uploadedUrls.push(localUrl);
-            resolve();
-          };
-          reader.onerror = () => resolve();
-          reader.readAsDataURL(file);
-        });
       }
     }
 
@@ -121,26 +206,24 @@ export default function AdminPage() {
         }
         return combined;
       });
-
       if (!thumbnailUrl) {
         setThumbnailUrl(uploadedUrls[0]);
       }
 
       if (errorCount === 0) {
         setMessage({
-          text: `${uploadedUrls.length} file/foto berhasil diupload ke Supabase Storage!`,
+          text: `${uploadedUrls.length} file berhasil diupload ke Supabase Storage.`,
           type: 'success',
         });
       } else {
         setMessage({
-          text: `${uploadedUrls.length - errorCount} berhasil, ${errorCount} file menggunakan preview lokal.`,
+          text: `${uploadedUrls.length - errorCount} berhasil diupload, ${errorCount} memakai preview lokal.`,
           type: 'error',
         });
       }
     }
 
     setUploading(false);
-    // Reset file input value so user can upload the same files again if needed
     e.target.value = '';
   };
 
@@ -156,64 +239,74 @@ export default function AdminPage() {
     });
   };
 
-  const handleAddProduct = async (e: React.FormEvent) => {
+  const handleSaveProduct = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setMessage(null);
 
+    const payload = {
+      title,
+      category,
+      tech_stack: techStack,
+      price: Number(price) || 0,
+      is_portfolio: isPortfolio,
+      thumbnail_url: thumbnailUrl || '/products/p-jurnalku.png',
+      preview_images:
+        previewImages.length > 0
+          ? previewImages
+          : [thumbnailUrl || '/products/p-jurnalku.png'],
+      demo_url: demoUrl,
+      github_url: githubUrl,
+      description,
+      admin_pin: pin,
+      pin,
+    };
+
     try {
-      const res = await fetch('/api/products', {
-        method: 'POST',
+      const endpoint = editingId
+        ? `/api/products/${editingId}`
+        : '/api/products';
+      const method = editingId ? 'PUT' : 'POST';
+
+      const res = await fetch(endpoint, {
+        method,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          title,
-          category,
-          tech_stack: techStack,
-          price: Number(price) || 0,
-          is_portfolio: isPortfolio,
-          thumbnail_url: thumbnailUrl,
-          preview_images: previewImages.length > 0 ? previewImages : [thumbnailUrl],
-          demo_url: demoUrl,
-          github_url: githubUrl,
-          description,
-          admin_pin: pin,
-          pin: pin,
-        }),
+        body: JSON.stringify(payload),
       });
 
       const data = await res.json();
       if (data.success) {
-        setMessage({ text: 'Produk berhasil ditambahkan ke Supabase!', type: 'success' });
-        // Reset form
-        setTitle('');
-        setTechStack('');
-        setPrice('');
-        setThumbnailUrl('');
-        setPreviewImages([]);
-        setDemoUrl('');
-        setGithubUrl('');
-        setDescription('');
-        setIsPortfolio(false);
+        setMessage({
+          text: editingId
+            ? 'Perubahan produk berhasil disimpan ke Supabase!'
+            : 'Produk baru berhasil ditambahkan ke Supabase!',
+          type: 'success',
+        });
+        resetForm();
         fetchProducts();
       } else {
-        setMessage({ text: data.error, type: 'error' });
+        setMessage({ text: data.error || 'Gagal menyimpan produk.', type: 'error' });
       }
     } catch (err: any) {
       setMessage({ text: err.message, type: 'error' });
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   const handleDeleteProduct = async (id: string) => {
-    if (!confirm('Yakin ingin menghapus produk ini?')) return;
+    if (!confirm('Yakin ingin menghapus produk ini dari katalog?')) return;
     try {
-      const res = await fetch(`/api/products/${id}?pin=${pin}`, { method: 'DELETE' });
+      const res = await fetch(`/api/products/${id}?pin=${encodeURIComponent(pin)}`, {
+        method: 'DELETE',
+      });
       const data = await res.json();
       if (data.success) {
-        setMessage({ text: 'Produk berhasil dihapus!', type: 'success' });
+        setMessage({ text: 'Produk berhasil dihapus.', type: 'success' });
+        if (editingId === id) resetForm();
         fetchProducts();
       } else {
-        setMessage({ text: data.error, type: 'error' });
+        setMessage({ text: data.error || 'Gagal menghapus.', type: 'error' });
       }
     } catch (err: any) {
       setMessage({ text: err.message, type: 'error' });
@@ -224,29 +317,49 @@ export default function AdminPage() {
     return (
       <main>
         <Navbar />
-        <div className="max-w-md mx-auto my-16 bg-white p-8 rounded-3xl shadow-sm border border-slate-200">
-          <h2 className="text-2xl font-black text-slate-900 mb-2">Admin Backoffice</h2>
-          <p className="text-sm text-slate-500 mb-6">Masukkan PIN Admin untuk mengelola katalog BiruMarket.</p>
-          
+        <div className="max-w-md mx-auto my-12 bg-white p-8 rounded-3xl border border-slate-200 shadow-sm">
+          <span className="font-mono text-xs font-bold uppercase tracking-wider text-[#1D4ED8] block mb-1">
+            Restricted Area
+          </span>
+          <h1 className="font-['Syne',sans-serif] text-2xl font-extrabold text-[#0B2545] mb-2">
+            Admin Backoffice
+          </h1>
+          <p className="text-sm text-slate-600 mb-6">
+            Masukkan PIN Admin untuk mengelola katalog produk dan sinkronisasi Supabase BiruMarket.
+          </p>
+
+          {message && (
+            <div className="mb-4 p-3 rounded-xl bg-rose-50 text-rose-800 border border-rose-200 text-xs font-medium">
+              {message.text}
+            </div>
+          )}
+
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase mb-2">PIN Rahasia</label>
+              <label
+                htmlFor="admin-pin-input"
+                className="block font-mono text-xs font-bold text-slate-700 uppercase mb-2"
+              >
+                PIN Rahasia
+              </label>
               <input
+                id="admin-pin-input"
                 type="password"
                 placeholder="Default: 123456"
                 value={pin}
                 onChange={(e) => setPin(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-[#3B5763] focus:outline-none text-center text-xl tracking-widest"
+                className="w-full min-h-[46px] px-4 py-3 rounded-xl border border-slate-200 focus:border-[#1D4ED8] focus:outline-none text-center text-xl tracking-widest font-mono"
               />
             </div>
             <button
               type="submit"
-              className="w-full bg-[#1C2024] hover:bg-slate-800 text-white font-bold py-3.5 rounded-xl transition shadow"
+              className="w-full min-h-[46px] bg-[#0B2545] hover:bg-[#123663] text-white font-bold py-3 rounded-xl transition"
             >
               Masuk Dashboard
             </button>
           </form>
         </div>
+        <Footer />
       </main>
     );
   }
@@ -255,27 +368,51 @@ export default function AdminPage() {
     <main>
       <Navbar />
 
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4 bg-white p-6 rounded-2xl border border-slate-200">
         <div>
-          <h1 className="font-['Syne',sans-serif] text-3xl font-extrabold text-slate-900 uppercase">
+          <span className="font-mono text-xs font-bold uppercase tracking-wider text-[#1D4ED8]">
+            Supabase CMS &amp; Inventory
+          </span>
+          <h1 className="font-['Syne',sans-serif] text-2xl sm:text-3xl font-extrabold text-[#0B2545] uppercase mt-1">
             Backoffice BiruMarket
           </h1>
-          <p className="text-slate-500 text-sm">Kelola produk, upload preview, dan showcase portofolio Fikri Bintang.</p>
+          <p className="text-slate-600 text-xs sm:text-sm mt-1">
+            Kelola produk, perbarui harga/demo, upload thumbnail, dan sinkronkan 12 produk unggulan ke Supabase.
+          </p>
         </div>
-        <div className="flex items-center gap-3">
+
+        <div className="flex flex-wrap items-center gap-2.5">
           <button
+            type="button"
+            onClick={handleSyncDefaultCatalog}
+            disabled={seeding}
+            className="min-h-[42px] px-4 py-2 rounded-xl bg-[#1D4ED8] hover:bg-[#1E40AF] text-white text-xs font-bold inline-flex items-center gap-2 transition disabled:opacity-60"
+          >
+            {seeding ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              <Database className="w-4 h-4" />
+            )}
+            <span>Sync 12 Produk Default</span>
+          </button>
+
+          <button
+            type="button"
             onClick={fetchProducts}
-            className="p-2.5 rounded-full bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 transition"
-            title="Refresh"
+            className="min-h-[42px] w-10 h-10 rounded-xl bg-slate-50 border border-slate-200 text-slate-700 hover:bg-slate-100 flex items-center justify-center transition"
+            title="Refresh Katalog"
+            aria-label="Refresh Katalog"
           >
             <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
           </button>
+
           <button
+            type="button"
             onClick={() => {
               localStorage.removeItem('bm_admin_pin');
               setIsAuthenticated(false);
             }}
-            className="text-xs font-bold text-rose-600 bg-rose-50 px-4 py-2.5 rounded-full border border-rose-100 hover:bg-rose-100 transition"
+            className="min-h-[42px] text-xs font-bold text-rose-700 bg-rose-50 px-4 py-2 rounded-xl border border-rose-200 hover:bg-rose-100 transition"
           >
             Logout
           </button>
@@ -286,143 +423,208 @@ export default function AdminPage() {
         <div
           className={`p-4 rounded-2xl mb-6 flex items-center gap-3 text-sm ${
             message.type === 'success'
-              ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
-              : 'bg-rose-50 text-rose-800 border border-rose-200'
+              ? 'bg-emerald-50 text-emerald-900 border border-emerald-200'
+              : 'bg-rose-50 text-rose-900 border border-rose-200'
           }`}
         >
-          {message.type === 'success' ? <CheckCircle2 className="w-5 h-5 shrink-0" /> : <AlertCircle className="w-5 h-5 shrink-0" />}
+          {message.type === 'success' ? (
+            <CheckCircle2 className="w-5 h-5 shrink-0" />
+          ) : (
+            <AlertCircle className="w-5 h-5 shrink-0" />
+          )}
           <span>{message.text}</span>
         </div>
       )}
 
-      {/* Grid: Form Tambah (Left) & List Produk (Right) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        
-        {/* Form Tambah Produk */}
-        <div className="lg:col-span-5 bg-white p-6 sm:p-7 rounded-3xl shadow-sm border border-slate-200/80">
-          <h3 className="font-bold text-lg text-slate-900 mb-4 flex items-center gap-2">
-            <Plus className="w-5 h-5 text-[#3B5763]" />
-            Tambah Produk / Portfolio Baru
-          </h3>
+        {/* Form Tambah / Edit Produk */}
+        <div className="lg:col-span-5 bg-white p-6 sm:p-7 rounded-2xl border border-slate-200">
+          <div className="flex items-center justify-between gap-2 mb-5">
+            <h2 className="font-['Syne',sans-serif] font-extrabold text-lg text-[#0B2545] flex items-center gap-2">
+              {editingId ? (
+                <>
+                  <Pencil className="w-4 h-4 text-[#1D4ED8]" />
+                  <span>Edit Produk</span>
+                </>
+              ) : (
+                <>
+                  <Plus className="w-5 h-5 text-[#1D4ED8]" />
+                  <span>Tambah Produk Baru</span>
+                </>
+              )}
+            </h2>
 
-          <form onSubmit={handleAddProduct} className="space-y-4">
+            {editingId && (
+              <button
+                type="button"
+                onClick={resetForm}
+                className="text-xs font-bold text-slate-600 hover:text-[#0B2545] underline"
+              >
+                Batal Edit
+              </button>
+            )}
+          </div>
+
+          <form onSubmit={handleSaveProduct} className="space-y-4">
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Judul Aplikasi / Web</label>
+              <label
+                htmlFor="prod-title"
+                className="block font-mono text-xs font-bold text-slate-700 uppercase mb-1"
+              >
+                Judul Aplikasi / Web
+              </label>
               <input
+                id="prod-title"
                 type="text"
                 required
-                placeholder="Misal: AI Dropship Store"
+                placeholder="Nama aplikasi atau boilerplate"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#3B5763]"
+                className="w-full min-h-[42px] px-3.5 py-2 rounded-xl border border-slate-200 text-sm focus:border-[#1D4ED8] focus:outline-none"
               />
             </div>
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Kategori</label>
+                <label
+                  htmlFor="prod-category"
+                  className="block font-mono text-xs font-bold text-slate-700 uppercase mb-1"
+                >
+                  Kategori
+                </label>
                 <select
+                  id="prod-category"
                   value={category}
                   onChange={(e) => setCategory(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#3B5763]"
+                  className="w-full min-h-[42px] px-3 py-2 rounded-xl border border-slate-200 text-sm focus:border-[#1D4ED8] focus:outline-none"
                 >
-                  <option value="E-COMMERCE">E-COMMERCE</option>
                   <option value="SAAS WEB">SAAS WEB</option>
+                  <option value="E-COMMERCE">E-COMMERCE</option>
                   <option value="MOBILE APPS">MOBILE APPS</option>
-                  <option value="SCRIPTS & BOTS">SCRIPTS & BOTS</option>
+                  <option value="SCRIPTS & BOTS">SCRIPTS &amp; BOTS</option>
                 </select>
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Harga (Rp)</label>
+                <label
+                  htmlFor="prod-price"
+                  className="block font-mono text-xs font-bold text-slate-700 uppercase mb-1"
+                >
+                  Harga (Rp)
+                </label>
                 <input
+                  id="prod-price"
                   type="number"
-                  placeholder="650000"
+                  placeholder="850000"
                   value={price}
                   onChange={(e) => setPrice(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#3B5763]"
+                  className="w-full min-h-[42px] px-3.5 py-2 rounded-xl border border-slate-200 text-sm focus:border-[#1D4ED8] focus:outline-none"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Tech Stack (pisahkan koma)</label>
+              <label
+                htmlFor="prod-stack"
+                className="block font-mono text-xs font-bold text-slate-700 uppercase mb-1"
+              >
+                Tech Stack (pisahkan koma)
+              </label>
               <input
+                id="prod-stack"
                 type="text"
-                placeholder="Next.js, Python, PostgreSQL, Flutter"
+                placeholder="Next.js, Python, Supabase, Tailwind CSS"
                 value={techStack}
                 onChange={(e) => setTechStack(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#3B5763]"
+                className="w-full min-h-[42px] px-3.5 py-2 rounded-xl border border-slate-200 text-sm focus:border-[#1D4ED8] focus:outline-none"
               />
             </div>
 
-            {/* Upload File / Gambar ke Supabase Storage */}
             <div>
               <div className="flex items-center justify-between mb-1">
-                <label className="block text-xs font-bold text-slate-700 uppercase">Upload Gambar / File</label>
-                <span className="text-[11px] text-[#3B5763] font-medium">Supabase Storage</span>
+                <span className="font-mono text-xs font-bold text-slate-700 uppercase">
+                  Upload Gambar / Thumbnail
+                </span>
+                <span className="font-mono text-[11px] text-[#1D4ED8] font-medium">
+                  Supabase Storage
+                </span>
               </div>
-              
+
               <div className="space-y-2">
-                <div className="relative border-2 border-dashed border-slate-200 hover:border-[#3B5763] rounded-2xl p-4 transition text-center bg-slate-50/50">
+                <div className="relative border-2 border-dashed border-slate-200 hover:border-[#1D4ED8] rounded-2xl p-4 transition text-center bg-slate-50">
                   <input
                     type="file"
                     accept="image/*,.pdf,.zip"
                     multiple
                     onChange={handleFileUpload}
                     disabled={uploading}
+                    aria-label="Upload file gambar produk"
                     className="absolute inset-0 w-full h-full opacity-0 cursor-pointer disabled:cursor-not-allowed"
                   />
                   <div className="flex flex-col items-center justify-center gap-1.5 pointer-events-none">
                     {uploading ? (
                       <>
-                        <Loader2 className="w-6 h-6 text-[#3B5763] animate-spin" />
-                        <span className="text-xs font-semibold text-slate-600">Mengupload ke Supabase Storage...</span>
+                        <Loader2 className="w-6 h-6 text-[#1D4ED8] animate-spin" />
+                        <span className="text-xs font-semibold text-slate-600">
+                          Mengupload ke Supabase Storage...
+                        </span>
                       </>
                     ) : (
                       <>
                         <ImageIcon className="w-6 h-6 text-slate-400" />
-                        <span className="text-xs font-semibold text-slate-700">Klik atau Drag satu / beberapa foto ke sini</span>
-                        <span className="text-[10px] text-slate-400">Pilih multi-file (PNG, JPG, WEBP, ZIP) • Bucket: catalog</span>
+                        <span className="text-xs font-semibold text-slate-700">
+                          Klik atau tarik foto preview ke sini
+                        </span>
+                        <span className="font-mono text-[10px] text-slate-500">
+                          PNG, JPG, WEBP • Bucket: catalog
+                        </span>
                       </>
                     )}
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2">
-                  <input
-                    type="url"
-                    placeholder="Atau tempel Link URL Gambar..."
-                    value={thumbnailUrl}
-                    onChange={(e) => {
-                      setThumbnailUrl(e.target.value);
-                      if (e.target.value && !previewImages.includes(e.target.value)) {
-                        setPreviewImages(prev => [...prev, e.target.value]);
-                      }
-                    }}
-                    className="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-[#3B5763]"
-                  />
-                </div>
+                <input
+                  type="text"
+                  placeholder="Atau path/URL gambar (contoh: /products/p-jurnalku.png)"
+                  value={thumbnailUrl}
+                  onChange={(e) => {
+                    setThumbnailUrl(e.target.value);
+                    if (e.target.value && !previewImages.includes(e.target.value)) {
+                      setPreviewImages((prev) => [...prev, e.target.value]);
+                    }
+                  }}
+                  aria-label="URL gambar thumbnail"
+                  className="w-full min-h-[40px] px-3.5 py-2 rounded-xl border border-slate-200 text-xs focus:border-[#1D4ED8] focus:outline-none"
+                />
               </div>
 
-              {/* Preview List Gallery */}
               {previewImages.length > 0 && (
                 <div className="mt-3 space-y-1.5">
-                  <span className="text-[11px] font-bold text-slate-500 uppercase">Preview Foto Catalog ({previewImages.length}):</span>
+                  <span className="font-mono text-[11px] font-bold text-slate-500 uppercase">
+                    Preview ({previewImages.length}):
+                  </span>
                   <div className="grid grid-cols-3 gap-2">
                     {previewImages.map((img, idx) => (
-                      <div key={idx} className="relative group rounded-xl overflow-hidden border border-slate-200 h-20 bg-slate-100">
-                        <img src={img} alt={`Preview ${idx + 1}`} className="w-full h-full object-cover" />
+                      <div
+                        key={idx}
+                        className="relative group rounded-xl overflow-hidden border border-slate-200 h-20 bg-slate-100"
+                      >
+                        <img
+                          src={img}
+                          alt={`Preview ${idx + 1}`}
+                          className="w-full h-full object-cover"
+                        />
                         <button
                           type="button"
                           onClick={() => handleRemoveImage(idx)}
-                          className="absolute top-1 right-1 bg-black/60 hover:bg-rose-600 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition"
+                          className="absolute top-1 right-1 bg-black/70 hover:bg-rose-600 text-white p-1 rounded-full opacity-90 sm:opacity-0 group-hover:opacity-100 transition"
                           title="Hapus Gambar"
+                          aria-label="Hapus Gambar"
                         >
                           <X className="w-3 h-3" />
                         </button>
                         {thumbnailUrl === img && (
-                          <span className="absolute bottom-1 left-1 bg-[#3B5763] text-white text-[9px] px-1.5 py-0.5 rounded font-black">
+                          <span className="absolute bottom-1 left-1 bg-[#0B2545] text-white font-mono text-[9px] px-1.5 py-0.5 rounded font-bold">
                             MAIN
                           </span>
                         )}
@@ -435,124 +637,186 @@ export default function AdminPage() {
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Demo URL</label>
+                <label
+                  htmlFor="prod-demo"
+                  className="block font-mono text-xs font-bold text-slate-700 uppercase mb-1"
+                >
+                  Demo URL
+                </label>
                 <input
+                  id="prod-demo"
                   type="url"
                   placeholder="https://..."
                   value={demoUrl}
                   onChange={(e) => setDemoUrl(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#3B5763]"
+                  className="w-full min-h-[42px] px-3.5 py-2 rounded-xl border border-slate-200 text-sm focus:border-[#1D4ED8] focus:outline-none"
                 />
               </div>
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase mb-1">GitHub URL</label>
+                <label
+                  htmlFor="prod-github"
+                  className="block font-mono text-xs font-bold text-slate-700 uppercase mb-1"
+                >
+                  GitHub URL
+                </label>
                 <input
+                  id="prod-github"
                   type="url"
                   placeholder="https://github.com/..."
                   value={githubUrl}
                   onChange={(e) => setGithubUrl(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#3B5763]"
+                  className="w-full min-h-[42px] px-3.5 py-2 rounded-xl border border-slate-200 text-sm focus:border-[#1D4ED8] focus:outline-none"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Deskripsi Lengkap</label>
+              <label
+                htmlFor="prod-desc"
+                className="block font-mono text-xs font-bold text-slate-700 uppercase mb-1"
+              >
+                Deskripsi Lengkap
+              </label>
               <textarea
+                id="prod-desc"
                 rows={3}
                 required
-                placeholder="Jelaskan fitur utama, spesifikasi, dan keunggulan aplikasi..."
+                placeholder="Jelaskan fitur utama, spesifikasi arsitektur, dan kegunaan aplikasi..."
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#3B5763]"
-              ></textarea>
+                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:border-[#1D4ED8] focus:outline-none"
+              />
             </div>
 
-            <div className="flex items-center gap-2 pt-1">
+            <div className="flex items-center gap-2.5 pt-1">
               <input
                 type="checkbox"
                 id="isPortfolio"
                 checked={isPortfolio}
                 onChange={(e) => setIsPortfolio(e.target.checked)}
-                className="w-4 h-4 rounded text-[#3B5763] focus:ring-[#3B5763]"
+                className="w-4 h-4 rounded text-[#1D4ED8] focus:ring-[#1D4ED8]"
               />
-              <label htmlFor="isPortfolio" className="text-xs font-bold text-slate-700 cursor-pointer">
-                Tandai sebagai Portfolio Showcase (Bukan untuk dijual langsung)
+              <label
+                htmlFor="isPortfolio"
+                className="text-xs font-bold text-slate-700 cursor-pointer"
+              >
+                Tandai sebagai Portfolio Showcase (Custom Quote)
               </label>
             </div>
 
             <button
               type="submit"
               disabled={loading || uploading}
-              className="w-full bg-[#3B5763] hover:bg-[#2F4752] text-white font-bold py-3.5 rounded-xl transition shadow flex items-center justify-center gap-2 disabled:opacity-50"
+              className="w-full min-h-[46px] bg-[#0B2545] hover:bg-[#123663] text-white font-bold py-3 rounded-xl transition flex items-center justify-center gap-2 disabled:opacity-50"
             >
               {loading ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
               ) : (
                 <Upload className="w-4 h-4" />
               )}
-              <span>Simpan ke Database Supabase</span>
+              <span>
+                {editingId
+                  ? 'Simpan Perubahan ke Supabase'
+                  : 'Simpan Produk Baru ke Supabase'}
+              </span>
             </button>
           </form>
         </div>
 
-        {/* Tabel / Card List Produk */}
-        <div className="lg:col-span-7 space-y-4">
-          <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-200/80">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="font-bold text-lg text-slate-900">
-                Daftar Produk di Supabase ({products.length})
-              </h3>
-              <a
-                href="/catalog"
-                target="_blank"
-                className="text-xs text-[#3B5763] font-bold flex items-center gap-1 hover:underline"
-              >
-                <span>Lihat Catalog Live</span>
-                <ExternalLink className="w-3 h-3" />
-              </a>
-            </div>
+        {/* Product List Table */}
+        <div className="lg:col-span-7 bg-white p-6 rounded-2xl border border-slate-200">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="font-['Syne',sans-serif] font-extrabold text-lg text-[#0B2545]">
+              Daftar Produk Aktif ({products.length})
+            </h2>
+            <a
+              href="/catalog"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs text-[#1D4ED8] font-bold flex items-center gap-1 hover:underline"
+            >
+              <span>Lihat Catalog Live</span>
+              <ExternalLink className="w-3.5 h-3.5" />
+            </a>
+          </div>
 
-            <div className="divide-y divide-slate-100 max-h-[700px] overflow-y-auto pr-2">
+          {loading && products.length === 0 ? (
+            <div className="py-12 text-center text-sm text-slate-500">
+              Memuat produk...
+            </div>
+          ) : products.length === 0 ? (
+            <div className="py-12 text-center space-y-3">
+              <p className="text-sm text-slate-600">
+                Belum ada produk di tabel Supabase. Klik tombol Sync 12 Produk Default di kanan atas.
+              </p>
+            </div>
+          ) : (
+            <div className="divide-y divide-slate-100 max-h-[760px] overflow-y-auto pr-1">
               {products.map((p) => (
-                <div key={p.id} className="py-4 flex items-start gap-4">
+                <div
+                  key={p.id}
+                  className={`py-4 flex items-start gap-4 px-2 rounded-xl transition ${
+                    editingId === p.id ? 'bg-[#EFF6FF]' : ''
+                  }`}
+                >
                   <img
                     src={p.thumbnail_url}
                     alt={p.title}
-                    className="w-16 h-16 rounded-xl object-cover border border-slate-100 shrink-0"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = '/products/p-jurnalku.png';
+                    }}
+                    className="w-16 h-16 rounded-xl object-cover border border-slate-200 shrink-0"
                   />
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2">
-                      <span className="text-[10px] font-black uppercase text-slate-500 bg-slate-100 px-2 py-0.5 rounded">
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      <span className="font-mono text-[10px] font-bold uppercase text-slate-700 bg-slate-100 px-2 py-0.5 rounded">
                         {p.category}
                       </span>
                       {p.is_portfolio ? (
-                        <span className="text-[10px] font-bold text-purple-700 bg-purple-100 px-2 py-0.5 rounded">
+                        <span className="font-mono text-[10px] font-bold text-[#0B2545] bg-slate-200 px-2 py-0.5 rounded">
                           PORTFOLIO
                         </span>
                       ) : (
-                        <span className="text-[10px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded">
-                          Rp {p.price?.toLocaleString('id-ID')}
+                        <span className="font-mono text-[10px] font-bold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded">
+                          Rp {Number(p.price || 0).toLocaleString('id-ID')}
                         </span>
                       )}
                     </div>
-                    <h4 className="font-bold text-slate-900 text-sm mt-1 truncate">{p.title}</h4>
-                    <p className="text-xs text-slate-500 truncate mt-0.5">{p.description}</p>
+                    <h3 className="font-bold text-[#0B2545] text-sm mt-1 truncate">
+                      {p.title}
+                    </h3>
+                    <p className="text-xs text-slate-600 truncate mt-0.5">
+                      {p.description}
+                    </p>
                   </div>
-                  <button
-                    onClick={() => handleDeleteProduct(p.id)}
-                    className="p-2 text-rose-500 hover:bg-rose-50 rounded-lg transition shrink-0"
-                    title="Hapus"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
+                  <div className="flex items-center gap-1 shrink-0">
+                    <button
+                      type="button"
+                      onClick={() => startEdit(p)}
+                      className="w-9 h-9 flex items-center justify-center text-[#1D4ED8] hover:bg-blue-50 rounded-lg transition"
+                      title="Edit Produk"
+                      aria-label={`Edit ${p.title}`}
+                    >
+                      <Pencil className="w-4 h-4" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleDeleteProduct(p.id)}
+                      className="w-9 h-9 flex items-center justify-center text-rose-600 hover:bg-rose-50 rounded-lg transition"
+                      title="Hapus Produk"
+                      aria-label={`Hapus ${p.title}`}
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>
-          </div>
+          )}
         </div>
-
       </div>
+
+      <Footer />
     </main>
   );
 }

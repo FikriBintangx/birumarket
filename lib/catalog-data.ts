@@ -1,7 +1,7 @@
 export const CONTACT_INFO = {
   brandName: 'BiruMarket',
-  domain: 'birumarket.my.id',
-  fallbackDomain: 'birumarket.web.id',
+  domain: 'birumarket.web.id',
+  fallbackDomain: 'birumarket.vercel.app',
   ownerName: 'Fikri Bintang Purnomo',
   ownerRole: 'Fullstack & Mobile UI/UX Engineer',
   location: 'Cikupa, Kab. Tangerang, Banten, Indonesia',

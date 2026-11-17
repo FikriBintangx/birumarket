@@ -1,7 +1,7 @@
 # DESIGN.md — BiruMarket Architectural Direction
 
 ## Identity & Purpose
-- **Product**: BiruMarket (`birumarket.my.id`)
+- **Product**: BiruMarket (`birumarket.web.id`)
 - **Role**: Marketplace Source Code, Turnkey Web Apps, AI SaaS & Portfolio Showcase oleh Fikri Bintang Purnomo.
 - **Dial**: `ENERGY 2 / RHYTHM 3 / MOTION 2`
 

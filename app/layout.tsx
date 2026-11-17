@@ -4,13 +4,13 @@ import './globals.css';
 export const metadata: Metadata = {
   title: 'BiruMarket · Marketplace Source Code & Showcase Aplikasi Web',
   description:
-    'Beli source code aplikasi web, AI SaaS, e-commerce, dan script otomasi siap pakai karya Fikri Bintang Purnomo. Uji live demo sebelum akuisisi di birumarket.my.id.',
-  metadataBase: new URL('https://birumarket.my.id'),
+    'Beli source code aplikasi web, AI SaaS, e-commerce, dan script otomasi siap pakai karya Fikri Bintang Purnomo. Uji live demo sebelum akuisisi di birumarket.web.id.',
+  metadataBase: new URL('https://birumarket.web.id'),
   openGraph: {
     title: 'BiruMarket · Marketplace Source Code & Showcase Aplikasi Web',
     description:
       'Katalog aplikasi web, AI SaaS, PWA, dan otomasi siap deploy oleh Fikri Bintang Purnomo.',
-    url: 'https://birumarket.my.id',
+    url: 'https://birumarket.web.id',
     siteName: 'BiruMarket',
     locale: 'id_ID',
     type: 'website',

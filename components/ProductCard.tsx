@@ -22,7 +22,7 @@ export default function ProductCard({ product, onSelect }: ProductCardProps) {
           src={product.thumbnail_url}
           alt={product.title}
           onError={(e) => {
-            (e.target as HTMLImageElement).src = '/products/p-jurnalku.png';
+            (e.target as HTMLImageElement).src = '/products/thumb-pos-kuro.svg';
           }}
           className="w-full h-full object-cover group-hover:scale-[1.03] transition duration-300"
         />

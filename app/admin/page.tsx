@@ -36,7 +36,7 @@ export default function AdminPage() {
 
   // Form State
   const [title, setTitle] = useState('');
-  const [category, setCategory] = useState('SAAS WEB');
+  const [category, setCategory] = useState('POS DASHBOARD');
   const [techStack, setTechStack] = useState('');
   const [price, setPrice] = useState('');
   const [isPortfolio, setIsPortfolio] = useState(false);
@@ -88,7 +88,7 @@ export default function AdminPage() {
   const resetForm = () => {
     setEditingId(null);
     setTitle('');
-    setCategory('SAAS WEB');
+    setCategory('POS DASHBOARD');
     setTechStack('');
     setPrice('');
     setIsPortfolio(false);
@@ -140,7 +140,7 @@ export default function AdminPage() {
         setMessage({
           text:
             data.message ||
-            '12 produk default BiruMarket berhasil disinkronkan ke Supabase!',
+            '10 produk default BiruMarket berhasil disinkronkan ke Supabase!',
           type: 'success',
         });
         fetchProducts();
@@ -250,11 +250,11 @@ export default function AdminPage() {
       tech_stack: techStack,
       price: Number(price) || 0,
       is_portfolio: isPortfolio,
-      thumbnail_url: thumbnailUrl || '/products/p-jurnalku.png',
+      thumbnail_url: thumbnailUrl || '/products/thumb-pos-kuro.svg',
       preview_images:
         previewImages.length > 0
           ? previewImages
-          : [thumbnailUrl || '/products/p-jurnalku.png'],
+          : [thumbnailUrl || '/products/thumb-pos-kuro.svg'],
       demo_url: demoUrl,
       github_url: githubUrl,
       description,
@@ -377,7 +377,7 @@ export default function AdminPage() {
             Backoffice BiruMarket
           </h1>
           <p className="text-slate-600 text-xs sm:text-sm mt-1">
-            Kelola produk, perbarui harga/demo, upload thumbnail, dan sinkronkan 12 produk unggulan ke Supabase.
+            Kelola produk, perbarui harga/demo, upload thumbnail, dan sinkronkan 10 produk original ke Supabase.
           </p>
         </div>
 
@@ -393,7 +393,7 @@ export default function AdminPage() {
             ) : (
               <Database className="w-4 h-4" />
             )}
-            <span>Sync 12 Produk Default</span>
+            <span>Sync 10 Produk Default</span>
           </button>
 
           <button
@@ -498,9 +498,9 @@ export default function AdminPage() {
                   onChange={(e) => setCategory(e.target.value)}
                   className="w-full min-h-[42px] px-3 py-2 rounded-xl border border-slate-200 text-sm focus:border-[#1D4ED8] focus:outline-none"
                 >
+                  <option value="POS DASHBOARD">POS DASHBOARD</option>
                   <option value="SAAS WEB">SAAS WEB</option>
                   <option value="E-COMMERCE">E-COMMERCE</option>
-                  <option value="MOBILE APPS">MOBILE APPS</option>
                   <option value="SCRIPTS & BOTS">SCRIPTS &amp; BOTS</option>
                 </select>
               </div>
@@ -585,7 +585,7 @@ export default function AdminPage() {
 
                 <input
                   type="text"
-                  placeholder="Atau path/URL gambar (contoh: /products/p-jurnalku.png)"
+                  placeholder="Atau path/URL gambar (contoh: /products/thumb-pos-kuro.svg)"
                   value={thumbnailUrl}
                   onChange={(e) => {
                     setThumbnailUrl(e.target.value);
@@ -763,7 +763,7 @@ export default function AdminPage() {
                     src={p.thumbnail_url}
                     alt={p.title}
                     onError={(e) => {
-                      (e.target as HTMLImageElement).src = '/products/p-jurnalku.png';
+                      (e.target as HTMLImageElement).src = '/products/thumb-pos-kuro.svg';
                     }}
                     className="w-16 h-16 rounded-xl object-cover border border-slate-200 shrink-0"
                   />

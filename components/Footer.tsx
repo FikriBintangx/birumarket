@@ -28,23 +28,23 @@ export default function Footer() {
           </h3>
           <ul className="space-y-2 text-xs sm:text-sm text-slate-300">
             <li>
+              <Link href="/catalog?category=POS+DASHBOARD" className="hover:text-white transition">
+                POS Dashboards (5 Tema UI)
+              </Link>
+            </li>
+            <li>
               <Link href="/catalog?category=SAAS+WEB" className="hover:text-white transition">
-                AI & SaaS Web
+                SaaS &amp; Web Applications
               </Link>
             </li>
             <li>
               <Link href="/catalog?category=E-COMMERCE" className="hover:text-white transition">
-                E-Commerce & PropTech
-              </Link>
-            </li>
-            <li>
-              <Link href="/catalog?category=MOBILE+APPS" className="hover:text-white transition">
-                Mobile PWA & Desktop
+                Service Booking &amp; Commerce
               </Link>
             </li>
             <li>
               <Link href="/catalog?category=SCRIPTS+%26+BOTS" className="hover:text-white transition">
-                Scripts & Automation Bots
+                Productivity &amp; Legal Generators
               </Link>
             </li>
           </ul>

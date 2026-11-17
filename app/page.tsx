@@ -8,6 +8,7 @@ import Footer from '@/components/Footer';
 import ProductCard from '@/components/ProductCard';
 import ProductDetailModal from '@/components/ProductDetailModal';
 import {
+  CATEGORIES,
   CONTACT_INFO,
   DEFAULT_PRODUCTS,
   ProductItem,
@@ -24,8 +25,6 @@ import {
   MessageCircle,
   RefreshCw,
 } from 'lucide-react';
-
-const CATEGORIES = ['ALL', 'SAAS WEB', 'E-COMMERCE', 'MOBILE APPS', 'SCRIPTS & BOTS'];
 
 export default function Home() {
   const router = useRouter();
@@ -68,8 +67,8 @@ export default function Home() {
 
   const filteredPreview =
     activeCategory === 'ALL'
-      ? products.slice(0, 6)
-      : products.filter((p) => p.category === activeCategory).slice(0, 6);
+      ? products.slice(0, 10)
+      : products.filter((p) => p.category === activeCategory).slice(0, 10);
 
   const handleHeroSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -206,7 +205,7 @@ export default function Home() {
                   src={currentHighlight.thumbnail_url}
                   alt={currentHighlight.title}
                   onError={(e) => {
-                    (e.target as HTMLImageElement).src = '/products/p-jurnalku.png';
+                    (e.target as HTMLImageElement).src = '/products/thumb-pos-kuro.svg';
                   }}
                   className="w-full h-full object-cover hover:scale-[1.02] transition duration-300"
                 />
@@ -519,7 +518,7 @@ export default function Home() {
                 rows={2}
                 value={inquiryNote}
                 onChange={(e) => setInquiryNote(e.target.value)}
-                placeholder="Contoh: Mau beli JurnalKu + setup di domain kampus.ac.id, atau butuh tambahan integrasi Midtrans..."
+                placeholder="Contoh: Mau beli KuroBento POS + integrasi printer termal, atau butuh kustomisasi BagiRata..."
                 className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-sm text-[#0B2545] placeholder:text-slate-400 focus:bg-white focus:border-[#1D4ED8] focus:outline-none"
               />
             </div>

@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" fill="none">
+  <rect width="960" height="600" fill="#E2E8F0"/>
+  <rect width="960" height="56" fill="#0B2545"/>
+  <text x="28" y="35" fill="#FFFFFF" font-family="monospace" font-size="16" font-weight="700">LEGALDRAFT ID · GENERATOR SPK, NDA &amp; INVOICE TERMIN</text>
+  <!-- Left Form -->
+  <rect x="24" y="76" width="380" height="500" rx="14" fill="#FFFFFF" stroke="#CBD5E1"/>
+  <text x="46" y="112" fill="#1D4ED8" font-family="monospace" font-size="12" font-weight="700">PARAMETER KONTRAK</text>
+  <rect x="46" y="132" width="336" height="44" rx="8" fill="#F8FAFC" stroke="#CBD5E1"/>
+  <text x="60" y="159" fill="#0F172A" font-family="sans-serif" font-size="13" font-weight="600">PT Nusantara Digital Karya</text>
+  <rect x="46" y="194" width="336" height="44" rx="8" fill="#F8FAFC" stroke="#CBD5E1"/>
+  <text x="60" y="221" fill="#0F172A" font-family="sans-serif" font-size="13" font-weight="600">Sistem ERP &amp; Kasir Web</text>
+  <rect x="46" y="256" width="160" height="44" rx="8" fill="#F8FAFC" stroke="#CBD5E1"/>
+  <text x="60" y="283" fill="#0F172A" font-family="monospace" font-size="13" font-weight="700">Rp 25.000.000</text>
+  <rect x="222" y="256" width="160" height="44" rx="8" fill="#EFF6FF" stroke="#1D4ED8"/>
+  <text x="246" y="283" fill="#1D4ED8" font-family="monospace" font-size="13" font-weight="700">DP 50% / 50%</text>
+  <rect x="46" y="500" width="336" height="52" rx="10" fill="#0B2545"/>
+  <text x="128" y="531" fill="#FFFFFF" font-family="sans-serif" font-size="13" font-weight="800">UNDUH / CETAK PDF SPK</text>
+  <!-- Right A4 Document Preview -->
+  <rect x="428" y="76" width="508" height="500" rx="8" fill="#FFFFFF" stroke="#94A3B8"/>
+  <text x="464" y="122" fill="#0B2545" font-family="serif" font-size="19" font-weight="700">SURAT PERJANJIAN KERJA (SPK)</text>
+  <text x="464" y="146" fill="#64748B" font-family="monospace" font-size="11">NOMOR: SPK/2026/XI/041 · HUKUM INDONESIA</text>
+  <line x1="464" y1="164" x2="900" y2="164" stroke="#E2E8F0"/>
+  <text x="464" y="196" fill="#0F172A" font-family="sans-serif" font-size="13" font-weight="700">PASAL 1 · RUANG LINGKUP PEKERJAAN</text>
+  <text x="464" y="220" fill="#334155" font-family="sans-serif" font-size="12">Pihak Kedua berkewajiban mengembangkan Sistem ERP &amp; Kasir Web</text>
+  <text x="464" y="238" fill="#334155" font-family="sans-serif" font-size="12">untuk PT Nusantara Digital Karya sesuai spesifikasi teknis.</text>
+  <text x="464" y="278" fill="#0F172A" font-family="sans-serif" font-size="13" font-weight="700">PASAL 2 · NILAI KONTRAK &amp; TERMIN PEMBAYARAN</text>
+  <text x="464" y="302" fill="#334155" font-family="monospace" font-size="12">• Termin I (DP 50%): Rp 12.500.000 (Saat SPK ditandatangani)</text>
+  <text x="464" y="324" fill="#334155" font-family="monospace" font-size="12">• Termin II (50%)  : Rp 12.500.000 (Saat UAT &amp; Serah Terima)</text>
+  <text x="464" y="366" fill="#0F172A" font-family="sans-serif" font-size="13" font-weight="700">PASAL 3 · KEPEMILIKAN SOURCE CODE &amp; NDA</text>
+  <text x="464" y="390" fill="#334155" font-family="sans-serif" font-size="12">Hak kepemilikan penuh beralih setelah Termin II lunas dibayarkan.</text>
+</svg>

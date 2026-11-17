@@ -6,10 +6,8 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import ProductCard from '@/components/ProductCard';
 import ProductDetailModal from '@/components/ProductDetailModal';
-import { DEFAULT_PRODUCTS, ProductItem } from '@/lib/catalog-data';
+import { CATEGORIES, DEFAULT_PRODUCTS, ProductItem } from '@/lib/catalog-data';
 import { Search, X, RefreshCw, SlidersHorizontal } from 'lucide-react';
-
-const CATEGORIES = ['ALL', 'SAAS WEB', 'E-COMMERCE', 'MOBILE APPS', 'SCRIPTS & BOTS'];
 
 function CatalogContent() {
   const searchParams = useSearchParams();
@@ -21,7 +19,9 @@ function CatalogContent() {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const [category, setCategory] = useState(
-    CATEGORIES.includes(initialCategory) ? initialCategory : 'ALL'
+    (CATEGORIES as readonly string[]).includes(initialCategory)
+      ? initialCategory
+      : 'ALL'
   );
   const [search, setSearch] = useState(initialSearch);
   const [statusFilter, setStatusFilter] = useState<'ALL' | 'SALE' | 'PORTFOLIO'>('ALL');
@@ -55,7 +55,7 @@ function CatalogContent() {
   useEffect(() => {
     const paramCat = searchParams.get('category');
     const paramSearch = searchParams.get('search');
-    if (paramCat && CATEGORIES.includes(paramCat)) {
+    if (paramCat && (CATEGORIES as readonly string[]).includes(paramCat)) {
       setCategory(paramCat);
     }
     if (paramSearch !== null) {

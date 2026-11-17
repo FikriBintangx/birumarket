@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" fill="none">
+  <rect width="960" height="600" fill="#FFFDF7"/>
+  <rect x="32" y="28" width="896" height="58" rx="12" fill="#FFE66D" stroke="#0F172A" stroke-width="3"/>
+  <text x="56" y="64" fill="#0F172A" font-family="monospace" font-size="18" font-weight="700">BAGIRATA · SMART RECEIPT SPLITTER (PPN 11% + SVC 5%)</text>
+  <!-- Left Receipt Items -->
+  <rect x="32" y="108" width="480" height="460" rx="16" fill="#FFFFFF" stroke="#0F172A" stroke-width="3"/>
+  <text x="56" y="144" fill="#0F172A" font-family="monospace" font-size="14" font-weight="700">ITEM STRUK (KLIK UNTUK ASSIGN)</text>
+  <rect x="56" y="164" width="432" height="72" rx="10" fill="#EFF6FF" stroke="#0F172A" stroke-width="2"/>
+  <text x="74" y="194" fill="#0F172A" font-family="sans-serif" font-size="15" font-weight="800">Wagyu Donburi Bowl</text>
+  <text x="380" y="194" fill="#1D4ED8" font-family="monospace" font-size="14" font-weight="700">Rp 145.000</text>
+  <text x="74" y="218" fill="#475569" font-family="monospace" font-size="12">Assigned: Biru, Raka</text>
+  <rect x="56" y="252" width="432" height="72" rx="10" fill="#FEF3C7" stroke="#0F172A" stroke-width="2"/>
+  <text x="74" y="282" fill="#0F172A" font-family="sans-serif" font-size="15" font-weight="800">Truffle Fries Shareable</text>
+  <text x="388" y="282" fill="#0F172A" font-family="monospace" font-size="14" font-weight="700">Rp 68.000</text>
+  <text x="74" y="306" fill="#475569" font-family="monospace" font-size="12">Assigned: Semua (3 Orang)</text>
+  <rect x="56" y="340" width="432" height="72" rx="10" fill="#FFFFFF" stroke="#0F172A" stroke-width="2"/>
+  <text x="74" y="370" fill="#0F172A" font-family="sans-serif" font-size="15" font-weight="800">Iced Matcha Latte</text>
+  <text x="388" y="370" fill="#0F172A" font-family="monospace" font-size="14" font-weight="700">Rp 42.000</text>
+  <text x="74" y="394" fill="#475569" font-family="monospace" font-size="12">Assigned: Nabila</text>
+  <!-- Right Breakdown -->
+  <rect x="536" y="108" width="392" height="460" rx="16" fill="#0F172A"/>
+  <text x="564" y="148" fill="#FFE66D" font-family="monospace" font-size="15" font-weight="700">TAGIHAN PER ORANG</text>
+  <rect x="564" y="172" width="336" height="82" rx="10" fill="#1E293B"/>
+  <text x="582" y="206" fill="#FFFFFF" font-family="sans-serif" font-size="16" font-weight="800">Biru</text>
+  <text x="774" y="206" fill="#FFE66D" font-family="monospace" font-size="16" font-weight="700">Rp 110.892</text>
+  <text x="582" y="232" fill="#94A3B8" font-family="monospace" font-size="11">Subtotal + Tax 11% + Service 5%</text>
+  <rect x="564" y="270" width="336" height="82" rx="10" fill="#1E293B"/>
+  <text x="582" y="304" fill="#FFFFFF" font-family="sans-serif" font-size="16" font-weight="800">Raka</text>
+  <text x="774" y="304" fill="#FFE66D" font-family="monospace" font-size="16" font-weight="700">Rp 110.892</text>
+  <rect x="564" y="368" width="336" height="82" rx="10" fill="#1E293B"/>
+  <text x="582" y="402" fill="#FFFFFF" font-family="sans-serif" font-size="16" font-weight="800">Nabila</text>
+  <text x="782" y="402" fill="#FFE66D" font-family="monospace" font-size="16" font-weight="700">Rp 75.027</text>
+  <rect x="564" y="482" width="336" height="54" rx="10" fill="#10B981"/>
+  <text x="632" y="515" fill="#022C22" font-family="monospace" font-size="14" font-weight="700">SALIN RINGKASAN WA</text>
+</svg>

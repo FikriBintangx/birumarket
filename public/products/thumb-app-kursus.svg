@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" fill="none">
+  <rect width="960" height="600" fill="#F8FAFC"/>
+  <rect width="260" height="600" fill="#1E1B4B"/>
+  <text x="24" y="46" fill="#FFFFFF" font-family="sans-serif" font-size="18" font-weight="800">KELASKILAT LMS</text>
+  <rect x="20" y="76" width="220" height="54" rx="10" fill="#4F46E5"/>
+  <text x="36" y="108" fill="#FFFFFF" font-family="sans-serif" font-size="13" font-weight="700">01. Next.js App Router</text>
+  <rect x="20" y="142" width="220" height="54" rx="10" fill="#312E81"/>
+  <text x="36" y="174" fill="#C7D2FE" font-family="sans-serif" font-size="13">02. Supabase RLS &amp; Auth</text>
+  <rect x="20" y="208" width="220" height="54" rx="10" fill="#312E81"/>
+  <text x="36" y="240" fill="#C7D2FE" font-family="sans-serif" font-size="13">03. Payment Webhook</text>
+  <!-- Main Content -->
+  <rect x="292" y="28" width="636" height="270" rx="16" fill="#0F172A"/>
+  <circle cx="610" cy="163" r="34" fill="#4F46E5"/>
+  <polygon points="602,149 602,177 626,163" fill="#FFFFFF"/>
+  <text x="320" y="268" fill="#CBD5E1" font-family="monospace" font-size="12">MODULE 01 · FULLSTACK PRODUCTION ARCHITECTURE (18:40)</text>
+  <!-- Interactive Quiz Card -->
+  <rect x="292" y="318" width="636" height="252" rx="16" fill="#FFFFFF" stroke="#E2E8F0"/>
+  <text x="320" y="354" fill="#4F46E5" font-family="monospace" font-size="12" font-weight="700">INTERACTIVE CHECKPOINT QUIZ</text>
+  <text x="320" y="384" fill="#0F172A" font-family="sans-serif" font-size="15" font-weight="700">Mengapa Server Actions memerlukan validasi ulang di backend?</text>
+  <rect x="320" y="406" width="580" height="44" rx="10" fill="#EEF2FF" stroke="#4F46E5" stroke-width="2"/>
+  <text x="338" y="433" fill="#312E81" font-family="sans-serif" font-size="13" font-weight="700">A. Payload HTTP client dapat dimodifikasi oleh attacker sebelum dikirim</text>
+  <rect x="320" y="462" width="580" height="44" rx="10" fill="#F8FAFC" stroke="#CBD5E1"/>
+  <text x="338" y="489" fill="#475569" font-family="sans-serif" font-size="13">B. Agar ukuran bundle JavaScript di browser menjadi lebih kecil</text>
+</svg>

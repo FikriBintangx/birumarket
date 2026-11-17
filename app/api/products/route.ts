@@ -38,6 +38,19 @@ function filterDefaults(category: string | null, search: string | null): Product
   return filtered;
 }
 
+async function replaceLegacyWithDefaults(): Promise<ProductItem[] | null> {
+  await supabase.from('products').delete().like('id', 'prod-%');
+  const { data: seededData, error: seedError } = await supabase
+    .from('products')
+    .upsert(toSupabaseRows(DEFAULT_PRODUCTS), { onConflict: 'id' })
+    .select();
+
+  if (seedError || !seededData || seededData.length === 0) {
+    return null;
+  }
+  return seededData.map(enrichProduct);
+}
+
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
@@ -70,24 +83,42 @@ export async function GET(req: NextRequest) {
       });
     }
 
-    // If database table is completely empty, auto-seed DEFAULT_PRODUCTS
+    const hasLegacyRows =
+      Array.isArray(data) &&
+      data.some((row: any) => typeof row.id === 'string' && row.id.startsWith('prod-'));
+
+    if (hasLegacyRows) {
+      const migrated = await replaceLegacyWithDefaults();
+      if (migrated) {
+        const filteredMigrated = migrated.filter((p) => {
+          const catMatch = !category || category === 'ALL' || p.category === category;
+          const s = search?.toLowerCase();
+          const searchMatch =
+            !s ||
+            p.title.toLowerCase().includes(s) ||
+            p.description.toLowerCase().includes(s);
+          return catMatch && searchMatch;
+        });
+        return NextResponse.json({
+          success: true,
+          data: filteredMigrated,
+          auto_migrated: true,
+        });
+      }
+    }
+
     if (!data || data.length === 0) {
       if ((!category || category === 'ALL') && !search) {
-        const { data: seededData, error: seedError } = await supabase
-          .from('products')
-          .upsert(toSupabaseRows(DEFAULT_PRODUCTS), { onConflict: 'id' })
-          .select();
-
-        if (!seedError && seededData && seededData.length > 0) {
+        const seeded = await replaceLegacyWithDefaults();
+        if (seeded) {
           return NextResponse.json({
             success: true,
-            data: seededData.map(enrichProduct),
+            data: seeded,
             auto_seeded: true,
           });
         }
       }
 
-      // If filtered or if RLS blocked insert, check if table has any rows at all
       const { count } = await supabase
         .from('products')
         .select('id', { count: 'exact', head: true });
@@ -142,6 +173,7 @@ export async function POST(req: NextRequest) {
     }
 
     if (action === 'SEED_DEFAULTS') {
+      await supabase.from('products').delete().like('id', 'prod-%');
       const { data: seeded, error: seedError } = await supabase
         .from('products')
         .upsert(toSupabaseRows(DEFAULT_PRODUCTS), { onConflict: 'id' })
@@ -160,7 +192,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({
         success: true,
         seeded_count: seeded?.length || DEFAULT_PRODUCTS.length,
-        message: `${seeded?.length || DEFAULT_PRODUCTS.length} produk default berhasil disinkronkan ke Supabase.`,
+        message: `${seeded?.length || DEFAULT_PRODUCTS.length} produk original berhasil disinkronkan ke Supabase.`,
       });
     }
 
@@ -174,7 +206,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const id = 'prod-' + Date.now();
+    const id = 'custom-' + Date.now();
     const slug =
       title
         .toLowerCase()

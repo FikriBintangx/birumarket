@@ -137,7 +137,7 @@ export default function ProductDetailModal({
                 src={currentImage}
                 alt={product.title}
                 onError={(e) => {
-                  (e.target as HTMLImageElement).src = '/products/thumb-pos-kuro.svg';
+                  (e.target as HTMLImageElement).src = '/products/shot-pos-kuro.png';
                 }}
                 className="w-full h-full object-cover"
               />

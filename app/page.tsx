@@ -205,7 +205,7 @@ export default function Home() {
                   src={currentHighlight.thumbnail_url}
                   alt={currentHighlight.title}
                   onError={(e) => {
-                    (e.target as HTMLImageElement).src = '/products/thumb-pos-kuro.svg';
+                    (e.target as HTMLImageElement).src = '/products/shot-pos-kuro.png';
                   }}
                   className="w-full h-full object-cover hover:scale-[1.02] transition duration-300"
                 />

@@ -1,1088 +1,890 @@
 'use client';
 
 import { useState } from 'react';
-import {
-  Flame,
-  Coffee,
-  Pill,
-  ShoppingBag,
-  Wrench,
-  Plus,
-  Minus,
-  Trash2,
-  Printer,
-  CheckCircle2,
-  Search,
-  Sparkles,
-} from 'lucide-react';
 
 /* ============================================================================
- * 1. KUROBENTO · Izakaya & Ramen Table POS + KDS (Dark Charcoal & Vermilion)
+ * 1. KUROBENTO · Japanese Shokuken Ticket Machine & Perforated Paper Slip
  * ========================================================================== */
-interface KuroCartItem {
-  id: string;
+interface KuroTicketItem {
+  code: string;
   name: string;
+  jp: string;
   price: number;
   qty: number;
-  note: string;
+  spec: string;
 }
 
-const KURO_TABLES = [
-  { id: 'T-01', seats: 2, status: 'Available' },
-  { id: 'T-02', seats: 4, status: 'Occupied' },
-  { id: 'T-03', seats: 2, status: 'Available' },
-  { id: 'T-04', seats: 4, status: 'Occupied' },
-  { id: 'T-05', seats: 6, status: 'Billing' },
-  { id: 'T-06', seats: 4, status: 'Available' },
-  { id: 'T-07', seats: 2, status: 'Occupied' },
-  { id: 'T-08', seats: 8, status: 'Available' },
-];
-
-const KURO_MENU = [
-  { id: 'k1', cat: 'Ramen', name: 'Kuro Tonkotsu Ramen', price: 68000, desc: 'Kaldu tulang 12 jam · Black garlic oil' },
-  { id: 'k2', cat: 'Ramen', name: 'Spicy Miso Tori Ramen', price: 62000, desc: 'Kaldu ayam pedas · Ajitama egg' },
-  { id: 'k3', cat: 'Ramen', name: 'Truffle Shoyu Mazemen', price: 74000, desc: 'Dry ramen · Menma · Chashu bakar' },
-  { id: 'k4', cat: 'Yakitori', name: 'Negima Chicken Skewer', price: 38000, desc: '2 tusuk paha ayam · Saus tare arang' },
-  { id: 'k5', cat: 'Yakitori', name: 'Tsukune Egg Yolk', price: 42000, desc: 'Bakso ayam panggang · Kuning telur' },
-  { id: 'k6', cat: 'Izakaya', name: 'Salmon Aburi Mentaiko', price: 78000, desc: '6 pcs roll · Saus mentai bakar' },
-  { id: 'k7', cat: 'Izakaya', name: 'Crispy Tori Karaage', price: 46000, desc: 'Mayo yuzu · Jeruk nipis segar' },
-  { id: 'k8', cat: 'Ocha', name: 'Cold Roasted Hojicha', price: 18000, desc: 'Refillable · Tanpa gula' },
+const SHOKUKEN_BUTTONS = [
+  { code: '#01', cat: 'RAMEN', name: 'Kuro Garlic Tonkotsu', jp: '黒マー油豚骨', price: 68000 },
+  { code: '#02', cat: 'RAMEN', name: 'Aka Karai Miso Tori', jp: '赤辛味噌鶏', price: 64000 },
+  { code: '#03', cat: 'RAMEN', name: 'Truffle Shoyu Mazemen', jp: 'トリュフ混ぜ麺', price: 74000 },
+  { code: '#04', cat: 'RAMEN', name: 'Yuzu Shio Clear Broth', jp: '柚子塩ラーメン', price: 62000 },
+  { code: '#05', cat: 'YAKITORI', name: 'Negima Charcoal Skewer', jp: 'ねぎま串焼', price: 38000 },
+  { code: '#06', cat: 'YAKITORI', name: 'Tsukune Tare + Yolk', jp: '月見つくね', price: 42000 },
+  { code: '#07', cat: 'IZAKAYA', name: 'Aburi Salmon Mentaiko', jp: '炙り明太サーモン', price: 78000 },
+  { code: '#08', cat: 'DRINK', name: 'Cold Roasted Hojicha', jp: '冷焙じ茶', price: 18000 },
 ];
 
 export function KuroBentoPos() {
-  const [selectedTable, setSelectedTable] = useState('T-04');
-  const [activeCat, setActiveCat] = useState('All');
-  const [firmness, setFirmness] = useState('Katame (Firm)');
-  const [brothLevel, setBrothLevel] = useState('Rich Garlic');
-  const [cart, setCart] = useState<KuroCartItem[]>([
-    { id: 'k1-Katame', name: 'Kuro Tonkotsu Ramen', price: 68000, qty: 2, note: 'Katame (Firm) · Rich Garlic' },
-    { id: 'k4-Std', name: 'Negima Chicken Skewer', price: 38000, qty: 1, note: 'Standard Tare' },
+  const [booth, setBooth] = useState('04');
+  const [noodle, setNoodle] = useState('KATAME');
+  const [oil, setOil] = useState('RICH');
+  const [items, setItems] = useState<KuroTicketItem[]>([
+    { code: '#01', name: 'Kuro Garlic Tonkotsu', jp: '黒マー油豚骨', price: 68000, qty: 2, spec: 'KATAME · RICH' },
+    { code: '#05', name: 'Negima Charcoal Skewer', jp: 'ねぎま串焼', price: 38000, qty: 1, spec: 'CHARCOAL' },
   ]);
-  const [kdsQueue, setKdsQueue] = useState([
-    { id: '#KDS-108', table: 'T-02', items: '2x Spicy Miso Tori, 1x Karaage', status: 'Cooking' },
-    { id: '#KDS-107', table: 'T-05', items: '1x Salmon Aburi Mentaiko', status: 'Ready' },
-  ]);
-  const [firedMessage, setFiredMessage] = useState<string | null>(null);
+  const [stamped, setStamped] = useState(false);
 
-  const visibleMenu = activeCat === 'All' ? KURO_MENU : KURO_MENU.filter((m) => m.cat === activeCat);
-
-  const addItem = (item: (typeof KURO_MENU)[0]) => {
-    const note = item.cat === 'Ramen' ? `${firmness} · ${brothLevel}` : 'Standard Prep';
-    const key = `${item.id}-${note}`;
-    setCart((prev) => {
-      const idx = prev.findIndex((c) => c.id === key);
+  const pressKey = (btn: (typeof SHOKUKEN_BUTTONS)[0]) => {
+    setStamped(false);
+    const spec = btn.cat === 'RAMEN' ? `${noodle} · ${oil}` : btn.cat;
+    setItems((prev) => {
+      const idx = prev.findIndex((i) => i.code === btn.code && i.spec === spec);
       if (idx >= 0) {
         const copy = [...prev];
         copy[idx] = { ...copy[idx], qty: copy[idx].qty + 1 };
         return copy;
       }
-      return [...prev, { id: key, name: item.name, price: item.price, qty: 1, note }];
+      return [...prev, { code: btn.code, name: btn.name, jp: btn.jp, price: btn.price, qty: 1, spec }];
     });
   };
 
-  const subtotal = cart.reduce((acc, c) => acc + c.price * c.qty, 0);
+  const subtotal = items.reduce((s, x) => s + x.price * x.qty, 0);
   const serviceTax = Math.round(subtotal * 0.15);
   const grandTotal = subtotal + serviceTax;
 
-  const fireToKitchen = () => {
-    if (cart.length === 0) return;
-    const summary = cart.map((c) => `${c.qty}x ${c.name}`).join(', ');
-    const code = `#KDS-${109 + kdsQueue.length}`;
-    setKdsQueue((prev) => [{ id: code, table: selectedTable, items: summary, status: 'Cooking' }, ...prev]);
-    setFiredMessage(`Tiket ${code} untuk meja ${selectedTable} dikirim ke Kitchen Display!`);
-    setTimeout(() => setFiredMessage(null), 3500);
-  };
-
   return (
-    <div className="min-h-[calc(100vh-56px)] bg-[#111315] text-zinc-100 p-4 sm:p-6">
-      {/* Top Bar */}
-      <div className="max-w-[1440px] mx-auto flex flex-wrap items-center justify-between gap-4 pb-5 mb-5 border-b border-zinc-800">
+    <div className="min-h-[720px] bg-[#0C0C0E] text-[#E4E4E7] font-mono rounded-none flex flex-col">
+      {/* 36px Status Strip */}
+      <div className="h-9 px-4 border-b border-[#27272A] bg-[#141418] flex items-center justify-between text-[11px] tracking-wider">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-[#E11D48] flex items-center justify-center text-white">
-            <Flame className="w-5 h-5" />
-          </div>
-          <div>
-            <h1 className="font-mono font-bold text-base sm:text-lg tracking-wider text-white">
-              KUROBENTO · IZAKAYA POS + KDS
-            </h1>
-            <p className="text-xs text-zinc-400">Night Shift Terminal · Tokyo Charcoal Theme</p>
-          </div>
+          <span className="text-[#E11D48] font-bold">[営業中]</span>
+          <span>SHIBUYA RAMEN TERMINAL</span>
+          <span className="text-zinc-500 hidden sm:inline">NODE: KDS-02</span>
         </div>
-        <div className="flex items-center gap-2 font-mono text-xs">
-          <span className="px-3 py-1.5 rounded-lg bg-zinc-900 border border-zinc-800 text-rose-300">
-            ACTIVE TABLE: {selectedTable}
-          </span>
-          <span className="px-3 py-1.5 rounded-lg bg-emerald-950/60 border border-emerald-800/60 text-emerald-300">
-            KDS ONLINE
-          </span>
+        <div className="flex items-center gap-4">
+          <span className="text-zinc-400">BOOTH #{booth}</span>
+          <span className="text-zinc-300">19:42 JST</span>
         </div>
       </div>
 
-      {firedMessage && (
-        <div className="max-w-[1440px] mx-auto mb-4 p-3.5 rounded-xl bg-rose-950/70 border border-rose-500/60 text-rose-100 text-xs sm:text-sm font-mono flex items-center gap-2">
-          <CheckCircle2 className="w-4 h-4 text-rose-400 shrink-0" />
-          <span>{firedMessage}</span>
-        </div>
-      )}
-
-      <div className="max-w-[1440px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
-        {/* Left: Table Floor Map & Live KDS Rail */}
-        <div className="lg:col-span-3 space-y-5">
-          <div className="bg-[#181B20] border border-zinc-800 rounded-2xl p-4">
-            <h2 className="font-mono text-xs font-bold uppercase tracking-wider text-zinc-400 mb-3">
-              Floor Map (Pilih Meja)
-            </h2>
-            <div className="grid grid-cols-4 lg:grid-cols-2 gap-2">
-              {KURO_TABLES.map((t) => {
-                const active = selectedTable === t.id;
-                return (
-                  <button
-                    key={t.id}
-                    type="button"
-                    onClick={() => setSelectedTable(t.id)}
-                    className={`p-2.5 rounded-xl border text-left transition ${
-                      active
-                        ? 'bg-[#E11D48] border-[#E11D48] text-white'
-                        : t.status === 'Occupied'
-                          ? 'bg-zinc-900 border-rose-900/60 text-zinc-200 hover:border-rose-500'
-                          : t.status === 'Billing'
-                            ? 'bg-amber-950/30 border-amber-700/50 text-amber-200'
-                            : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:border-zinc-600'
-                    }`}
-                  >
-                    <div className="font-mono text-xs font-bold">{t.id}</div>
-                    <div className="text-[10px] opacity-80">{t.seats} Seats · {t.status}</div>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          <div className="bg-[#181B20] border border-zinc-800 rounded-2xl p-4">
-            <h2 className="font-mono text-xs font-bold uppercase tracking-wider text-zinc-400 mb-3">
-              Live KDS Kitchen Queue
-            </h2>
-            <div className="space-y-2.5">
-              {kdsQueue.map((ticket) => (
-                <div
-                  key={ticket.id}
-                  className={`p-3 rounded-xl border ${
-                    ticket.status === 'Ready'
-                      ? 'bg-emerald-950/30 border-emerald-700/50'
-                      : 'bg-zinc-900 border-amber-700/50'
-                  }`}
-                >
-                  <div className="flex items-center justify-between font-mono text-[11px] font-bold">
-                    <span className={ticket.status === 'Ready' ? 'text-emerald-400' : 'text-amber-400'}>
-                      {ticket.id} · {ticket.table}
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setKdsQueue((q) =>
-                          q.map((item) =>
-                            item.id === ticket.id
-                              ? { ...item, status: item.status === 'Cooking' ? 'Ready' : 'Cooking' }
-                              : item
-                          )
-                        )
-                      }
-                      className="underline text-[10px] text-zinc-300"
-                    >
-                      {ticket.status}
-                    </button>
-                  </div>
-                  <p className="text-xs text-zinc-300 mt-1">{ticket.items}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Center: Menu & Ramen Customizer */}
-        <div className="lg:col-span-5 bg-[#181B20] border border-zinc-800 rounded-2xl p-4 sm:p-5 space-y-4">
-          <div className="flex flex-wrap gap-2">
-            {['All', 'Ramen', 'Yakitori', 'Izakaya', 'Ocha'].map((cat) => (
-              <button
-                key={cat}
-                type="button"
-                onClick={() => setActiveCat(cat)}
-                className={`px-3.5 py-2 rounded-xl font-mono text-xs font-bold transition ${
-                  activeCat === cat
-                    ? 'bg-[#E11D48] text-white'
-                    : 'bg-zinc-900 text-zinc-400 border border-zinc-800 hover:text-white'
-                }`}
-              >
-                {cat}
-              </button>
-            ))}
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {visibleMenu.map((item) => (
-              <button
-                key={item.id}
-                type="button"
-                onClick={() => addItem(item)}
-                className="p-3.5 rounded-xl bg-zinc-900/90 hover:bg-zinc-800 border border-zinc-800 hover:border-rose-500/70 text-left transition flex flex-col justify-between gap-3"
-              >
-                <div>
-                  <span className="font-mono text-[10px] text-rose-400 uppercase">{item.cat}</span>
-                  <h3 className="font-bold text-sm text-white mt-0.5">{item.name}</h3>
-                  <p className="text-xs text-zinc-400 mt-1">{item.desc}</p>
-                </div>
-                <div className="flex items-center justify-between pt-2 border-t border-zinc-800">
-                  <span className="font-mono text-xs font-bold text-rose-300">
-                    Rp {item.price.toLocaleString('id-ID')}
-                  </span>
-                  <span className="w-6 h-6 rounded-md bg-rose-600/20 text-rose-400 flex items-center justify-center">
-                    <Plus className="w-3.5 h-3.5" />
-                  </span>
-                </div>
-              </button>
-            ))}
-          </div>
-
-          {/* Ramen Modifier Strip */}
-          <div className="p-3.5 rounded-xl bg-[#111315] border border-zinc-800 space-y-2.5">
-            <span className="font-mono text-[11px] font-bold uppercase text-zinc-400 block">
-              Ramen Customizer (Berlaku saat klik item Ramen)
-            </span>
-            <div className="flex flex-wrap gap-1.5">
-              {['Katame (Firm)', 'Futsu (Normal)', 'Yawame (Soft)'].map((f) => (
-                <button
-                  key={f}
-                  type="button"
-                  onClick={() => setFirmness(f)}
-                  className={`px-2.5 py-1.5 rounded-lg font-mono text-[11px] font-semibold transition ${
-                    firmness === f ? 'bg-[#E11D48] text-white' : 'bg-zinc-900 text-zinc-400 border border-zinc-800'
-                  }`}
-                >
-                  {f}
-                </button>
-              ))}
-            </div>
-            <div className="flex flex-wrap gap-1.5">
-              {['Rich Garlic', 'Light Shoyu', 'Extra Spicy Oil'].map((b) => (
-                <button
-                  key={b}
-                  type="button"
-                  onClick={() => setBrothLevel(b)}
-                  className={`px-2.5 py-1.5 rounded-lg font-mono text-[11px] font-semibold transition ${
-                    brothLevel === b ? 'bg-amber-600 text-white' : 'bg-zinc-900 text-zinc-400 border border-zinc-800'
-                  }`}
-                >
-                  {b}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Right: Table Ticket */}
-        <div className="lg:col-span-4 bg-[#181B20] border border-zinc-800 rounded-2xl p-5 space-y-4">
-          <div className="flex items-center justify-between pb-3 border-b border-zinc-800">
-            <h2 className="font-mono text-sm font-bold text-white">
-              CHECK MEJA {selectedTable}
-            </h2>
+      {/* Main Hairline Grid */}
+      <div className="flex-1 grid grid-cols-1 lg:grid-cols-12">
+        {/* Left 80px-style Vertical Booth Rail */}
+        <div className="lg:col-span-1 border-b lg:border-b-0 lg:border-r border-[#27272A] flex lg:flex-col">
+          {['01', '02', '03', '04', '05', '06', '07', '08'].map((b) => (
             <button
+              key={b}
               type="button"
-              onClick={() => setCart([])}
-              className="text-xs font-mono text-zinc-400 hover:text-rose-400"
-            >
-              Clear
-            </button>
-          </div>
-
-          {cart.length === 0 ? (
-            <p className="py-10 text-center text-xs text-zinc-500 font-mono">
-              Klik menu di tengah untuk mengisi pesanan meja {selectedTable}.
-            </p>
-          ) : (
-            <div className="space-y-2.5 max-h-[300px] overflow-y-auto pr-1">
-              {cart.map((c) => (
-                <div
-                  key={c.id}
-                  className="p-3 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-between gap-2"
-                >
-                  <div className="min-w-0">
-                    <h4 className="text-xs font-bold text-white truncate">{c.name}</h4>
-                    <p className="text-[10px] font-mono text-zinc-400 truncate">{c.note}</p>
-                    <p className="text-xs font-mono text-rose-300 mt-1">
-                      Rp {(c.price * c.qty).toLocaleString('id-ID')}
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-1.5 shrink-0">
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setCart((prev) =>
-                          prev
-                            .map((x) => (x.id === c.id ? { ...x, qty: x.qty - 1 } : x))
-                            .filter((x) => x.qty > 0)
-                        )
-                      }
-                      className="w-7 h-7 rounded bg-zinc-800 hover:bg-zinc-700 flex items-center justify-center"
-                    >
-                      <Minus className="w-3 h-3" />
-                    </button>
-                    <span className="font-mono text-xs w-5 text-center">{c.qty}</span>
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setCart((prev) =>
-                          prev.map((x) => (x.id === c.id ? { ...x, qty: x.qty + 1 } : x))
-                        )
-                      }
-                      className="w-7 h-7 rounded bg-zinc-800 hover:bg-zinc-700 flex items-center justify-center"
-                    >
-                      <Plus className="w-3 h-3" />
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-
-          <div className="pt-3 border-t border-zinc-800 space-y-1.5 font-mono text-xs">
-            <div className="flex justify-between text-zinc-400">
-              <span>Subtotal</span>
-              <span>Rp {subtotal.toLocaleString('id-ID')}</span>
-            </div>
-            <div className="flex justify-between text-zinc-400">
-              <span>Tax + Service (15%)</span>
-              <span>Rp {serviceTax.toLocaleString('id-ID')}</span>
-            </div>
-            <div className="flex justify-between text-base font-bold text-white pt-2 border-t border-zinc-800">
-              <span>GRAND TOTAL</span>
-              <span className="text-rose-400">Rp {grandTotal.toLocaleString('id-ID')}</span>
-            </div>
-          </div>
-
-          <button
-            type="button"
-            onClick={fireToKitchen}
-            disabled={cart.length === 0}
-            className="w-full min-h-[46px] rounded-xl bg-[#E11D48] hover:bg-rose-600 text-white font-mono font-bold text-sm transition disabled:opacity-40"
-          >
-            FIRE TO KITCHEN (KDS)
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/* ============================================================================
- * 2. BREWLAB · Specialty Coffee & Barista POS (Warm Oat & Terracotta)
- * ========================================================================== */
-const BREW_MENU = [
-  { id: 'b1', cat: 'Espresso', name: 'Oat Spanish Latte', basePrice: 38000 },
-  { id: 'b2', cat: 'Manual Brew', name: 'Ethiopia Guji V60', basePrice: 42000 },
-  { id: 'b3', cat: 'Signature', name: 'Dirty Matcha Kyoto', basePrice: 44000 },
-  { id: 'b4', cat: 'Espresso', name: 'Iced Americano Single Origin', basePrice: 29000 },
-  { id: 'b5', cat: 'Pastry', name: 'French Butter Croissant', basePrice: 28000 },
-  { id: 'b6', cat: 'Pastry', name: 'Burnt Basque Cheesecake', basePrice: 39000 },
-];
-
-export function BrewLabPos() {
-  const [milk, setMilk] = useState<'Fresh Milk' | 'Oatside (+6k)' | 'Soy Milk (+4k)'>('Oatside (+6k)');
-  const [sugar, setSugar] = useState('50% Less');
-  const [ice, setIce] = useState('Less Ice');
-  const [shots, setShots] = useState<'Single' | 'Double (+5k)'>('Single');
-  const [cupName, setCupName] = useState('Biru');
-  const [ticket, setTicket] = useState<
-    { id: string; name: string; price: number; qty: number; mods: string }[]
-  >([
-    {
-      id: 'init-1',
-      name: 'Oat Spanish Latte',
-      price: 44000,
-      qty: 1,
-      mods: 'Oatside (+6k) · 50% Less · Less Ice',
-    },
-  ]);
-  const [showReceipt, setShowReceipt] = useState(false);
-
-  const milkFee = milk.includes('+6k') ? 6000 : milk.includes('+4k') ? 4000 : 0;
-  const shotFee = shots.includes('+5k') ? 5000 : 0;
-
-  const addDrink = (item: (typeof BREW_MENU)[0]) => {
-    const isPastry = item.cat === 'Pastry';
-    const unitPrice = isPastry ? item.basePrice : item.basePrice + milkFee + shotFee;
-    const mods = isPastry ? 'Warm Served' : `${milk} · ${sugar} · ${ice} · ${shots}`;
-    const key = `${item.id}-${mods}`;
-    setTicket((prev) => {
-      const idx = prev.findIndex((x) => x.id === key);
-      if (idx >= 0) {
-        const copy = [...prev];
-        copy[idx] = { ...copy[idx], qty: copy[idx].qty + 1 };
-        return copy;
-      }
-      return [...prev, { id: key, name: item.name, price: unitPrice, qty: 1, mods }];
-    });
-  };
-
-  const total = ticket.reduce((sum, i) => sum + i.price * i.qty, 0);
-
-  return (
-    <div className="min-h-[calc(100vh-56px)] bg-[#FAF6F0] text-[#2C1A11] p-4 sm:p-6">
-      <div className="max-w-[1440px] mx-auto bg-[#2C1A11] text-[#FAF6F0] rounded-2xl p-4 sm:px-6 flex flex-wrap items-center justify-between gap-4 mb-6">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-[#C86D51] flex items-center justify-center text-white">
-            <Coffee className="w-5 h-5" />
-          </div>
-          <div>
-            <h1 className="font-bold text-lg tracking-tight">BREWLAB · BARISTA SPEED POS</h1>
-            <p className="text-xs text-[#D6C7B8]">Warm Oat Craft Interface · Modifier Matrix Ready</p>
-          </div>
-        </div>
-        <span className="font-mono text-xs px-3.5 py-1.5 rounded-full bg-[#C86D51] text-white font-bold">
-          CUP LABEL: {cupName || 'GUEST'}
-        </span>
-      </div>
-
-      <div className="max-w-[1440px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
-        {/* Column 1: Drink Grid */}
-        <div className="lg:col-span-5 bg-white rounded-3xl border border-[#E7DDD3] p-5 space-y-4">
-          <h2 className="font-bold text-sm uppercase tracking-wider text-[#78716C]">
-            1. Pilih Menu Bar &amp; Pastry
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {BREW_MENU.map((m) => (
-              <button
-                key={m.id}
-                type="button"
-                onClick={() => addDrink(m)}
-                className="p-4 rounded-2xl bg-[#FAF6F0] hover:bg-[#F3EBE0] border border-[#E7DDD3] hover:border-[#C86D51] text-left transition flex flex-col justify-between gap-2"
-              >
-                <div>
-                  <span className="font-mono text-[10px] font-bold uppercase text-[#C86D51]">
-                    {m.cat}
-                  </span>
-                  <h3 className="font-bold text-sm text-[#2C1A11] mt-1">{m.name}</h3>
-                </div>
-                <div className="flex items-center justify-between pt-2">
-                  <span className="font-mono text-xs font-bold text-[#6F4E37]">
-                    Rp {m.basePrice.toLocaleString('id-ID')}
-                  </span>
-                  <span className="text-xs font-bold text-[#C86D51]">+ Tambah</span>
-                </div>
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Column 2: Permanent Barista Modifier Matrix */}
-        <div className="lg:col-span-3 bg-white rounded-3xl border border-[#E7DDD3] p-5 space-y-5">
-          <h2 className="font-bold text-sm uppercase tracking-wider text-[#78716C]">
-            2. Barista Modifiers
-          </h2>
-
-          <div className="space-y-2">
-            <span className="font-mono text-[11px] font-bold text-[#78716C] block">MILK BASE</span>
-            <div className="grid grid-cols-1 gap-1.5">
-              {(['Fresh Milk', 'Oatside (+6k)', 'Soy Milk (+4k)'] as const).map((m) => (
-                <button
-                  key={m}
-                  type="button"
-                  onClick={() => setMilk(m)}
-                  className={`px-3 py-2 rounded-xl text-xs font-bold border text-left transition ${
-                    milk === m
-                      ? 'bg-[#2C1A11] text-[#FAF6F0] border-[#2C1A11]'
-                      : 'bg-[#FAF6F0] text-[#2C1A11] border-[#E7DDD3]'
-                  }`}
-                >
-                  {m}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <span className="font-mono text-[11px] font-bold text-[#78716C] block">SUGAR LEVEL</span>
-            <div className="grid grid-cols-3 gap-1.5">
-              {['0% No Sugar', '50% Less', '100% Normal'].map((s) => (
-                <button
-                  key={s}
-                  type="button"
-                  onClick={() => setSugar(s)}
-                  className={`px-2 py-2 rounded-xl text-[11px] font-bold border transition ${
-                    sugar === s
-                      ? 'bg-[#C86D51] text-white border-[#C86D51]'
-                      : 'bg-[#FAF6F0] text-[#2C1A11] border-[#E7DDD3]'
-                  }`}
-                >
-                  {s.split(' ')[0]}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <span className="font-mono text-[11px] font-bold text-[#78716C] block">ICE &amp; ESPRESSO</span>
-            <div className="grid grid-cols-2 gap-1.5">
-              {['Less Ice', 'Normal Ice'].map((i) => (
-                <button
-                  key={i}
-                  type="button"
-                  onClick={() => setIce(i)}
-                  className={`px-2 py-2 rounded-xl text-xs font-bold border transition ${
-                    ice === i
-                      ? 'bg-[#2C1A11] text-[#FAF6F0] border-[#2C1A11]'
-                      : 'bg-[#FAF6F0] text-[#2C1A11] border-[#E7DDD3]'
-                  }`}
-                >
-                  {i}
-                </button>
-              ))}
-              {(['Single', 'Double (+5k)'] as const).map((sh) => (
-                <button
-                  key={sh}
-                  type="button"
-                  onClick={() => setShots(sh)}
-                  className={`px-2 py-2 rounded-xl text-xs font-bold border transition ${
-                    shots === sh
-                      ? 'bg-[#C86D51] text-white border-[#C86D51]'
-                      : 'bg-[#FAF6F0] text-[#2C1A11] border-[#E7DDD3]'
-                  }`}
-                >
-                  {sh}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div>
-            <label htmlFor="cup-name" className="font-mono text-[11px] font-bold text-[#78716C] block mb-1.5">
-              NAMA DI GELAS (CUP NAME)
-            </label>
-            <input
-              id="cup-name"
-              type="text"
-              value={cupName}
-              onChange={(e) => setCupName(e.target.value)}
-              className="w-full px-3.5 py-2.5 rounded-xl bg-[#FAF6F0] border border-[#D6C7B8] text-sm font-bold text-[#2C1A11]"
-            />
-          </div>
-        </div>
-
-        {/* Column 3: Cup Ticket & Thermal Struk */}
-        <div className="lg:col-span-4 bg-[#2C1A11] text-[#FAF6F0] rounded-3xl p-5 space-y-4">
-          <div className="flex items-center justify-between">
-            <h2 className="font-mono font-bold text-sm">CUP TICKET · {cupName || 'GUEST'}</h2>
-            <button
-              type="button"
-              onClick={() => {
-                setTicket([]);
-                setShowReceipt(false);
-              }}
-              className="text-xs text-[#D6C7B8] hover:text-white underline"
-            >
-              Reset
-            </button>
-          </div>
-
-          <div className="space-y-2.5 max-h-[290px] overflow-y-auto pr-1">
-            {ticket.length === 0 ? (
-              <p className="py-10 text-center text-xs text-[#D6C7B8]">
-                Pilih minuman di sebelah kiri untuk membuat pesanan.
-              </p>
-            ) : (
-              ticket.map((t) => (
-                <div
-                  key={t.id}
-                  className="p-3 rounded-2xl bg-[#3D261A] flex items-start justify-between gap-3"
-                >
-                  <div className="min-w-0">
-                    <div className="font-bold text-sm">
-                      {t.qty}x {t.name}
-                    </div>
-                    <div className="font-mono text-[11px] text-[#D6C7B8] mt-0.5">{t.mods}</div>
-                    <div className="font-mono text-xs font-bold text-[#FDBA74] mt-1">
-                      Rp {(t.price * t.qty).toLocaleString('id-ID')}
-                    </div>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => setTicket((prev) => prev.filter((x) => x.id !== t.id))}
-                    className="p-1.5 text-[#D6C7B8] hover:text-white"
-                    aria-label="Hapus item"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                </div>
-              ))
-            )}
-          </div>
-
-          <div className="pt-3 border-t border-white/15 flex items-center justify-between">
-            <span className="font-mono text-xs text-[#D6C7B8]">TOTAL BAYAR</span>
-            <span className="font-mono text-xl font-bold">
-              Rp {total.toLocaleString('id-ID')}
-            </span>
-          </div>
-
-          <button
-            type="button"
-            disabled={ticket.length === 0}
-            onClick={() => setShowReceipt((v) => !v)}
-            className="w-full min-h-[46px] rounded-2xl bg-[#C86D51] hover:bg-[#b55e43] text-white font-bold text-sm flex items-center justify-center gap-2 transition disabled:opacity-40"
-          >
-            <Printer className="w-4 h-4" />
-            <span>{showReceipt ? 'Tutup Preview Struk' : 'Cetak Struk & QRIS'}</span>
-          </button>
-
-          {showReceipt && ticket.length > 0 && (
-            <div className="bg-[#FAF6F0] text-[#2C1A11] rounded-2xl p-4 font-mono text-xs space-y-2 border-2 border-dashed border-[#C86D51]">
-              <div className="text-center font-bold border-b border-dashed border-[#2C1A11]/30 pb-2">
-                BREWLAB ROASTERY · CUP #{cupName || 'GUEST'}
-              </div>
-              {ticket.map((t) => (
-                <div key={t.id} className="flex justify-between">
-                  <span>
-                    {t.qty}x {t.name}
-                  </span>
-                  <span>{(t.price * t.qty).toLocaleString('id-ID')}</span>
-                </div>
-              ))}
-              <div className="flex justify-between font-bold border-t border-dashed border-[#2C1A11]/30 pt-2">
-                <span>QRIS PAID</span>
-                <span>Rp {total.toLocaleString('id-ID')}</span>
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/* ============================================================================
- * 3. APOTEK MEDIKA · Pharmacy FEFO & Etiket Obat POS (Sterile Emerald)
- * ========================================================================== */
-const PHARMACY_DRUGS = [
-  { id: 'd1', name: 'Paracetamol 500mg Strip (10 Tab)', batch: 'PCM-26A', exp: '08/2027', stock: 120, rx: false, price: 12000 },
-  { id: 'd2', name: 'Amoxicillin 500mg Strip (10 Kap)', batch: 'AMX-991', exp: '05/2027', stock: 42, rx: true, price: 18500 },
-  { id: 'd3', name: 'Cetirizine 10mg Anti-Alergi', batch: 'CTZ-104', exp: '12/2027', stock: 64, rx: false, price: 15000 },
-  { id: 'd4', name: 'Vitamin D3 1000 IU Softgel', batch: 'VD3-412', exp: '11/2028', stock: 85, rx: false, price: 45000 },
-  { id: 'd5', name: 'Omeprazole 20mg Kapsul', batch: 'OMP-311', exp: '06/2027', stock: 28, rx: true, price: 24000 },
-];
-
-export function ApotekMedikaPos() {
-  const [query, setQuery] = useState('');
-  const [selectedDose, setSelectedDose] = useState('3 x 1 Tablet Sesudah Makan');
-  const [patientName, setPatientName] = useState('Tn. Hendra');
-  const [tuslahFee, setTuslahFee] = useState(true);
-  const [cart, setCart] = useState<
-    { id: string; name: string; batch: string; dose: string; price: number; qty: number }[]
-  >([
-    {
-      id: 'd1',
-      name: 'Paracetamol 500mg Strip (10 Tab)',
-      batch: 'PCM-26A',
-      dose: '3 x 1 Tablet Sesudah Makan',
-      price: 12000,
-      qty: 1,
-    },
-  ]);
-
-  const filteredDrugs = PHARMACY_DRUGS.filter(
-    (d) =>
-      d.name.toLowerCase().includes(query.toLowerCase()) ||
-      d.batch.toLowerCase().includes(query.toLowerCase())
-  );
-
-  const addDrug = (drug: (typeof PHARMACY_DRUGS)[0]) => {
-    setCart((prev) => {
-      const idx = prev.findIndex((c) => c.id === drug.id);
-      if (idx >= 0) {
-        const copy = [...prev];
-        copy[idx] = { ...copy[idx], qty: copy[idx].qty + 1 };
-        return copy;
-      }
-      return [
-        ...prev,
-        { id: drug.id, name: drug.name, batch: drug.batch, dose: selectedDose, price: drug.price, qty: 1 },
-      ];
-    });
-  };
-
-  const subtotal = cart.reduce((s, c) => s + c.price * c.qty, 0);
-  const serviceCost = tuslahFee && cart.length > 0 ? 5000 : 0;
-  const total = subtotal + serviceCost;
-
-  return (
-    <div className="min-h-[calc(100vh-56px)] bg-[#F1F5F9] text-[#0F172A] p-4 sm:p-6">
-      <div className="max-w-[1440px] mx-auto bg-[#065F46] text-white rounded-2xl p-4 sm:px-6 flex flex-wrap items-center justify-between gap-4 mb-6">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-white/15 flex items-center justify-center">
-            <Pill className="w-5 h-5" />
-          </div>
-          <div>
-            <h1 className="font-bold text-base sm:text-lg">
-              APOTEK MEDIKA · CLINICAL DISPENSING &amp; FEFO POS
-            </h1>
-            <p className="text-xs text-emerald-100">Sterile Lab Interface · Batch Expiration Guard</p>
-          </div>
-        </div>
-        <span className="font-mono text-xs px-3 py-1.5 rounded-lg bg-[#047857] border border-emerald-400/30">
-          APOTEKER: APT. RAKA, S.FARM
-        </span>
-      </div>
-
-      <div className="max-w-[1440px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
-        {/* Left: High-Density FEFO Drug Table */}
-        <div className="lg:col-span-7 bg-white rounded-2xl border border-slate-200 p-5 space-y-4">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <div className="relative flex-1">
-              <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-              <input
-                type="text"
-                placeholder="Cari obat, kode batch FEFO..."
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-sm focus:border-[#065F46] focus:outline-none"
-              />
-            </div>
-            <select
-              value={selectedDose}
-              onChange={(e) => setSelectedDose(e.target.value)}
-              className="px-3 py-2.5 rounded-xl bg-emerald-50 border border-emerald-200 text-xs font-bold text-[#065F46]"
-            >
-              <option>3 x 1 Tablet Sesudah Makan</option>
-              <option>2 x 1 Tablet Sebelum Makan</option>
-              <option>1 x 1 Malam Sebelum Tidur</option>
-              <option>Pemakaian Luar (Oles)</option>
-            </select>
-          </div>
-
-          <div className="space-y-2.5">
-            {filteredDrugs.map((d, idx) => (
-              <div
-                key={d.id}
-                className={`p-3.5 rounded-xl border flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${
-                  idx === 0 ? 'bg-emerald-50/70 border-emerald-300' : 'bg-white border-slate-200'
-                }`}
-              >
-                <div>
-                  <div className="flex flex-wrap items-center gap-2">
-                    <span className="font-bold text-sm text-[#0F172A]">{d.name}</span>
-                    {d.rx && (
-                      <span className="font-mono text-[10px] font-bold px-2 py-0.5 rounded bg-amber-100 text-amber-900">
-                        RESEP (K)
-                      </span>
-                    )}
-                    {idx === 0 && (
-                      <span className="font-mono text-[10px] font-bold px-2 py-0.5 rounded bg-[#065F46] text-white">
-                        FEFO #1
-                      </span>
-                    )}
-                  </div>
-                  <div className="font-mono text-[11px] text-slate-600 mt-1">
-                    BATCH: {d.batch} · EXP: {d.exp} · STOK: {d.stock}
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-between sm:justify-end gap-3">
-                  <span className="font-mono font-bold text-sm text-[#065F46]">
-                    Rp {d.price.toLocaleString('id-ID')}
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => addDrug(d)}
-                    className="px-3.5 py-2 rounded-lg bg-[#065F46] hover:bg-[#047857] text-white text-xs font-bold transition"
-                  >
-                    + Dispense
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Right: Etiket Preview & Checkout */}
-        <div className="lg:col-span-5 bg-white rounded-2xl border border-slate-200 p-5 space-y-4">
-          <div className="flex items-center justify-between border-b border-slate-200 pb-3">
-            <h2 className="font-mono text-xs font-bold uppercase tracking-wider text-[#065F46]">
-              Generator Etiket Obat &amp; Kasir
-            </h2>
-            <input
-              type="text"
-              value={patientName}
-              onChange={(e) => setPatientName(e.target.value)}
-              placeholder="Nama Pasien"
-              className="px-2.5 py-1 rounded-lg border border-slate-200 text-xs font-semibold w-36 text-right"
-            />
-          </div>
-
-          <div className="space-y-2.5 max-h-[260px] overflow-y-auto">
-            {cart.length === 0 ? (
-              <p className="py-8 text-center text-xs text-slate-500">
-                Pilih obat dari daftar FEFO di sebelah kiri.
-              </p>
-            ) : (
-              cart.map((c) => (
-                <div key={c.id} className="p-3 rounded-xl bg-[#F0FDF4] border border-emerald-200 space-y-1">
-                  <div className="flex items-start justify-between gap-2">
-                    <span className="font-bold text-xs text-[#064E3B]">
-                      {c.qty}x {c.name}
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => setCart((p) => p.filter((x) => x.id !== c.id))}
-                      className="text-rose-600 text-xs font-bold"
-                    >
-                      Hapus
-                    </button>
-                  </div>
-                  <div className="font-mono text-[11px] text-[#047857]">
-                    ETIKET ({patientName}): {c.dose} · Batch {c.batch}
-                  </div>
-                  <div className="font-mono text-xs font-bold text-[#065F46]">
-                    Rp {(c.price * c.qty).toLocaleString('id-ID')}
-                  </div>
-                </div>
-              ))
-            )}
-          </div>
-
-          <label className="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-200 cursor-pointer text-xs font-semibold">
-            <span>Tambahkan Biaya Jasa Racik / Tuslah Apoteker</span>
-            <input
-              type="checkbox"
-              checked={tuslahFee}
-              onChange={(e) => setTuslahFee(e.target.checked)}
-              className="w-4 h-4 accent-[#065F46]"
-            />
-          </label>
-
-          <div className="pt-2 border-t border-slate-200 space-y-1 font-mono text-xs">
-            <div className="flex justify-between text-slate-600">
-              <span>Subtotal Obat</span>
-              <span>Rp {subtotal.toLocaleString('id-ID')}</span>
-            </div>
-            <div className="flex justify-between text-slate-600">
-              <span>Jasa Tuslah</span>
-              <span>Rp {serviceCost.toLocaleString('id-ID')}</span>
-            </div>
-            <div className="flex justify-between text-base font-bold text-[#065F46] pt-2">
-              <span>TOTAL RESEP</span>
-              <span>Rp {total.toLocaleString('id-ID')}</span>
-            </div>
-          </div>
-
-          <button
-            type="button"
-            onClick={() => alert(`Struk & Etiket Obat untuk ${patientName} senilai Rp ${total.toLocaleString('id-ID')} siap dicetak.`)}
-            className="w-full min-h-[46px] rounded-xl bg-[#065F46] hover:bg-[#047857] text-white font-bold text-sm transition"
-          >
-            Terbitkan Struk &amp; Cetak Etiket
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/* ============================================================================
- * 4. ATELIER LUXE · Luxury Boutique Size-Matrix POS (Obsidian & Champagne Gold)
- * ========================================================================== */
-const BOUTIQUE_ITEMS = [
-  { id: 'a1', name: 'Cashmere Wool Trench Coat', sku: 'AT-CT-01', price: 4850000, sizes: ['S', 'M', 'L', 'XL'] },
-  { id: 'a2', name: 'Italian Suede Chelsea Boots', sku: 'AT-FT-04', price: 3200000, sizes: ['EU40', 'EU41', 'EU42', 'EU43'] },
-  { id: 'a3', name: 'Structured Calfskin Tote Bag', sku: 'AT-BG-09', price: 5400000, sizes: ['ONE SIZE'] },
-  { id: 'a4', name: 'Silk Jacquard Overshirt', sku: 'AT-SH-12', price: 2150000, sizes: ['S', 'M', 'L'] },
-];
-
-export function AtelierLuxePos() {
-  const [selectedSizes, setSelectedSizes] = useState<Record<string, string>>({
-    a1: 'M',
-    a2: 'EU42',
-    a3: 'ONE SIZE',
-    a4: 'L',
-  });
-  const [vipTier, setVipTier] = useState<'NONE' | 'SILVER' | 'GOLD' | 'BLACK'>('BLACK');
-  const [giftBox, setGiftBox] = useState(true);
-  const [bag, setBag] = useState<{ key: string; name: string; size: string; price: number; qty: number }[]>([
-    { key: 'a1-M', name: 'Cashmere Wool Trench Coat', size: 'M', price: 4850000, qty: 1 },
-  ]);
-
-  const discountRate = vipTier === 'BLACK' ? 0.15 : vipTier === 'GOLD' ? 0.1 : vipTier === 'SILVER' ? 0.05 : 0;
-  const subtotal = bag.reduce((s, b) => s + b.price * b.qty, 0);
-  const discount = Math.round(subtotal * discountRate);
-  const netTotal = subtotal - discount;
-
-  const addToBag = (item: (typeof BOUTIQUE_ITEMS)[0]) => {
-    const size = selectedSizes[item.id] || item.sizes[0];
-    const key = `${item.id}-${size}`;
-    setBag((prev) => {
-      const idx = prev.findIndex((x) => x.key === key);
-      if (idx >= 0) {
-        const copy = [...prev];
-        copy[idx] = { ...copy[idx], qty: copy[idx].qty + 1 };
-        return copy;
-      }
-      return [...prev, { key, name: item.name, size, price: item.price, qty: 1 }];
-    });
-  };
-
-  return (
-    <div className="min-h-[calc(100vh-56px)] bg-[#09090B] text-zinc-100 p-4 sm:p-6">
-      <div className="max-w-[1440px] mx-auto pb-5 mb-6 border-b border-zinc-800 flex flex-wrap items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 border border-[#D4AF37] text-[#D4AF37] flex items-center justify-center">
-            <ShoppingBag className="w-5 h-5" />
-          </div>
-          <div>
-            <h1 className="font-serif text-xl tracking-[0.2em] text-white">ATELIER LUXE</h1>
-            <p className="font-mono text-[11px] text-zinc-400">Obsidian Size-Matrix &amp; VIP Clienteling POS</p>
-          </div>
-        </div>
-        <div className="flex flex-wrap items-center gap-2">
-          {(['NONE', 'SILVER', 'GOLD', 'BLACK'] as const).map((tier) => (
-            <button
-              key={tier}
-              type="button"
-              onClick={() => setVipTier(tier)}
-              className={`px-3 py-1.5 font-mono text-[11px] font-bold border transition ${
-                vipTier === tier
-                  ? 'bg-[#D4AF37] text-[#09090B] border-[#D4AF37]'
-                  : 'bg-zinc-900 text-zinc-400 border-zinc-800 hover:text-white'
+              onClick={() => setBooth(b)}
+              className={`flex-1 py-3 px-2 text-xs font-bold border-r lg:border-r-0 lg:border-b border-[#27272A] transition ${
+                booth === b
+                  ? 'bg-[#E11D48] text-white'
+                  : 'bg-[#0C0C0E] text-zinc-500 hover:text-white hover:bg-[#16161B]'
               }`}
             >
-              VIP {tier}
+              {b}
             </button>
           ))}
         </div>
-      </div>
 
-      <div className="max-w-[1440px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        <div className="lg:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {BOUTIQUE_ITEMS.map((item) => {
-            const currentSize = selectedSizes[item.id] || item.sizes[0];
-            return (
-              <div key={item.id} className="bg-[#121215] border border-zinc-800 p-5 space-y-4">
-                <div className="flex justify-between items-start gap-2">
-                  <div>
-                    <span className="font-mono text-[10px] text-zinc-500">{item.sku}</span>
-                    <h2 className="font-semibold text-base text-white mt-0.5">{item.name}</h2>
-                  </div>
-                  <span className="font-mono text-sm font-bold text-[#D4AF37]">
-                    Rp {item.price.toLocaleString('id-ID')}
-                  </span>
-                </div>
-
-                <div>
-                  <span className="font-mono text-[10px] uppercase text-zinc-500 block mb-2">
-                    Select Size Matrix
-                  </span>
-                  <div className="flex flex-wrap gap-1.5">
-                    {item.sizes.map((sz) => (
-                      <button
-                        key={sz}
-                        type="button"
-                        onClick={() => setSelectedSizes((p) => ({ ...p, [item.id]: sz }))}
-                        className={`px-3 py-1.5 font-mono text-xs border transition ${
-                          currentSize === sz
-                            ? 'bg-[#D4AF37] text-[#09090B] border-[#D4AF37] font-bold'
-                            : 'bg-zinc-900 text-zinc-400 border-zinc-800 hover:border-zinc-600'
-                        }`}
-                      >
-                        {sz}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
+        {/* Center Shokuken Physical Push Buttons */}
+        <div className="lg:col-span-7 border-b lg:border-b-0 lg:border-r border-[#27272A] flex flex-col">
+          {/* Noodle / Broth Selector Bar */}
+          <div className="p-3 border-b border-[#27272A] bg-[#121216] flex flex-wrap items-center justify-between gap-2 text-[11px]">
+            <div className="flex items-center gap-1">
+              <span className="text-zinc-500 mr-1">NOODLE:</span>
+              {['KATAME', 'FUTSU', 'YAWAME'].map((n) => (
                 <button
+                  key={n}
                   type="button"
-                  onClick={() => addToBag(item)}
-                  className="w-full py-2.5 border border-[#D4AF37]/60 text-[#D4AF37] hover:bg-[#D4AF37] hover:text-[#09090B] font-mono text-xs font-bold transition"
+                  onClick={() => setNoodle(n)}
+                  className={`px-2.5 py-1 border ${
+                    noodle === n
+                      ? 'border-[#E11D48] bg-[#E11D48]/20 text-white'
+                      : 'border-[#27272A] text-zinc-400'
+                  }`}
                 >
-                  ADD SIZE ({currentSize}) TO CLIENT BAG
+                  {n}
                 </button>
+              ))}
+            </div>
+            <div className="flex items-center gap-1">
+              <span className="text-zinc-500 mr-1">OIL:</span>
+              {['LIGHT', 'RICH', 'BLACK-X'].map((o) => (
+                <button
+                  key={o}
+                  type="button"
+                  onClick={() => setOil(o)}
+                  className={`px-2.5 py-1 border ${
+                    oil === o
+                      ? 'border-amber-500 bg-amber-500/20 text-amber-200'
+                      : 'border-[#27272A] text-zinc-400'
+                  }`}
+                >
+                  {o}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* 8-Key Ticket Machine Grid */}
+          <div className="flex-1 grid grid-cols-1 sm:grid-cols-2">
+            {SHOKUKEN_BUTTONS.map((btn, i) => (
+              <button
+                key={btn.code}
+                type="button"
+                onClick={() => pressKey(btn)}
+                className={`p-5 text-left border-b border-[#27272A] ${
+                  i % 2 === 0 ? 'sm:border-r' : ''
+                } hover:bg-[#16161D] active:bg-[#1E1E26] transition flex flex-col justify-between gap-4`}
+              >
+                <div className="flex items-start justify-between gap-2">
+                  <span className="px-2 py-0.5 bg-[#E11D48] text-white text-[10px] font-bold">
+                    {btn.code}
+                  </span>
+                  <span className="text-[11px] text-zinc-500">{btn.cat}</span>
+                </div>
+                <div>
+                  <div className="text-xs text-zinc-400">{btn.jp}</div>
+                  <div className="font-sans font-bold text-base text-white mt-0.5">{btn.name}</div>
+                </div>
+                <div className="flex items-center justify-between pt-2 border-t border-[#27272A]/80 text-xs">
+                  <span className="text-zinc-300 font-bold">Rp {btn.price.toLocaleString('id-ID')}</span>
+                  <span className="text-[#E11D48] text-[11px]">[ ISSUE TICKET ]</span>
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Right Cream Perforated Thermal Paper Slip */}
+        <div className="lg:col-span-4 bg-[#141418] p-5 flex flex-col justify-between">
+          <div className="bg-[#F4F1EA] text-[#18181B] relative shadow-xl">
+            <div className="p-5 pb-6 space-y-4">
+              <div className="flex items-start justify-between border-b border-dashed border-zinc-400 pb-3">
+                <div>
+                  <div className="text-[10px] tracking-widest text-zinc-500">SHOKUKEN SLIP</div>
+                  <div className="font-bold text-base tracking-tight">KUROBENTO SHIBUYA</div>
+                  <div className="text-[11px] text-zinc-600">BOOTH #{booth} · KDS SYNC</div>
+                </div>
+                <div
+                  className={`w-10 h-10 border-2 flex items-center justify-center font-serif text-lg font-bold transition ${
+                    stamped
+                      ? 'border-[#E11D48] text-[#E11D48] rotate-[-8deg] opacity-100'
+                      : 'border-zinc-300 text-zinc-300 opacity-50'
+                  }`}
+                  title="Hanko Stamp"
+                >
+                  済
+                </div>
+              </div>
+
+              <div className="space-y-2.5 min-h-[210px]">
+                {items.length === 0 ? (
+                  <p className="text-xs text-zinc-500 py-8 text-center">
+                    Tekan tombol shokuken untuk mencetak item.
+                  </p>
+                ) : (
+                  items.map((it, idx) => (
+                    <div key={`${it.code}-${idx}`} className="text-xs border-b border-zinc-300/60 pb-2">
+                      <div className="flex justify-between font-bold">
+                        <span>
+                          {it.qty}x {it.name}
+                        </span>
+                        <span>{(it.price * it.qty).toLocaleString('id-ID')}</span>
+                      </div>
+                      <div className="flex justify-between text-[10px] text-zinc-600 mt-0.5">
+                        <span>
+                          {it.jp} · {it.spec}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => setItems((p) => p.filter((_, i) => i !== idx))}
+                          className="text-rose-700 underline"
+                        >
+                          VOID
+                        </button>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+
+              <div className="border-t border-dashed border-zinc-400 pt-3 space-y-1 text-xs">
+                <div className="flex justify-between text-zinc-600">
+                  <span>SUBTOTAL</span>
+                  <span>Rp {subtotal.toLocaleString('id-ID')}</span>
+                </div>
+                <div className="flex justify-between text-zinc-600">
+                  <span>TAX &amp; SVC 15%</span>
+                  <span>Rp {serviceTax.toLocaleString('id-ID')}</span>
+                </div>
+                <div className="flex justify-between text-base font-bold pt-1.5 border-t border-zinc-400">
+                  <span>TOTAL</span>
+                  <span>Rp {grandTotal.toLocaleString('id-ID')}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* SVG Sawtooth Tear Edge */}
+            <svg viewBox="0 0 320 12" className="w-full h-3 block" preserveAspectRatio="none">
+              <polygon
+                points="0,0 10,12 20,0 30,12 40,0 50,12 60,0 70,12 80,0 90,12 100,0 110,12 120,0 130,12 140,0 150,12 160,0 170,12 180,0 190,12 200,0 210,12 220,0 230,12 240,0 250,12 260,0 270,12 280,0 290,12 300,0 310,12 320,0 320,0 0,0"
+                fill="#141418"
+                transform="scale(1,-1) translate(0,-12)"
+              />
+            </svg>
+          </div>
+
+          <button
+            type="button"
+            disabled={items.length === 0}
+            onClick={() => setStamped(true)}
+            className="mt-4 w-full py-3.5 bg-[#E11D48] hover:bg-rose-600 text-white text-xs font-bold tracking-widest transition disabled:opacity-40"
+          >
+            {stamped ? 'DISPATCHED TO KDS (済)' : 'FIRE TICKET TO KITCHEN'}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ============================================================================
+ * 2. BREWLAB · Editorial Linen Menu List + Analog Segmented Modifiers
+ * ========================================================================== */
+const BREW_ITEMS = [
+  { id: 'br1', origin: 'CIWIDEY · WASHED', name: 'Oat Spanish Latte', price: 38000, pastry: false },
+  { id: 'br2', origin: 'ETHIOPIA GUJI · NATURAL', name: 'Pour Over V60', price: 42000, pastry: false },
+  { id: 'br3', origin: 'UJI KYOTO · CEREMONIAL', name: 'Dirty Matcha Shot', price: 44000, pastry: false },
+  { id: 'br4', origin: 'ACEH GAYO · DOUBLE', name: 'Iced Long Black', price: 29000, pastry: false },
+  { id: 'br5', origin: 'FRENCH BUTTER', name: 'Pain au Chocolat', price: 31000, pastry: true },
+  { id: 'br6', origin: 'BAKED DAILY', name: 'Burnt Basque Slice', price: 39000, pastry: true },
+];
+
+export function BrewLabPos() {
+  const [expandedId, setExpandedId] = useState<string>('br1');
+  const [milk, setMilk] = useState<'Dairy' | 'Oat' | 'Soy'>('Oat');
+  const [sweet, setSweet] = useState<'0%' | '50%' | '100%'>('50%');
+  const [shot, setShot] = useState<'Single' | 'Double'>('Single');
+  const [cupName, setCupName] = useState('BIRU');
+  const [paidMethod, setPaidMethod] = useState<string | null>(null);
+  const [orders, setOrders] = useState<
+    { id: string; name: string; meta: string; price: number; qty: number }[]
+  >([
+    { id: 'br1-Oat-50%-Single', name: 'Oat Spanish Latte', meta: 'Oat · 50% · Single', price: 44000, qty: 1 },
+  ]);
+
+  const commitDrink = (item: (typeof BREW_ITEMS)[0]) => {
+    setPaidMethod(null);
+    const extra = item.pastry ? 0 : (milk === 'Oat' ? 6000 : milk === 'Soy' ? 4000 : 0) + (shot === 'Double' ? 5000 : 0);
+    const meta = item.pastry ? 'Warmed' : `${milk} · ${sweet} · ${shot}`;
+    const key = `${item.id}-${meta}`;
+    setOrders((prev) => {
+      const idx = prev.findIndex((o) => o.id === key);
+      if (idx >= 0) {
+        const c = [...prev];
+        c[idx] = { ...c[idx], qty: c[idx].qty + 1 };
+        return c;
+      }
+      return [...prev, { id: key, name: item.name, meta, price: item.price + extra, qty: 1 }];
+    });
+  };
+
+  const total = orders.reduce((s, o) => s + o.price * o.qty, 0);
+
+  return (
+    <div className="min-h-[720px] bg-[#F4EFE6] text-[#1C1917] grid grid-cols-1 lg:grid-cols-12">
+      {/* Left 65% Editorial Menu Table */}
+      <div className="lg:col-span-8 p-6 sm:p-10 border-b lg:border-b-0 lg:border-r border-[#1C1917]/15">
+        <div className="flex flex-wrap items-baseline justify-between gap-2 pb-6 border-b-2 border-[#1C1917]">
+          <div>
+            <span className="font-mono text-[11px] tracking-widest uppercase text-[#D94E34] font-bold">
+              Barista Touch Register · No. 02
+            </span>
+            <h1 className="font-serif text-3xl sm:text-4xl font-bold tracking-tight mt-1">
+              BrewLab Roastery
+            </h1>
+          </div>
+          <span className="font-mono text-xs text-stone-600">MORNING SHIFT · LINE 1</span>
+        </div>
+
+        <div className="divide-y divide-[#1C1917]/15">
+          {BREW_ITEMS.map((item) => {
+            const isOpen = expandedId === item.id;
+            return (
+              <div key={item.id} className="py-4">
+                <div className="flex items-center justify-between gap-4">
+                  <button
+                    type="button"
+                    onClick={() => setExpandedId(item.id)}
+                    className="text-left flex-1 group"
+                  >
+                    <span className="font-mono text-[10px] tracking-widest text-stone-500 block">
+                      {item.origin}
+                    </span>
+                    <span className="font-serif text-xl font-bold group-hover:text-[#D94E34] transition">
+                      {item.name}
+                    </span>
+                  </button>
+                  <div className="flex items-center gap-4 shrink-0">
+                    <span className="font-mono text-sm font-bold">
+                      Rp {item.price.toLocaleString('id-ID')}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => commitDrink(item)}
+                      className="px-4 py-2 bg-[#1C1917] hover:bg-[#D94E34] text-[#F4EFE6] font-mono text-xs font-bold transition"
+                    >
+                      + ADD
+                    </button>
+                  </div>
+                </div>
+
+                {/* Inline Expanded Modifier Strip */}
+                {isOpen && !item.pastry && (
+                  <div className="mt-4 pt-3 border-t border-dashed border-[#1C1917]/20 flex flex-wrap items-center gap-4 text-xs font-mono">
+                    <div className="flex items-center border border-[#1C1917]">
+                      {(['Dairy', 'Oat', 'Soy'] as const).map((m) => (
+                        <button
+                          key={m}
+                          type="button"
+                          onClick={() => setMilk(m)}
+                          className={`px-3 py-1.5 ${milk === m ? 'bg-[#1C1917] text-[#F4EFE6]' : 'bg-transparent'}`}
+                        >
+                          {m}
+                        </button>
+                      ))}
+                    </div>
+                    <div className="flex items-center border border-[#1C1917]">
+                      {(['0%', '50%', '100%'] as const).map((sw) => (
+                        <button
+                          key={sw}
+                          type="button"
+                          onClick={() => setSweet(sw)}
+                          className={`px-3 py-1.5 ${sweet === sw ? 'bg-[#D94E34] text-white' : 'bg-transparent'}`}
+                        >
+                          {sw}
+                        </button>
+                      ))}
+                    </div>
+                    <div className="flex items-center border border-[#1C1917]">
+                      {(['Single', 'Double'] as const).map((sh) => (
+                        <button
+                          key={sh}
+                          type="button"
+                          onClick={() => setShot(sh)}
+                          className={`px-3 py-1.5 ${shot === sh ? 'bg-[#1C1917] text-[#F4EFE6]' : 'bg-transparent'}`}
+                        >
+                          {sh}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             );
           })}
         </div>
+      </div>
 
-        <div className="lg:col-span-4 bg-[#121215] border border-[#D4AF37]/40 p-5 space-y-4">
-          <div className="flex items-center justify-between border-b border-zinc-800 pb-3">
-            <h2 className="font-serif text-lg tracking-wider text-white">CLIENT BAG</h2>
-            <span className="font-mono text-[11px] text-[#D4AF37]">
-              TIER: {vipTier} ({Math.round(discountRate * 100)}% OFF)
+      {/* Right 35% Full-Height Order Sheet */}
+      <div className="lg:col-span-4 bg-[#EAE2D3] p-6 sm:p-8 flex flex-col justify-between">
+        <div className="space-y-5">
+          <div className="flex items-center justify-between border-b-2 border-[#1C1917] pb-3">
+            <label htmlFor="brew-cup-call" className="font-mono text-xs font-bold">
+              [ CUP CALLOUT ]
+            </label>
+            <input
+              id="brew-cup-call"
+              type="text"
+              value={cupName}
+              onChange={(e) => setCupName(e.target.value.toUpperCase())}
+              className="w-32 text-right font-mono font-bold text-sm bg-transparent border-b border-[#1C1917] focus:outline-none text-[#D94E34]"
+            />
+          </div>
+
+          <div className="space-y-3 min-h-[260px]">
+            {orders.map((o) => (
+              <div key={o.id} className="flex justify-between items-start gap-2 pb-3 border-b border-[#1C1917]/15">
+                <div>
+                  <div className="font-serif font-bold text-base">
+                    {o.qty}x {o.name}
+                  </div>
+                  <div className="font-mono text-[11px] text-stone-600">{o.meta}</div>
+                </div>
+                <div className="text-right font-mono text-xs">
+                  <div className="font-bold">Rp {(o.price * o.qty).toLocaleString('id-ID')}</div>
+                  <button
+                    type="button"
+                    onClick={() => setOrders((p) => p.filter((x) => x.id !== o.id))}
+                    className="text-[#D94E34] underline mt-0.5"
+                  >
+                    Remove
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="space-y-4 pt-4 border-t-2 border-[#1C1917]">
+          <div className="flex justify-between items-baseline">
+            <span className="font-mono text-xs font-bold">AMOUNT DUE</span>
+            <span className="font-serif text-3xl font-bold">
+              Rp {total.toLocaleString('id-ID')}
             </span>
           </div>
 
-          <div className="space-y-3 max-h-[260px] overflow-y-auto">
-            {bag.length === 0 ? (
-              <p className="py-8 text-center font-mono text-xs text-zinc-500">Client bag empty.</p>
-            ) : (
-              bag.map((b) => (
-                <div key={b.key} className="pb-3 border-b border-zinc-800/80 flex justify-between gap-2">
+          {paidMethod && (
+            <div className="p-2.5 bg-[#1C1917] text-[#F4EFE6] font-mono text-xs text-center">
+              SETTLED VIA {paidMethod} · CUP #{cupName || 'GUEST'} QUEUED
+            </div>
+          )}
+
+          <div className="grid grid-cols-2 gap-2 font-mono text-xs font-bold">
+            <button
+              type="button"
+              onClick={() => setPaidMethod('EXACT CASH')}
+              className="py-3.5 border-2 border-[#1C1917] hover:bg-[#1C1917] hover:text-[#F4EFE6] transition"
+            >
+              EXACT CASH
+            </button>
+            <button
+              type="button"
+              onClick={() => setPaidMethod('QRIS TAP')}
+              className="py-3.5 bg-[#D94E34] hover:bg-[#be4029] text-white transition"
+            >
+              QRIS TAP
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ============================================================================
+ * 3. APOTEK MEDIKA · High-Density SIMRS Spreadsheet & Blue-White Etiket
+ * ========================================================================== */
+const SIMRS_DRUGS = [
+  { code: 'OBT-001', name: 'Paracetamol 500mg Strip 10 Tab', batch: 'PCM-26A', exp: '2027-08', stock: 120, rx: false, price: 12000 },
+  { code: 'OBT-014', name: 'Amoxicillin Trihydrate 500mg Kap', batch: 'AMX-991', exp: '2027-05', stock: 42, rx: true, price: 18500 },
+  { code: 'OBT-029', name: 'Cetirizine HCl 10mg Tablet', batch: 'CTZ-104', exp: '2027-12', stock: 64, rx: false, price: 15000 },
+  { code: 'OBT-052', name: 'Omeprazole 20mg Kapsul Lepas Lambat', batch: 'OMP-311', exp: '2027-06', stock: 28, rx: true, price: 24000 },
+  { code: 'OBT-088', name: 'Cholecalciferol D3 1000 IU Softgel', batch: 'VD3-412', exp: '2028-11', stock: 85, rx: false, price: 45000 },
+];
+
+export function ApotekMedikaPos() {
+  const [search, setSearch] = useState('');
+  const [onlyRx, setOnlyRx] = useState(false);
+  const [patient, setPatient] = useState('Tn. Hendra Wijaya');
+  const [timing, setTiming] = useState<'Pagi' | 'Siang' | 'Malam'>('Pagi');
+  const [mealRule, setMealRule] = useState<'Sesudah Makan' | 'Sebelum Makan'>('Sesudah Makan');
+  const [doseQty, setDoseQty] = useState('3 x 1 Tablet');
+  const [dispensed, setDispensed] = useState([
+    { code: 'OBT-001', name: 'Paracetamol 500mg Strip 10 Tab', batch: 'PCM-26A', qty: 1, price: 12000 },
+  ]);
+
+  const rows = SIMRS_DRUGS.filter(
+    (d) =>
+      (!onlyRx || d.rx) &&
+      (d.name.toLowerCase().includes(search.toLowerCase()) ||
+        d.code.toLowerCase().includes(search.toLowerCase()) ||
+        d.batch.toLowerCase().includes(search.toLowerCase()))
+  );
+
+  const addRow = (d: (typeof SIMRS_DRUGS)[0]) => {
+    setDispensed((prev) => {
+      const idx = prev.findIndex((p) => p.code === d.code);
+      if (idx >= 0) {
+        const copy = [...prev];
+        copy[idx] = { ...copy[idx], qty: copy[idx].qty + 1 };
+        return copy;
+      }
+      return [...prev, { code: d.code, name: d.name, batch: d.batch, qty: 1, price: d.price }];
+    });
+  };
+
+  const subtotal = dispensed.reduce((s, d) => s + d.price * d.qty, 0);
+
+  return (
+    <div className="min-h-[720px] bg-[#F8FAFC] text-[#0F172A] font-sans flex flex-col">
+      {/* Compact Desktop ERP Function Bar */}
+      <div className="bg-[#064E3B] text-white px-4 py-2 flex flex-wrap items-center justify-between gap-2 text-xs font-mono">
+        <div className="flex items-center gap-3">
+          <span className="font-bold">SIMRS FARMASI v4.2</span>
+          <button
+            type="button"
+            onClick={() => setOnlyRx(false)}
+            className={`px-2 py-0.5 border border-emerald-400/40 ${!onlyRx ? 'bg-emerald-700' : ''}`}
+          >
+            [F1] Semua Sediaan
+          </button>
+          <button
+            type="button"
+            onClick={() => setOnlyRx((v) => !v)}
+            className={`px-2 py-0.5 border border-emerald-400/40 ${onlyRx ? 'bg-amber-500 text-black font-bold' : ''}`}
+          >
+            [F2] Hanya Obat Resep (K)
+          </button>
+        </div>
+        <span>APT. RAKA, S.FARM · SIPA 1998/2026</span>
+      </div>
+
+      {/* Top Search Toolbar */}
+      <div className="p-3 bg-white border-b border-slate-300 flex flex-wrap items-center gap-3 text-xs">
+        <input
+          type="text"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Filter kode obat, nama generik, atau nomor batch FEFO..."
+          className="flex-1 min-w-[240px] px-3 py-1.5 border border-slate-300 bg-slate-50 font-mono focus:border-[#065F46] focus:outline-none"
+        />
+        <span className="font-mono text-slate-500">URUTAN: EXP TERDEKAT (FEFO)</span>
+      </div>
+
+      {/* High-Density Spreadsheet Table */}
+      <div className="overflow-x-auto bg-white border-b border-slate-300">
+        <table className="w-full text-xs text-left border-collapse">
+          <thead className="bg-slate-100 border-b border-slate-300 font-mono text-[11px] text-slate-700">
+            <tr>
+              <th className="py-2 px-3 border-r border-slate-200">KODE</th>
+              <th className="py-2 px-3 border-r border-slate-200">NAMA OBAT &amp; SEDIAAN</th>
+              <th className="py-2 px-3 border-r border-slate-200">BATCH</th>
+              <th className="py-2 px-3 border-r border-slate-200">EXP (FEFO)</th>
+              <th className="py-2 px-3 border-r border-slate-200 text-right">STOK</th>
+              <th className="py-2 px-3 border-r border-slate-200 text-right">HARGA HET</th>
+              <th className="py-2 px-3 text-center">AKSI</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-slate-200">
+            {rows.map((r, i) => (
+              <tr key={r.code} className={i % 2 === 1 ? 'bg-slate-50/70' : 'bg-white'}>
+                <td className="py-2 px-3 font-mono border-r border-slate-200">{r.code}</td>
+                <td className="py-2 px-3 font-semibold border-r border-slate-200">
+                  {r.name}{' '}
+                  {r.rx && (
+                    <span className="ml-1 font-mono text-[10px] px-1 bg-rose-100 text-rose-800 border border-rose-300">
+                      K
+                    </span>
+                  )}
+                </td>
+                <td className="py-2 px-3 font-mono border-r border-slate-200">{r.batch}</td>
+                <td className="py-2 px-3 font-mono border-r border-slate-200 text-[#065F46] font-bold">
+                  {r.exp}
+                </td>
+                <td className="py-2 px-3 font-mono border-r border-slate-200 text-right">{r.stock}</td>
+                <td className="py-2 px-3 font-mono border-r border-slate-200 text-right">
+                  Rp {r.price.toLocaleString('id-ID')}
+                </td>
+                <td className="py-2 px-3 text-center">
+                  <button
+                    type="button"
+                    onClick={() => addRow(r)}
+                    className="px-2.5 py-1 bg-[#065F46] hover:bg-[#047857] text-white font-mono text-[11px] font-bold"
+                  >
+                    + DISPENSE
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Bottom Split: Prescription Ledger + Indonesian Blue/White Etiket Obat */}
+      <div className="flex-1 grid grid-cols-1 lg:grid-cols-12">
+        {/* Prescription Table */}
+        <div className="lg:col-span-7 p-4 border-b lg:border-b-0 lg:border-r border-slate-300 bg-white flex flex-col justify-between">
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <h2 className="font-mono text-xs font-bold uppercase text-slate-600">
+                Rincian Penyerahan Obat
+              </h2>
+              <span className="font-mono text-sm font-bold text-[#065F46]">
+                TOTAL: Rp {subtotal.toLocaleString('id-ID')}
+              </span>
+            </div>
+            <div className="border border-slate-200 divide-y divide-slate-200 text-xs">
+              {dispensed.map((d) => (
+                <div key={d.code} className="p-2.5 flex items-center justify-between gap-2">
                   <div>
-                    <div className="text-sm font-medium text-white">
-                      {b.qty}x {b.name}
-                    </div>
-                    <div className="font-mono text-[11px] text-zinc-400">Size: {b.size}</div>
+                    <span className="font-mono text-slate-500 mr-2">[{d.batch}]</span>
+                    <span className="font-bold">{d.qty}x {d.name}</span>
                   </div>
-                  <div className="text-right">
-                    <div className="font-mono text-xs text-[#D4AF37]">
-                      Rp {(b.price * b.qty).toLocaleString('id-ID')}
-                    </div>
+                  <div className="flex items-center gap-3 font-mono">
+                    <span>Rp {(d.price * d.qty).toLocaleString('id-ID')}</span>
                     <button
                       type="button"
-                      onClick={() => setBag((p) => p.filter((x) => x.key !== b.key))}
-                      className="font-mono text-[10px] text-zinc-500 hover:text-rose-400"
+                      onClick={() => setDispensed((p) => p.filter((x) => x.code !== d.code))}
+                      className="text-rose-700 underline"
                     >
-                      Remove
+                      Del
                     </button>
                   </div>
                 </div>
-              ))
-            )}
+              ))}
+            </div>
           </div>
 
-          <label className="flex items-center justify-between text-xs text-zinc-300 border border-zinc-800 p-3 bg-zinc-900/50 cursor-pointer">
-            <span className="flex items-center gap-2">
-              <Sparkles className="w-3.5 h-3.5 text-[#D4AF37]" />
-              Complimentary Signature Ribbon Box
-            </span>
+          <div className="pt-4 flex flex-wrap gap-2 text-xs">
             <input
-              type="checkbox"
-              checked={giftBox}
-              onChange={(e) => setGiftBox(e.target.checked)}
-              className="accent-[#D4AF37]"
+              type="text"
+              value={patient}
+              onChange={(e) => setPatient(e.target.value)}
+              placeholder="Nama Pasien"
+              className="px-3 py-1.5 border border-slate-300 flex-1"
             />
-          </label>
+            <select
+              value={doseQty}
+              onChange={(e) => setDoseQty(e.target.value)}
+              className="px-3 py-1.5 border border-slate-300 bg-white font-mono"
+            >
+              <option>3 x 1 Tablet</option>
+              <option>2 x 1 Kapsul</option>
+              <option>1 x 1 Malam</option>
+            </select>
+          </div>
+        </div>
 
-          <div className="space-y-1.5 font-mono text-xs pt-2 border-t border-zinc-800">
-            <div className="flex justify-between text-zinc-400">
+        {/* Authentic Indonesian Apotek Etiket Sticker (Putih/Biru) */}
+        <div className="lg:col-span-5 p-4 bg-slate-100 flex flex-col justify-between gap-3">
+          <div className="bg-white border-2 border-[#1E40AF] shadow-sm">
+            <div className="bg-[#1E40AF] text-white px-3 py-1.5 text-center">
+              <div className="font-bold text-xs tracking-wide">APOTEK MEDIKA FARMA</div>
+              <div className="text-[10px]">APA: Apt. Raka Pratama, S.Farm · SIPA 1998/2026</div>
+            </div>
+            <div className="p-3.5 text-xs space-y-2.5">
+              <div className="flex justify-between font-mono text-[11px] border-b border-slate-200 pb-1.5">
+                <span>No. R/: 0182/XI</span>
+                <span>Tgl: 18/11/2026</span>
+              </div>
+              <div className="font-bold">
+                Nama Pasien: <span className="underline">{patient}</span>
+              </div>
+              <div className="font-mono text-sm font-bold text-[#1E40AF] text-center py-1 bg-blue-50 border border-blue-200">
+                {doseQty} · {mealRule}
+              </div>
+              <div className="flex justify-center gap-4 text-[11px] font-mono pt-1">
+                {(['Pagi', 'Siang', 'Malam'] as const).map((t) => (
+                  <button
+                    key={t}
+                    type="button"
+                    onClick={() => setTiming(t)}
+                    className="flex items-center gap-1"
+                  >
+                    <span className="w-3.5 h-3.5 border border-[#1E40AF] inline-flex items-center justify-center text-[10px] font-bold">
+                      {timing === t ? '✓' : ''}
+                    </span>
+                    <span>{t}</span>
+                  </button>
+                ))}
+              </div>
+              <div className="flex justify-center gap-4 text-[11px] pt-1">
+                {(['Sebelum Makan', 'Sesudah Makan'] as const).map((m) => (
+                  <button
+                    key={m}
+                    type="button"
+                    onClick={() => setMealRule(m)}
+                    className={`px-2 py-0.5 border text-[10px] ${
+                      mealRule === m ? 'border-[#1E40AF] bg-blue-50 font-bold' : 'border-slate-300'
+                    }`}
+                  >
+                    {m}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => alert(`Etiket Obat (${patient}: ${doseQty} ${mealRule}) dikirim ke thermal label printer.`)}
+            className="w-full py-2.5 bg-[#065F46] hover:bg-[#047857] text-white font-mono text-xs font-bold"
+          >
+            [F4] CETAK ETIKET &amp; TUTUP TRANSAKSI
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ============================================================================
+ * 4. ATELIER LUXE · Stark Monochrome Fashion Lookbook & Clienteling Dossier
+ * ========================================================================== */
+const LOOKBOOK = [
+  { ref: 'REF. AW26-01', name: 'Double-Faced Cashmere Trench', price: 4850000, sizes: ['36', '38', '40', '42'], swatch: '#1F2937' },
+  { ref: 'REF. AW26-04', name: 'Italian Suede Chelsea Boots', price: 3200000, sizes: ['40', '41', '42', '43'], swatch: '#57534E' },
+  { ref: 'REF. AW26-09', name: 'Box Calfskin Atelier Tote', price: 5400000, sizes: ['OS'], swatch: '#111111' },
+  { ref: 'REF. AW26-12', name: 'Raw Silk Jacquard Shirt', price: 2150000, sizes: ['36', '38', '40'], swatch: '#D6D3D1' },
+];
+
+export function AtelierLuxePos() {
+  const [sizePick, setSizePick] = useState<Record<string, string>>({
+    'REF. AW26-01': '38',
+    'REF. AW26-04': '42',
+    'REF. AW26-09': 'OS',
+    'REF. AW26-12': '40',
+  });
+  const [vip, setVip] = useState<'REGULAR' | 'SILVER 5%' | 'BLACK 15%'>('BLACK 15%');
+  const [bag, setBag] = useState<{ ref: string; name: string; size: string; price: number }[]>([
+    { ref: 'REF. AW26-01', name: 'Double-Faced Cashmere Trench', size: '38', price: 4850000 },
+  ]);
+
+  const rate = vip === 'BLACK 15%' ? 0.15 : vip === 'SILVER 5%' ? 0.05 : 0;
+  const gross = bag.reduce((s, b) => s + b.price, 0);
+  const disc = Math.round(gross * rate);
+  const net = gross - disc;
+
+  return (
+    <div className="min-h-[720px] bg-white text-[#111111] grid grid-cols-1 lg:grid-cols-12 border-t border-[#111111]">
+      {/* Left Lookbook Grid */}
+      <div className="lg:col-span-8 border-b lg:border-b-0 lg:border-r border-[#111111]">
+        <div className="px-6 py-4 border-b border-[#111111] flex items-center justify-between">
+          <h1 className="font-serif text-2xl tracking-[0.18em]">ATELIER LUXE</h1>
+          <span className="font-mono text-[11px] uppercase tracking-widest">
+            Senayan Flagship · Clienteling Terminal
+          </span>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2">
+          {LOOKBOOK.map((item, idx) => {
+            const activeSize = sizePick[item.ref] || item.sizes[0];
+            return (
+              <div
+                key={item.ref}
+                className={`p-6 border-b border-[#111111] ${idx % 2 === 0 ? 'sm:border-r' : ''} flex flex-col justify-between gap-5`}
+              >
+                <div className="space-y-3">
+                  <div className="flex justify-between font-mono text-[11px] text-neutral-500">
+                    <span>{item.ref}</span>
+                    <span>IN STOCK</span>
+                  </div>
+                  <div
+                    className="h-28 w-full border border-[#111111] flex items-end p-3"
+                    style={{ backgroundColor: item.swatch }}
+                  >
+                    <span className="bg-white text-[#111111] px-2 py-0.5 font-mono text-[10px]">
+                      SILHOUETTE {idx + 1}
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-baseline gap-2">
+                    <h2 className="font-serif text-lg font-medium">{item.name}</h2>
+                    <span className="font-mono text-xs font-bold shrink-0">
+                      IDR {item.price.toLocaleString('id-ID')}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  <div className="flex gap-1">
+                    {item.sizes.map((s) => (
+                      <button
+                        key={s}
+                        type="button"
+                        onClick={() => setSizePick((p) => ({ ...p, [item.ref]: s }))}
+                        className={`flex-1 py-1.5 font-mono text-xs border border-[#111111] transition ${
+                          activeSize === s ? 'bg-[#111111] text-white font-bold' : 'bg-white text-[#111111]'
+                        }`}
+                      >
+                        {s}
+                      </button>
+                    ))}
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setBag((p) => [
+                        ...p,
+                        { ref: item.ref, name: item.name, size: activeSize, price: item.price },
+                      ])
+                    }
+                    className="w-full py-2.5 border border-[#111111] hover:bg-[#111111] hover:text-white font-mono text-[11px] tracking-widest uppercase transition"
+                  >
+                    Add Size {activeSize} to Dossier
+                  </button>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Right Stark Client Dossier */}
+      <div className="lg:col-span-4 p-6 flex flex-col justify-between bg-[#FAFAFA]">
+        <div className="space-y-5">
+          <div className="border-b border-[#111111] pb-3">
+            <span className="font-mono text-[10px] tracking-widest uppercase text-neutral-500 block">
+              Client Dossier
+            </span>
+            <div className="font-serif text-xl mt-0.5">Clarissa V. · No. 0841</div>
+          </div>
+
+          <div className="grid grid-cols-3 border border-[#111111] font-mono text-[10px]">
+            {(['REGULAR', 'SILVER 5%', 'BLACK 15%'] as const).map((tier) => (
+              <button
+                key={tier}
+                type="button"
+                onClick={() => setVip(tier)}
+                className={`py-2 border-r last:border-r-0 border-[#111111] ${
+                  vip === tier ? 'bg-[#111111] text-white font-bold' : 'bg-white text-[#111111]'
+                }`}
+              >
+                {tier}
+              </button>
+            ))}
+          </div>
+
+          <div className="divide-y divide-neutral-300 min-h-[240px]">
+            {bag.map((b, i) => (
+              <div key={`${b.ref}-${i}`} className="py-3 flex justify-between items-start text-xs">
+                <div>
+                  <div className="font-serif text-sm">{b.name}</div>
+                  <div className="font-mono text-[10px] text-neutral-500">
+                    {b.ref} · SIZE {b.size}
+                  </div>
+                </div>
+                <div className="text-right font-mono">
+                  <div>{b.price.toLocaleString('id-ID')}</div>
+                  <button
+                    type="button"
+                    onClick={() => setBag((p) => p.filter((_, idx) => idx !== i))}
+                    className="text-[10px] underline text-neutral-500"
+                  >
+                    Void
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="space-y-4 pt-4 border-t border-[#111111]">
+          <div className="space-y-1 font-mono text-xs">
+            <div className="flex justify-between text-neutral-600">
               <span>GROSS</span>
-              <span>Rp {subtotal.toLocaleString('id-ID')}</span>
+              <span>IDR {gross.toLocaleString('id-ID')}</span>
             </div>
-            <div className="flex justify-between text-emerald-400">
-              <span>VIP PRIVILEGE</span>
-              <span>- Rp {discount.toLocaleString('id-ID')}</span>
+            <div className="flex justify-between text-neutral-600">
+              <span>PRIVILEGE ({vip})</span>
+              <span>- IDR {disc.toLocaleString('id-ID')}</span>
             </div>
-            <div className="flex justify-between text-base font-bold text-[#D4AF37] pt-2">
-              <span>NET SETTLEMENT</span>
-              <span>Rp {netTotal.toLocaleString('id-ID')}</span>
+            <div className="flex justify-between text-base font-bold pt-2 border-t border-[#111111]">
+              <span>NET TOTAL</span>
+              <span>IDR {net.toLocaleString('id-ID')}</span>
             </div>
           </div>
 
           <button
             type="button"
             disabled={bag.length === 0}
-            onClick={() =>
-              alert(
-                `VIP Settlement Rp ${netTotal.toLocaleString('id-ID')} recorded${giftBox ? ' with Signature Gift Box' : ''}.`
-              )
-            }
-            className="w-full min-h-[46px] bg-[#D4AF37] hover:bg-[#c5a12e] text-[#09090B] font-mono font-bold text-xs tracking-wider transition disabled:opacity-40"
+            onClick={() => alert(`Transaction Authorized: IDR ${net.toLocaleString('id-ID')}`)}
+            className="w-full py-4 bg-[#111111] hover:bg-neutral-800 text-white font-mono text-xs tracking-[0.2em] font-bold transition disabled:opacity-40"
           >
-            COMPLETE VIP SALE
+            AUTHORIZE TRANSACTION
           </button>
         </div>
       </div>
@@ -1091,206 +893,205 @@ export function AtelierLuxePos() {
 }
 
 /* ============================================================================
- * 5. PITSTOP PRO · Auto Service Bay & Work Order POS (Gunmetal & Safety Amber)
+ * 5. PITSTOP PRO · Automotive PKB & Realistic License Plate Bay Board
  * ========================================================================== */
-const SERVICE_BAYS = [
-  { id: 'BAY 01', plate: 'B 1942 KRN', car: 'Honda Civic Turbo 2023', mechanic: 'Dani', status: 'In Service' },
-  { id: 'BAY 02', plate: 'B 8821 VRT', car: 'Toyota Fortuner VRZ', mechanic: 'Arif', status: 'Ready Pickup' },
-  { id: 'BAY 03', plate: 'B 2104 ZXA', car: 'Hyundai Ioniq 5', mechanic: 'Reza', status: 'Inspection' },
-  { id: 'BAY 04', plate: 'D 404 RYZ', car: 'Yamaha XMAX 250', mechanic: 'Budi', status: 'Tune Up' },
+const BAYS = [
+  { id: 'BAY-01', plate: 'B 1942 KRN', exp: '11·28', model: 'Civic Turbo RS', tech: 'Dani S.', state: 'LIFT UP' },
+  { id: 'BAY-02', plate: 'B 8821 VRT', exp: '04·27', model: 'Fortuner VRZ', tech: 'Arif P.', state: 'FINAL QC' },
+  { id: 'BAY-03', plate: 'B 2104 ZXA', exp: '09·29', model: 'Ioniq 5 Signature', tech: 'Reza M.', state: 'SCANNER' },
+  { id: 'BAY-04', plate: 'D 404 RYZ', exp: '07·28', model: 'XMAX 250 Tech', tech: 'Budi H.', state: 'TUNE UP' },
 ];
 
-const WORKSHOP_CATALOG = [
-  { id: 'w1', kind: 'JASA', name: 'Tune Up & Injector Cleaning', price: 285000 },
-  { id: 'w2', kind: 'PART', name: 'Oli Mesin Full Synthetic 0W-20 (4L)', price: 480000 },
-  { id: 'w3', kind: 'JASA', name: 'Spooring + Balancing 4 Roda', price: 220000 },
-  { id: 'w4', kind: 'PART', name: 'Kampas Rem Depan OEM Set', price: 390000 },
-  { id: 'w5', kind: 'PART', name: 'Filter Oli + Filter Udara OEM', price: 165000 },
-  { id: 'w6', kind: 'JASA', name: 'Diagnostic OBD-II Scanner Check', price: 150000 },
+const PKB_LABOR = [
+  { id: 'L1', name: 'Tune Up & GDI Injector Cleaning', hours: '1.5 Jam', price: 285000 },
+  { id: 'L2', name: 'Spooring 3D + Balancing 4 Roda', hours: '1.0 Jam', price: 220000 },
+  { id: 'L3', name: 'Diagnostic OBD-II Fault Scan', hours: '0.5 Jam', price: 150000 },
+];
+
+const PKB_PARTS = [
+  { id: 'P1', partNo: 'OEM-0W20-4L', name: 'Oli Sintetik 0W-20 API SP (4 Liter)', price: 480000 },
+  { id: 'P2', partNo: 'OEM-BRK-F02', name: 'Kampas Rem Depan Keramik Set', price: 390000 },
+  { id: 'P3', partNo: 'OEM-FLT-091', name: 'Filter Oli + Filter Udara Kabin', price: 165000 },
 ];
 
 export function PitStopBengkelPos() {
-  const [activeBay, setActiveBay] = useState(SERVICE_BAYS[0]);
-  const [kmInput, setKmInput] = useState('42.500 km');
-  const [woItems, setWoItems] = useState<
-    { id: string; kind: string; name: string; price: number; qty: number }[]
+  const [bay, setBay] = useState(BAYS[0]);
+  const [odometer, setOdometer] = useState('42.580');
+  const [workItems, setWorkItems] = useState<
+    { id: string; section: 'JASA' | 'PART'; label: string; meta: string; price: number }[]
   >([
-    { id: 'w1', kind: 'JASA', name: 'Tune Up & Injector Cleaning', price: 285000, qty: 1 },
-    { id: 'w2', kind: 'PART', name: 'Oli Mesin Full Synthetic 0W-20 (4L)', price: 480000, qty: 1 },
+    { id: 'L1', section: 'JASA', label: 'Tune Up & GDI Injector Cleaning', meta: '1.5 Jam', price: 285000 },
+    { id: 'P1', section: 'PART', label: 'Oli Sintetik 0W-20 API SP (4 Liter)', meta: 'OEM-0W20-4L', price: 480000 },
   ]);
 
-  const addWoItem = (item: (typeof WORKSHOP_CATALOG)[0]) => {
-    setWoItems((prev) => {
-      const idx = prev.findIndex((x) => x.id === item.id);
-      if (idx >= 0) {
-        const copy = [...prev];
-        copy[idx] = { ...copy[idx], qty: copy[idx].qty + 1 };
-        return copy;
-      }
-      return [...prev, { ...item, qty: 1 }];
-    });
+  const addLine = (section: 'JASA' | 'PART', id: string, label: string, meta: string, price: number) => {
+    setWorkItems((p) => [...p, { id: `${id}-${Date.now()}`, section, label, meta, price }]);
   };
 
-  const laborTotal = woItems.filter((i) => i.kind === 'JASA').reduce((s, i) => s + i.price * i.qty, 0);
-  const partsTotal = woItems.filter((i) => i.kind === 'PART').reduce((s, i) => s + i.price * i.qty, 0);
-  const total = laborTotal + partsTotal;
+  const total = workItems.reduce((s, w) => s + w.price, 0);
 
   return (
-    <div className="min-h-[calc(100vh-56px)] bg-[#0F172A] text-slate-100 p-4 sm:p-6">
-      <div className="max-w-[1440px] mx-auto bg-[#1E293B] border border-slate-700 rounded-2xl p-4 sm:px-6 flex flex-wrap items-center justify-between gap-4 mb-5">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-[#F59E0B] text-[#0F172A] flex items-center justify-center">
-            <Wrench className="w-5 h-5" />
-          </div>
-          <div>
-            <h1 className="font-mono font-bold text-base sm:text-lg text-white">
-              PITSTOP PRO · AUTO SERVICE BAY &amp; SPK POS
-            </h1>
-            <p className="text-xs text-slate-400">Gunmetal Amber Industrial · Labor vs Parts Split</p>
-          </div>
-        </div>
-        <span className="font-mono text-xs px-3 py-1.5 rounded-lg bg-[#0F172A] border border-amber-500/40 text-[#F59E0B]">
-          ACTIVE: {activeBay.id} ({activeBay.plate})
-        </span>
+    <div className="min-h-[720px] bg-[#14181F] text-slate-100 font-sans flex flex-col">
+      {/* Hazard Stripe Header */}
+      <div
+        className="h-2 w-full"
+        style={{
+          backgroundImage: 'repeating-linear-gradient(45deg, #F59E0B 0 12px, #111827 12px 24px)',
+        }}
+      />
+      <div className="px-5 py-3 bg-[#1B222C] border-b border-slate-700 flex flex-wrap items-center justify-between gap-2 font-mono text-xs">
+        <span className="font-bold text-[#F59E0B]">PITSTOP PRO · PERINTAH KERJA BENGKEL (PKB)</span>
+        <span className="text-slate-300">WORKSHOP CONTROL · GARANSI SERVIS 30 HARI</span>
       </div>
 
-      {/* 4 Hydraulic Service Bays */}
-      <div className="max-w-[1440px] mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-5">
-        {SERVICE_BAYS.map((bay) => {
-          const active = activeBay.id === bay.id;
+      {/* 4 Lift Bay Plate Board */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 border-b border-slate-700 bg-[#0F1319]">
+        {BAYS.map((b) => {
+          const active = bay.id === b.id;
           return (
             <button
-              key={bay.id}
+              key={b.id}
               type="button"
-              onClick={() => setActiveBay(bay)}
-              className={`p-4 rounded-xl border text-left transition ${
-                active
-                  ? 'bg-[#1E293B] border-[#F59E0B] ring-1 ring-[#F59E0B]'
-                  : 'bg-[#1E293B]/60 border-slate-700 hover:border-slate-500'
+              onClick={() => setBay(b)}
+              className={`p-4 text-left border-b lg:border-b-0 border-r border-slate-700 last:border-r-0 transition ${
+                active ? 'bg-[#1F2733] ring-2 ring-inset ring-[#F59E0B]' : 'hover:bg-[#181E27]'
               }`}
             >
-              <div className="flex items-center justify-between font-mono text-[11px] font-bold">
-                <span className="text-[#F59E0B]">{bay.id}</span>
-                <span className="text-slate-400">{bay.status}</span>
+              <div className="flex justify-between font-mono text-[10px] mb-2">
+                <span className="text-[#F59E0B] font-bold">{b.id}</span>
+                <span className="text-slate-400">{b.state}</span>
               </div>
-              <div className="font-mono text-base font-bold text-white mt-1">{bay.plate}</div>
-              <div className="text-xs text-slate-300 mt-0.5">{bay.car}</div>
-              <div className="font-mono text-[10px] text-slate-400 mt-1">Mekanik: {bay.mechanic}</div>
+              {/* Realistic Indonesian Black License Plate */}
+              <div className="inline-block bg-black border-2 border-white px-3 py-1 rounded-sm font-mono text-white text-center">
+                <div className="text-sm font-bold tracking-widest leading-none">{b.plate}</div>
+                <div className="text-[9px] text-slate-300 mt-0.5 tracking-widest">{b.exp}</div>
+              </div>
+              <div className="text-xs font-semibold text-slate-200 mt-2">{b.model}</div>
+              <div className="font-mono text-[10px] text-slate-400">Teknisi: {b.tech}</div>
             </button>
           );
         })}
       </div>
 
-      <div className="max-w-[1440px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
-        <div className="lg:col-span-7 bg-[#1E293B] border border-slate-700 rounded-2xl p-5 space-y-4">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <h2 className="font-mono text-xs font-bold uppercase text-[#F59E0B]">
-              Tambah Jasa Mekanik &amp; Suku Cadang OEM
+      {/* Main Split: Labor/Parts Catalog vs PKB Form */}
+      <div className="flex-1 grid grid-cols-1 lg:grid-cols-12">
+        <div className="lg:col-span-6 p-5 border-b lg:border-b-0 lg:border-r border-slate-700 space-y-5">
+          <div>
+            <h2 className="font-mono text-xs font-bold text-[#F59E0B] uppercase mb-2.5">
+              Bagian A · Jasa Mekanik &amp; Flat-Rate
             </h2>
-            <div className="flex items-center gap-2 text-xs">
-              <span className="font-mono text-slate-400">Odometer:</span>
-              <input
-                type="text"
-                value={kmInput}
-                onChange={(e) => setKmInput(e.target.value)}
-                className="px-2.5 py-1 rounded bg-[#0F172A] border border-slate-700 font-mono text-xs w-28"
-              />
+            <div className="border border-slate-700 divide-y divide-slate-700 bg-[#1B222C]">
+              {PKB_LABOR.map((l) => (
+                <div key={l.id} className="p-3 flex items-center justify-between gap-3 text-xs">
+                  <div>
+                    <div className="font-bold text-white">{l.name}</div>
+                    <div className="font-mono text-[11px] text-slate-400">Estimasi: {l.hours}</div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => addLine('JASA', l.id, l.name, l.hours, l.price)}
+                    className="px-3 py-1.5 bg-[#F59E0B] text-black font-mono font-bold text-[11px] shrink-0"
+                  >
+                    + Rp {l.price.toLocaleString('id-ID')}
+                  </button>
+                </div>
+              ))}
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {WORKSHOP_CATALOG.map((w) => (
-              <button
-                key={w.id}
-                type="button"
-                onClick={() => addWoItem(w)}
-                className="p-3.5 rounded-xl bg-[#0F172A] hover:bg-slate-900 border border-slate-700 hover:border-[#F59E0B] text-left transition flex flex-col justify-between gap-2"
-              >
-                <div>
-                  <span
-                    className={`font-mono text-[10px] font-bold px-2 py-0.5 rounded ${
-                      w.kind === 'JASA'
-                        ? 'bg-amber-500/20 text-[#F59E0B]'
-                        : 'bg-sky-500/20 text-sky-300'
-                    }`}
+          <div>
+            <h2 className="font-mono text-xs font-bold text-sky-400 uppercase mb-2.5">
+              Bagian B · Suku Cadang OEM
+            </h2>
+            <div className="border border-slate-700 divide-y divide-slate-700 bg-[#1B222C]">
+              {PKB_PARTS.map((pt) => (
+                <div key={pt.id} className="p-3 flex items-center justify-between gap-3 text-xs">
+                  <div>
+                    <div className="font-bold text-white">{pt.name}</div>
+                    <div className="font-mono text-[11px] text-slate-400">{pt.partNo}</div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => addLine('PART', pt.id, pt.name, pt.partNo, pt.price)}
+                    className="px-3 py-1.5 bg-sky-500 text-black font-mono font-bold text-[11px] shrink-0"
                   >
-                    {w.kind}
-                  </span>
-                  <h3 className="font-bold text-sm text-white mt-2">{w.name}</h3>
+                    + Rp {pt.price.toLocaleString('id-ID')}
+                  </button>
                 </div>
-                <span className="font-mono text-xs font-bold text-slate-200">
-                  Rp {w.price.toLocaleString('id-ID')}
-                </span>
-              </button>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
 
-        {/* Work Order SPK */}
-        <div className="lg:col-span-5 bg-[#1E293B] border border-[#F59E0B]/50 rounded-2xl p-5 space-y-4">
-          <div className="border-b border-slate-700 pb-3">
-            <div className="font-mono text-xs font-bold text-[#F59E0B]">
-              WORK ORDER SPK · {activeBay.plate}
-            </div>
-            <div className="text-sm font-bold text-white mt-0.5">
-              {activeBay.car} ({kmInput}) · Mekanik: {activeBay.mechanic}
-            </div>
-          </div>
-
-          <div className="space-y-2 max-h-[260px] overflow-y-auto">
-            {woItems.map((i) => (
-              <div
-                key={i.id}
-                className="p-3 rounded-xl bg-[#0F172A] border border-slate-700 flex items-center justify-between gap-2"
-              >
-                <div>
-                  <span className="font-mono text-[10px] text-[#F59E0B]">{i.kind}</span>
-                  <div className="text-xs font-bold text-white">
-                    {i.qty}x {i.name}
-                  </div>
+        {/* Right PKB Document Sheet */}
+        <div className="lg:col-span-6 p-5 bg-[#0F1319] flex flex-col justify-between gap-4">
+          <div className="bg-white text-slate-900 p-5 border-t-4 border-[#F59E0B] space-y-4">
+            <div className="flex flex-wrap items-start justify-between gap-2 border-b border-slate-300 pb-3">
+              <div>
+                <div className="font-mono text-[10px] font-bold text-slate-500">
+                  FORMULIR PERINTAH KERJA BENGKEL
                 </div>
-                <div className="flex items-center gap-3">
-                  <span className="font-mono text-xs text-slate-200">
-                    Rp {(i.price * i.qty).toLocaleString('id-ID')}
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => setWoItems((p) => p.filter((x) => x.id !== i.id))}
-                    className="text-xs text-rose-400 hover:underline"
-                  >
-                    Hapus
-                  </button>
+                <div className="font-bold text-lg">
+                  {bay.plate} · {bay.model}
                 </div>
               </div>
-            ))}
-          </div>
+              <div className="font-mono text-xs">
+                <span>KM: </span>
+                <input
+                  type="text"
+                  value={odometer}
+                  onChange={(e) => setOdometer(e.target.value)}
+                  className="w-20 border-b border-slate-400 font-bold text-right focus:outline-none"
+                />
+              </div>
+            </div>
 
-          <div className="space-y-1.5 font-mono text-xs pt-3 border-t border-slate-700">
-            <div className="flex justify-between text-slate-400">
-              <span>Total Jasa Mekanik</span>
-              <span>Rp {laborTotal.toLocaleString('id-ID')}</span>
-            </div>
-            <div className="flex justify-between text-slate-400">
-              <span>Total Suku Cadang OEM</span>
-              <span>Rp {partsTotal.toLocaleString('id-ID')}</span>
-            </div>
-            <div className="flex justify-between text-base font-bold text-[#F59E0B] pt-2">
-              <span>ESTIMASI INVOICE SPK</span>
-              <span>Rp {total.toLocaleString('id-ID')}</span>
+            <table className="w-full text-xs text-left border-collapse">
+              <thead className="bg-slate-100 font-mono text-[10px] border-y border-slate-300">
+                <tr>
+                  <th className="py-1.5 px-2">TIPE</th>
+                  <th className="py-1.5 px-2">URAIAN PEKERJAAN / PART</th>
+                  <th className="py-1.5 px-2 text-right">BIAYA</th>
+                  <th className="py-1.5 px-2"></th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-200">
+                {workItems.map((w) => (
+                  <tr key={w.id}>
+                    <td className="py-2 px-2 font-mono font-bold">{w.section}</td>
+                    <td className="py-2 px-2">
+                      <div className="font-semibold">{w.label}</div>
+                      <div className="font-mono text-[10px] text-slate-500">{w.meta}</div>
+                    </td>
+                    <td className="py-2 px-2 font-mono text-right font-bold">
+                      {w.price.toLocaleString('id-ID')}
+                    </td>
+                    <td className="py-2 px-1 text-right">
+                      <button
+                        type="button"
+                        onClick={() => setWorkItems((p) => p.filter((x) => x.id !== w.id))}
+                        className="text-rose-700 font-mono text-[10px] underline"
+                      >
+                        X
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+
+            <div className="pt-3 border-t-2 border-slate-900 flex justify-between items-baseline font-mono">
+              <span className="text-xs font-bold">TOTAL TAGIHAN PKB</span>
+              <span className="text-lg font-extrabold">Rp {total.toLocaleString('id-ID')}</span>
             </div>
           </div>
 
           <button
             type="button"
-            disabled={woItems.length === 0}
-            onClick={() =>
-              alert(
-                `Invoice SPK untuk ${activeBay.plate} (${activeBay.car}) senilai Rp ${total.toLocaleString('id-ID')} siap diserahkan (Garansi 30 Hari).`
-              )
-            }
-            className="w-full min-h-[46px] rounded-xl bg-[#F59E0B] hover:bg-amber-400 text-[#0F172A] font-mono font-bold text-sm transition disabled:opacity-40"
+            onClick={() => alert(`PKB ${bay.plate} diterbitkan: Rp ${total.toLocaleString('id-ID')} (Garansi 30 Hari).`)}
+            className="w-full py-3.5 bg-[#F59E0B] hover:bg-amber-400 text-black font-mono font-bold text-xs tracking-wider"
           >
-            TERBITKAN INVOICE SPK + GARANSI 30 HARI
+            TERBITKAN INVOICE PKB + GARANSI 30 HARI
           </button>
         </div>
       </div>

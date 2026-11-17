@@ -95,8 +95,8 @@ export const DEFAULT_PRODUCTS: ProductItem[] = [
     tech_stack: ['Next.js 16', 'TypeScript', 'Tailwind CSS', 'Supabase', 'KDS Queue'],
     price: 950000,
     is_portfolio: false,
-    thumbnail_url: '/products/thumb-pos-kuro.svg',
-    preview_images: ['/products/thumb-pos-kuro.svg'],
+    thumbnail_url: '/products/shot-pos-kuro.png',
+    preview_images: ['/products/shot-pos-kuro.png'],
     demo_url: '/demo/pos-kuro',
     github_url: 'https://github.com/FikriBintangx/birumarket',
     description:
@@ -123,8 +123,8 @@ export const DEFAULT_PRODUCTS: ProductItem[] = [
     tech_stack: ['Next.js 16', 'React 19', 'Tailwind CSS', 'Receipt Builder', 'QRIS UI'],
     price: 850000,
     is_portfolio: false,
-    thumbnail_url: '/products/thumb-pos-brew.svg',
-    preview_images: ['/products/thumb-pos-brew.svg'],
+    thumbnail_url: '/products/shot-pos-brew.png',
+    preview_images: ['/products/shot-pos-brew.png'],
     demo_url: '/demo/pos-brew',
     github_url: 'https://github.com/FikriBintangx/birumarket',
     description:
@@ -151,8 +151,8 @@ export const DEFAULT_PRODUCTS: ProductItem[] = [
     tech_stack: ['Next.js 16', 'TypeScript', 'Tailwind CSS', 'PostgreSQL', 'FEFO Engine'],
     price: 1250000,
     is_portfolio: false,
-    thumbnail_url: '/products/thumb-pos-medika.svg',
-    preview_images: ['/products/thumb-pos-medika.svg'],
+    thumbnail_url: '/products/shot-pos-medika.png',
+    preview_images: ['/products/shot-pos-medika.png'],
     demo_url: '/demo/pos-medika',
     github_url: 'https://github.com/FikriBintangx/birumarket',
     description:
@@ -179,8 +179,8 @@ export const DEFAULT_PRODUCTS: ProductItem[] = [
     tech_stack: ['Next.js 16', 'TypeScript', 'Tailwind CSS', 'Clienteling CRM'],
     price: 1100000,
     is_portfolio: false,
-    thumbnail_url: '/products/thumb-pos-atelier.svg',
-    preview_images: ['/products/thumb-pos-atelier.svg'],
+    thumbnail_url: '/products/shot-pos-atelier.png',
+    preview_images: ['/products/shot-pos-atelier.png'],
     demo_url: '/demo/pos-atelier',
     github_url: 'https://github.com/FikriBintangx/birumarket',
     description:
@@ -207,8 +207,8 @@ export const DEFAULT_PRODUCTS: ProductItem[] = [
     tech_stack: ['Next.js 16', 'TypeScript', 'Tailwind CSS', 'Supabase', 'SPK Engine'],
     price: 1350000,
     is_portfolio: false,
-    thumbnail_url: '/products/thumb-pos-bengkel.svg',
-    preview_images: ['/products/thumb-pos-bengkel.svg'],
+    thumbnail_url: '/products/shot-pos-bengkel.png',
+    preview_images: ['/products/shot-pos-bengkel.png'],
     demo_url: '/demo/pos-bengkel',
     github_url: 'https://github.com/FikriBintangx/birumarket',
     description:
@@ -237,8 +237,8 @@ export const DEFAULT_PRODUCTS: ProductItem[] = [
     tech_stack: ['Next.js 16', 'TypeScript', 'Tailwind CSS', 'Telemetry UI'],
     price: 900000,
     is_portfolio: false,
-    thumbnail_url: '/products/thumb-app-pulseops.svg',
-    preview_images: ['/products/thumb-app-pulseops.svg'],
+    thumbnail_url: '/products/shot-app-pulseops.png',
+    preview_images: ['/products/shot-app-pulseops.png'],
     demo_url: '/demo/app-pulseops',
     github_url: 'https://github.com/FikriBintangx/birumarket',
     description:
@@ -265,8 +265,8 @@ export const DEFAULT_PRODUCTS: ProductItem[] = [
     tech_stack: ['Next.js 16', 'React 19', 'Tailwind CSS', 'WhatsApp Share'],
     price: 550000,
     is_portfolio: false,
-    thumbnail_url: '/products/thumb-app-splitbill.svg',
-    preview_images: ['/products/thumb-app-splitbill.svg'],
+    thumbnail_url: '/products/shot-app-splitbill.png',
+    preview_images: ['/products/shot-app-splitbill.png'],
     demo_url: '/demo/app-splitbill',
     github_url: 'https://github.com/FikriBintangx/birumarket',
     description:
@@ -293,8 +293,8 @@ export const DEFAULT_PRODUCTS: ProductItem[] = [
     tech_stack: ['Next.js 16', 'TypeScript', 'Tailwind CSS', 'Supabase Auth'],
     price: 1150000,
     is_portfolio: false,
-    thumbnail_url: '/products/thumb-app-kursus.svg',
-    preview_images: ['/products/thumb-app-kursus.svg'],
+    thumbnail_url: '/products/shot-app-kursus.png',
+    preview_images: ['/products/shot-app-kursus.png'],
     demo_url: '/demo/app-kursus',
     github_url: 'https://github.com/FikriBintangx/birumarket',
     description:
@@ -321,8 +321,8 @@ export const DEFAULT_PRODUCTS: ProductItem[] = [
     tech_stack: ['Next.js 16', 'TypeScript', 'Tailwind CSS', 'WhatsApp Ticket'],
     price: 800000,
     is_portfolio: false,
-    thumbnail_url: '/products/thumb-app-klinik.svg',
-    preview_images: ['/products/thumb-app-klinik.svg'],
+    thumbnail_url: '/products/shot-app-klinik.png',
+    preview_images: ['/products/shot-app-klinik.png'],
     demo_url: '/demo/app-klinik',
     github_url: 'https://github.com/FikriBintangx/birumarket',
     description:
@@ -349,8 +349,8 @@ export const DEFAULT_PRODUCTS: ProductItem[] = [
     tech_stack: ['Next.js 16', 'TypeScript', 'Tailwind CSS', 'Print CSS A4'],
     price: 650000,
     is_portfolio: false,
-    thumbnail_url: '/products/thumb-app-kontrak.svg',
-    preview_images: ['/products/thumb-app-kontrak.svg'],
+    thumbnail_url: '/products/shot-app-kontrak.png',
+    preview_images: ['/products/shot-app-kontrak.png'],
     demo_url: '/demo/app-kontrak',
     github_url: 'https://github.com/FikriBintangx/birumarket',
     description:
@@ -415,11 +415,11 @@ export function enrichProduct(raw: any): ProductItem {
     price: Number(raw.price) || 0,
     is_portfolio: Boolean(raw.is_portfolio),
     thumbnail_url:
-      raw.thumbnail_url || matched?.thumbnail_url || '/products/thumb-pos-kuro.svg',
+      raw.thumbnail_url || matched?.thumbnail_url || '/products/shot-pos-kuro.png',
     preview_images:
       previewImages.length > 0
         ? previewImages
-        : [raw.thumbnail_url || '/products/thumb-pos-kuro.svg'],
+        : [raw.thumbnail_url || '/products/shot-pos-kuro.png'],
     demo_url: raw.demo_url || matched?.demo_url || '',
     github_url: raw.github_url || matched?.github_url || CONTACT_INFO.github,
     description: raw.description || matched?.description || '',

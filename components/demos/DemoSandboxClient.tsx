@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowLeft, MessageCircle } from 'lucide-react';
 import { DEFAULT_PRODUCTS, buildWhatsAppOrderUrl } from '@/lib/catalog-data';
 import {
   KuroBentoPos,
@@ -58,10 +57,9 @@ export default function DemoSandboxClient({ slug }: DemoSandboxClientProps) {
             </p>
             <Link
               href="/catalog"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#0B2545] text-white text-xs font-bold"
+              className="inline-block px-5 py-2.5 bg-[#0B2545] text-white text-xs font-mono font-bold"
             >
-              <ArrowLeft className="w-4 h-4" />
-              <span>Kembali ke Katalog</span>
+              ← Kembali ke Katalog
             </Link>
           </div>
         );
@@ -69,25 +67,20 @@ export default function DemoSandboxClient({ slug }: DemoSandboxClientProps) {
   };
 
   return (
-    <div className="space-y-4">
-      {/* Sandbox Top Navigation Bar */}
-      <div className="bg-[#0B2545] text-white rounded-2xl px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3">
-        <div className="flex flex-wrap items-center gap-3 min-w-0">
+    <div className="space-y-3">
+      {/* Slim 38px Sandbox Navigation Bar */}
+      <div className="min-h-[38px] bg-[#0B2545] text-white px-4 py-1.5 flex flex-wrap items-center justify-between gap-2 font-mono text-[11px]">
+        <div className="flex items-center gap-3 min-w-0">
           <Link
             href="/catalog"
-            className="min-h-[38px] px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-bold inline-flex items-center gap-1.5 transition shrink-0"
+            className="text-blue-200 hover:text-white underline underline-offset-4 shrink-0"
           >
-            <ArrowLeft className="w-3.5 h-3.5" />
-            <span>Katalog</span>
+            ← Katalog
           </Link>
-          <div className="min-w-0">
-            <span className="font-mono text-[10px] uppercase tracking-wider text-blue-200 block">
-              BiruMarket Live Interactive Demo
-            </span>
-            <span className="font-bold text-xs sm:text-sm truncate block">
-              {product ? product.title : slug}
-            </span>
-          </div>
+          <span className="text-white/30">|</span>
+          <span className="font-bold truncate">
+            {product ? product.title : slug}
+          </span>
         </div>
 
         {product && (
@@ -95,18 +88,15 @@ export default function DemoSandboxClient({ slug }: DemoSandboxClientProps) {
             href={buildWhatsAppOrderUrl(product, 'source')}
             target="_blank"
             rel="noopener noreferrer"
-            className="min-h-[38px] px-4 py-1.5 rounded-xl bg-[#1D4ED8] hover:bg-blue-600 text-white text-xs font-bold inline-flex items-center gap-2 transition shrink-0"
+            className="px-3 py-1 bg-[#1D4ED8] hover:bg-blue-600 text-white font-bold shrink-0 transition"
           >
-            <MessageCircle className="w-3.5 h-3.5" />
-            <span>
-              Beli Source Code (Rp {product.price.toLocaleString('id-ID')})
-            </span>
+            Beli Source Code (Rp {product.price.toLocaleString('id-ID')})
           </a>
         )}
       </div>
 
-      {/* Live App Frame */}
-      <div className="rounded-2xl overflow-hidden border border-slate-200 shadow-lg">
+      {/* Full-Bleed Live App Frame */}
+      <div className="border border-slate-300 shadow-lg overflow-hidden">
         {renderDemo()}
       </div>
     </div>

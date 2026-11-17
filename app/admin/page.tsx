@@ -250,11 +250,11 @@ export default function AdminPage() {
       tech_stack: techStack,
       price: Number(price) || 0,
       is_portfolio: isPortfolio,
-      thumbnail_url: thumbnailUrl || '/products/thumb-pos-kuro.svg',
+      thumbnail_url: thumbnailUrl || '/products/shot-pos-kuro.png',
       preview_images:
         previewImages.length > 0
           ? previewImages
-          : [thumbnailUrl || '/products/thumb-pos-kuro.svg'],
+          : [thumbnailUrl || '/products/shot-pos-kuro.png'],
       demo_url: demoUrl,
       github_url: githubUrl,
       description,
@@ -585,7 +585,7 @@ export default function AdminPage() {
 
                 <input
                   type="text"
-                  placeholder="Atau path/URL gambar (contoh: /products/thumb-pos-kuro.svg)"
+                  placeholder="Atau path/URL gambar (contoh: /products/shot-pos-kuro.png)"
                   value={thumbnailUrl}
                   onChange={(e) => {
                     setThumbnailUrl(e.target.value);
@@ -763,7 +763,7 @@ export default function AdminPage() {
                     src={p.thumbnail_url}
                     alt={p.title}
                     onError={(e) => {
-                      (e.target as HTMLImageElement).src = '/products/thumb-pos-kuro.svg';
+                      (e.target as HTMLImageElement).src = '/products/shot-pos-kuro.png';
                     }}
                     className="w-16 h-16 rounded-xl object-cover border border-slate-200 shrink-0"
                   />

@@ -2,8 +2,8 @@
 
 @layer base {
   body {
-    background-color: #E8EEF5;
-    color: #0F172A;
+    background-color: #F8F7F4;
+    color: #111315;
     font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   }
 
@@ -17,17 +17,19 @@
   }
 }
 
-.hero-navy-canvas {
-  background: linear-gradient(155deg, #071930 0%, #0B2545 55%, #123663 100%);
-  position: relative;
-  overflow: hidden;
+.font-serif-editorial {
+  font-family: "Instrument Serif", Georgia, "Times New Roman", serif;
+}
+
+.font-display {
+  font-family: "Syne", sans-serif;
 }
 
 .font-mono {
   font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
-/* Custom scrollbar utility for horizontal chips */
+/* Custom scrollbar utility for horizontal strips */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }

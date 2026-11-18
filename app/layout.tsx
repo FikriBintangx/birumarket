@@ -3,11 +3,11 @@ import './globals.css';
 
 export const metadata: Metadata = {
   title: {
-    default: 'BiruMarket · Marketplace Source Code & Showcase Aplikasi Web',
+    default: 'BiruMarket · Editorial Marketplace Source Code & Sistem Web 3 Halaman',
     template: '%s · BiruMarket',
   },
   description:
-    'BiruMarket adalah marketplace resmi source code aplikasi web, POS dashboard, AI SaaS, micro-tools, dan workflow otomasi siap pakai karya Fikri Bintang Purnomo. Live interactive demo tersedia di birumarket.web.id.',
+    'BiruMarket adalah katalog produk digital, source code aplikasi web 3 halaman, POS interaktif, dan SaaS siap pakai karya Fikri Bintang Purnomo. Uji langsung live demo di birumarket.web.id.',
   metadataBase: new URL('https://birumarket.web.id'),
   alternates: {
     canonical: 'https://birumarket.web.id',
@@ -35,28 +35,28 @@ export const metadata: Metadata = {
     telephone: false,
   },
   openGraph: {
-    title: 'BiruMarket · Marketplace Source Code & Showcase Aplikasi Web',
+    title: 'BiruMarket · Editorial Marketplace Source Code & Sistem Web 3 Halaman',
     description:
-      'Katalog source code aplikasi web, dashboard POS modern, AI SaaS, dan otomasi siap deploy oleh Fikri Bintang Purnomo.',
+      'Katalog terkurasi untuk source code aplikasi web 3 halaman, terminal POS modern, dan sistem SaaS siap deploy oleh Fikri Bintang Purnomo.',
     url: 'https://birumarket.web.id',
     siteName: 'BiruMarket',
     locale: 'id_ID',
     type: 'website',
     images: [
       {
-        url: 'https://birumarket.web.id/products/shot-omnipos.png',
+        url: 'https://birumarket.web.id/products/shot-pos-kuro.png',
         width: 1200,
         height: 630,
-        alt: 'BiruMarket · Marketplace Source Code & Showcase Web',
+        alt: 'BiruMarket · Editorial Marketplace Source Code & Showcase Web',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'BiruMarket · Marketplace Source Code & Showcase Aplikasi Web',
+    title: 'BiruMarket · Editorial Marketplace Source Code & Sistem Web 3 Halaman',
     description:
-      'Beli source code aplikasi web dan dashboard POS siap pakai karya Fikri Bintang Purnomo.',
-    images: ['https://birumarket.web.id/products/shot-omnipos.png'],
+      'Akuisisi source code aplikasi web dan sistem POS 3 halaman siap pakai karya Fikri Bintang Purnomo.',
+    images: ['https://birumarket.web.id/products/shot-pos-kuro.png'],
     creator: '@fikribintang',
   },
   robots: {
@@ -84,7 +84,7 @@ const jsonLdWebsite = {
       url: 'https://birumarket.web.id',
       name: 'BiruMarket',
       description:
-        'Marketplace resmi source code aplikasi web, POS dashboard, AI SaaS, dan otomasi siap deploy.',
+        'Katalog resmi source code aplikasi web 3 halaman, terminal POS, dan SaaS siap deploy.',
       publisher: {
         '@id': 'https://birumarket.web.id/#organization',
       },
@@ -126,7 +126,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
-          href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Syne:wght@700;800&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Syne:wght@700;800&display=swap"
           rel="stylesheet"
         />
         <script
@@ -134,10 +134,8 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdWebsite) }}
         />
       </head>
-      <body className="p-2.5 sm:p-5 lg:p-8 min-h-screen flex items-start justify-center font-['Plus_Jakarta_Sans',sans-serif] bg-[#E8EEF5] text-[#0F172A] overflow-x-hidden">
-        <div className="w-full max-w-[1360px] bg-[#F8FAFC] rounded-[1.75rem] sm:rounded-[2.5rem] p-3.5 sm:p-6 md:p-8 shadow-xl border border-slate-200/80">
-          {children}
-        </div>
+      <body className="min-h-screen bg-[#F8F7F4] text-[#111315] font-['Plus_Jakarta_Sans',sans-serif] antialiased selection:bg-[#111315] selection:text-[#F8F7F4] overflow-x-hidden">
+        {children}
       </body>
     </html>
   );

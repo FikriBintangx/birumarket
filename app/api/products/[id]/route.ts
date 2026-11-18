@@ -1,5 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
+import crypto from 'crypto';
 import { supabase } from '@/lib/supabase';
+
+function verifyAdminPin(candidate: unknown): boolean {
+  if (typeof candidate !== 'string' || candidate.length === 0) {
+    return false;
+  }
+  const validPin = process.env.ADMIN_PIN || '123456';
+  const candidateDigest = crypto.createHash('sha256').update(candidate).digest();
+  const validDigest = crypto.createHash('sha256').update(validPin).digest();
+  return crypto.timingSafeEqual(candidateDigest, validDigest);
+}
 
 export async function DELETE(
   req: NextRequest,
@@ -8,10 +19,9 @@ export async function DELETE(
   try {
     const { id } = await params;
     const { searchParams } = new URL(req.url);
-    const pin = searchParams.get('pin');
+    const pin = req.headers.get('x-admin-pin') || searchParams.get('pin');
 
-    const validPin = process.env.ADMIN_PIN || '123456';
-    if (pin !== validPin) {
+    if (!verifyAdminPin(pin)) {
       return NextResponse.json({ success: false, error: 'Unauthorized: Invalid Admin PIN' }, { status: 401 });
     }
 
@@ -50,10 +60,11 @@ export async function PUT(
       description,
       status,
       admin_pin,
+      pin,
     } = body;
 
-    const validPin = process.env.ADMIN_PIN || '123456';
-    if (admin_pin !== validPin) {
+    const suppliedPin = req.headers.get('x-admin-pin') || admin_pin || pin;
+    if (!verifyAdminPin(suppliedPin)) {
       return NextResponse.json({ success: false, error: 'Unauthorized: Invalid Admin PIN' }, { status: 401 });
     }
 

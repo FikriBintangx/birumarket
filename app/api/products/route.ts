@@ -1,6 +1,27 @@
 import { NextRequest, NextResponse } from 'next/server';
+import crypto from 'crypto';
 import { supabase } from '@/lib/supabase';
 import { DEFAULT_PRODUCTS, enrichProduct, ProductItem } from '@/lib/catalog-data';
+
+function sanitizeSearchQuery(raw: string | null): string | null {
+  if (!raw) return null;
+  const cleaned = raw
+    .replace(/[,()%\\]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .slice(0, 120);
+  return cleaned.length > 0 ? cleaned : null;
+}
+
+function verifyAdminPin(candidate: unknown): boolean {
+  if (typeof candidate !== 'string' || candidate.length === 0) {
+    return false;
+  }
+  const validPin = process.env.ADMIN_PIN || '123456';
+  const candidateDigest = crypto.createHash('sha256').update(candidate).digest();
+  const validDigest = crypto.createHash('sha256').update(validPin).digest();
+  return crypto.timingSafeEqual(candidateDigest, validDigest);
+}
 
 function toSupabaseRows(items: ProductItem[]) {
   return items.map((p) => ({
@@ -55,7 +76,7 @@ export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
     const category = searchParams.get('category');
-    const search = searchParams.get('search');
+    const search = sanitizeSearchQuery(searchParams.get('search'));
 
     let query = supabase
       .from('products')
@@ -164,8 +185,8 @@ export async function POST(req: NextRequest) {
       pin,
     } = body;
 
-    const validPin = process.env.ADMIN_PIN || '123456';
-    if ((admin_pin || pin) !== validPin) {
+    const suppliedPin = req.headers.get('x-admin-pin') || admin_pin || pin;
+    if (!verifyAdminPin(suppliedPin)) {
       return NextResponse.json(
         { success: false, error: 'Unauthorized: Invalid Admin PIN' },
         { status: 401 }

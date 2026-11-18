@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { ArrowUpRight } from 'lucide-react';
 import { ProductItem } from '@/lib/catalog-data';
 
 interface ProductCardProps {
@@ -8,126 +9,139 @@ interface ProductCardProps {
   onSelect: (product: ProductItem) => void;
 }
 
+const SHORT_PAGE_LABELS: Record<1 | 2 | 3, string> = {
+  1: '01 Storefront',
+  2: '02 POS / Studio',
+  3: '03 Backoffice',
+};
+
 export default function ProductCard({ product, onSelect }: ProductCardProps) {
-  const pages = product.pages || [
-    { pageNumber: 1 as const, label: 'Hal 1 · Katalog', title: 'Storefront & Preview Produk', summary: '' },
-    { pageNumber: 2 as const, label: 'Hal 2 · Aplikasi', title: 'Terminal POS / Studio Utama', summary: '' },
-    { pageNumber: 3 as const, label: 'Hal 3 · Backoffice', title: 'Monitor & Laporan', summary: '' },
-  ];
+  const demoBase = product.demo_url || `/demo/${product.slug}`;
 
   return (
-    <article className="bg-white rounded-2xl border border-slate-200 overflow-hidden flex flex-col group hover:border-[#0B2545] transition duration-150 shadow-sm hover:shadow-md">
-      {/* Top Architectural Meta Strip */}
-      <div className="px-4 py-2.5 border-b border-slate-200 bg-slate-50/90 flex items-center justify-between gap-2 font-mono text-[11px]">
-        <div className="flex items-center gap-2">
-          <span className="font-bold uppercase tracking-wider text-[#0B2545]">
-            {product.category}
-          </span>
-          <span className="px-2 py-0.5 rounded bg-blue-50 text-[#1D4ED8] border border-blue-200 font-bold text-[10px]">
-            3 HALAMAN UTUH
-          </span>
+    <article className="group bg-white border border-[#E4E2DD] hover:border-[#111315] transition-colors duration-200 flex flex-col justify-between">
+      {/* Top Framed Browser Showcase */}
+      <div className="p-3 sm:p-4 pb-0">
+        <div className="border border-[#E4E2DD] bg-[#F8F7F4] overflow-hidden">
+          {/* Minimalist Browser Window Bar */}
+          <div className="h-8 px-3 border-b border-[#E4E2DD] bg-[#F3F1EC] flex items-center justify-between gap-3">
+            <div className="flex items-center gap-1.5 shrink-0" aria-hidden="true">
+              <span className="w-2 h-2 rounded-full bg-[#D0CDC6]" />
+              <span className="w-2 h-2 rounded-full bg-[#D0CDC6]" />
+              <span className="w-2 h-2 rounded-full bg-[#D0CDC6]" />
+            </div>
+
+            <div className="font-mono text-[10px] text-[#5C6269] truncate">
+              birumarket.web.id/demo/{product.slug}
+            </div>
+
+            <span className="font-mono text-[9px] uppercase tracking-wider text-[#111315] font-semibold shrink-0">
+              3 PAGES
+            </span>
+          </div>
+
+          {/* 16:10 Real Application Screenshot + Subtle Bottom Glass Bar */}
+          <div className="relative w-full aspect-[16/10] bg-[#111315] overflow-hidden">
+            <button
+              type="button"
+              onClick={() => onSelect(product)}
+              className="w-full h-full block text-left focus:outline-none"
+              aria-label={`Lihat spesifikasi ${product.title}`}
+            >
+              <img
+                src={product.thumbnail_url}
+                alt={product.title}
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src = '/products/shot-pos-kuro.png';
+                }}
+                className="w-full h-full object-cover object-top group-hover:scale-[1.015] transition-transform duration-500 ease-out"
+              />
+            </button>
+
+            {/* Subtle Bottom Glass Bar for 3-Page Deep Jump */}
+            <div className="absolute inset-x-2.5 bottom-2.5 z-10 translate-y-1 opacity-95 sm:opacity-0 sm:group-hover:opacity-100 sm:group-hover:translate-y-0 transition-all duration-200 bg-[#111315]/88 backdrop-blur-md border border-white/15 p-1.5 flex items-center justify-between gap-1.5">
+              {([1, 2, 3] as const).map((pageNum) => (
+                <Link
+                  key={pageNum}
+                  href={`${demoBase}?page=${pageNum}`}
+                  className="flex-1 py-1.5 px-2 text-center font-mono text-[10px] font-medium text-white/90 hover:text-white hover:bg-white/15 transition truncate"
+                >
+                  {SHORT_PAGE_LABELS[pageNum]}
+                </Link>
+              ))}
+            </div>
+          </div>
         </div>
-        <span className="text-slate-500 font-semibold">
-          {product.sku || product.id.toUpperCase()}
-        </span>
       </div>
 
-      {/* Crisp 16:10 Real App Screenshot */}
-      <button
-        type="button"
-        onClick={() => onSelect(product)}
-        className="relative w-full aspect-[16/10] bg-slate-900 overflow-hidden block text-left border-b border-slate-200"
-        aria-label={`Lihat spesifikasi ${product.title}`}
-      >
-        <img
-          src={product.thumbnail_url}
-          alt={product.title}
-          onError={(e) => {
-            (e.target as HTMLImageElement).src = '/products/shot-pos-kuro.png';
-          }}
-          className="w-full h-full object-cover object-top group-hover:scale-[1.02] transition duration-300"
-        />
-        <div className="absolute inset-0 bg-[#0B2545]/80 opacity-0 group-hover:opacity-100 transition duration-200 flex flex-col items-center justify-center p-4 text-center gap-2">
-          <span className="font-mono text-xs font-bold tracking-wider uppercase text-white border border-white/50 px-3.5 py-2 bg-[#0B2545]/90">
-            Preview Produk &amp; Arsitektur 3 Halaman
-          </span>
-          <span className="font-mono text-[10px] text-blue-200">
-            Storefront Katalog + Aplikasi POS/Studio + Monitor Backoffice
-          </span>
-        </div>
-      </button>
-
       {/* Editorial Body */}
-      <div className="p-5 flex-1 flex flex-col justify-between gap-4">
-        <div className="space-y-3">
+      <div className="p-5 sm:p-6 flex-1 flex flex-col justify-between gap-5">
+        <div className="space-y-2.5">
+          {/* Category + SKU */}
+          <div className="flex items-center justify-between gap-2 font-mono text-[11px] text-[#687078]">
+            <span className="uppercase tracking-wider font-semibold text-[#111315]">
+              {product.category}
+            </span>
+            <span>{product.sku || product.id.toUpperCase()}</span>
+          </div>
+
+          {/* Product Title */}
           <button
             type="button"
             onClick={() => onSelect(product)}
             className="text-left block w-full"
           >
-            <h3 className="font-['Syne',sans-serif] font-bold text-base sm:text-lg text-[#0B2545] group-hover:text-[#1D4ED8] transition leading-snug line-clamp-2">
-              {product.title}
+            <h3 className="font-['Syne',sans-serif] font-bold text-lg sm:text-xl text-[#111315] group-hover:text-[#1D4ED8] transition-colors leading-snug">
+              {product.title.replace(/\s*\(3 Halaman\)/gi, '')}
             </h3>
           </button>
 
-          <p className="text-xs sm:text-sm text-slate-600 line-clamp-2 leading-relaxed">
+          {/* Concise Summary */}
+          <p className="text-xs sm:text-sm text-[#525860] line-clamp-2 leading-relaxed">
             {product.tagline || product.description}
           </p>
 
-          {/* Interactive 3-Page Deep-Link Strip */}
-          {product.demo_url && (
-            <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200 space-y-1.5">
-              <div className="font-mono text-[10px] font-bold uppercase tracking-wider text-slate-500 flex items-center justify-between">
-                <span>ISI PAKET WEBSITE (KLIK HALAMAN):</span>
-                <span className="text-[#1D4ED8]">LIVE</span>
-              </div>
-              <div className="grid grid-cols-3 gap-1.5 font-mono text-[10px]">
-                {pages.map((pg) => (
-                  <Link
-                    key={pg.pageNumber}
-                    href={`${product.demo_url}?page=${pg.pageNumber}`}
-                    className="px-2 py-1.5 rounded-lg bg-white hover:bg-[#0B2545] text-[#0B2545] hover:text-white border border-slate-200 transition truncate font-bold text-center"
-                    title={pg.title}
-                  >
-                    {pg.label.replace('Halaman ', 'Hal ')}
-                  </Link>
-                ))}
-              </div>
-            </div>
-          )}
-
-          <p className="font-mono text-[11px] text-slate-500 line-clamp-1">
-            {product.tech_stack.join(' · ')}
-          </p>
+          {/* Subtle Stack Metadata */}
+          <div className="pt-1 flex flex-wrap items-center gap-1.5 font-mono text-[10px] text-[#687078]">
+            {product.tech_stack.slice(0, 4).map((stack) => (
+              <span
+                key={stack}
+                className="px-2 py-0.5 bg-[#F8F7F4] border border-[#E4E2DD] text-[#3B4046]"
+              >
+                {stack}
+              </span>
+            ))}
+          </div>
         </div>
 
-        {/* Bottom Price & Action Controls */}
-        <div className="pt-3.5 border-t border-slate-100 flex items-center justify-between gap-3">
+        {/* Bottom Price & Action Row */}
+        <div className="pt-4 border-t border-[#E4E2DD] flex items-center justify-between gap-3">
           <div>
-            <span className="font-mono text-[10px] text-slate-400 block">FULL SOURCE (3 HAL)</span>
-            <span className="font-mono font-bold text-sm sm:text-base text-[#0B2545]">
+            <span className="font-mono text-[10px] uppercase tracking-wider text-[#687078] block">
+              Full 3-Page Source
+            </span>
+            <span className="font-mono font-bold text-sm sm:text-base text-[#111315]">
               {product.is_portfolio
                 ? 'Custom Quote'
                 : `Rp ${Number(product.price).toLocaleString('id-ID')}`}
             </span>
           </div>
 
-          <div className="flex items-center gap-2 text-xs font-mono font-bold">
+          <div className="flex items-center gap-2 font-mono text-xs font-semibold">
             <button
               type="button"
               onClick={() => onSelect(product)}
-              className="min-h-[38px] py-1.5 px-3 text-slate-700 hover:text-[#0B2545] border border-slate-200 hover:border-[#0B2545] rounded-xl transition"
+              className="min-h-[38px] px-3.5 py-1.5 border border-[#D5D2CA] bg-white hover:border-[#111315] text-[#111315] transition"
             >
-              Preview
+              Detail
             </button>
-            {product.demo_url && (
-              <Link
-                href={product.demo_url}
-                className="min-h-[38px] py-1.5 px-3.5 bg-[#0B2545] hover:bg-[#1D4ED8] text-white rounded-xl inline-flex items-center transition"
-              >
-                Buka Web
-              </Link>
-            )}
+            <Link
+              href={demoBase}
+              className="min-h-[38px] px-3.5 py-1.5 bg-[#111315] hover:bg-[#1D4ED8] text-[#F8F7F4] inline-flex items-center gap-1.5 transition"
+            >
+              <span>Live Demo</span>
+              <ArrowUpRight className="w-3.5 h-3.5" />
+            </Link>
           </div>
         </div>
       </div>

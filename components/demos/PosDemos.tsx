@@ -1,6 +1,31 @@
 'use client';
 
 import { useState } from 'react';
+import {
+  ShoppingBag,
+  Plus,
+  Minus,
+  Check,
+  Clock,
+  Sparkles,
+  Flame,
+  Eye,
+  X,
+  ArrowRight,
+  Printer,
+  ShieldCheck,
+  Package,
+  Wrench,
+  Car,
+  Coffee,
+  UtensilsCrossed,
+  Search,
+  UserCheck,
+  MapPin,
+  CreditCard,
+  QrCode,
+  SlidersHorizontal,
+} from 'lucide-react';
 
 export interface MultiPageDemoProps {
   activePage?: 1 | 2 | 3;
@@ -22,7 +47,7 @@ function useSyncedPage(
 }
 
 /* ============================================================================
- * 1. KUROBENTO SHIBUYA · 3-Page Japanese Ramen Storefront, Shokuken POS & KDS
+ * 1. KUROBENTO SHIBUYA · Izakaya Storefront, iPad Shokuken POS & Kitchen KDS
  * ========================================================================== */
 interface KuroMenuItem {
   code: string;
@@ -34,7 +59,7 @@ interface KuroMenuItem {
   broth: string;
   toppings: string[];
   desc: string;
-  accent: string;
+  image: string;
   badge?: string;
 }
 
@@ -45,6 +70,7 @@ interface KuroTicketItem {
   price: number;
   qty: number;
   spec: string;
+  image: string;
 }
 
 interface KuroKdsTicket {
@@ -57,7 +83,7 @@ interface KuroKdsTicket {
 
 const KURO_CATALOG: KuroMenuItem[] = [
   {
-    code: '#01',
+    code: 'KB-01',
     cat: 'RAMEN',
     name: 'Kuro Garlic Tonkotsu Ramen',
     jp: '黒マー油豚骨ラーメン',
@@ -66,37 +92,37 @@ const KURO_CATALOG: KuroMenuItem[] = [
     broth: 'Kaldu Tulang Ayam & Sapi 18 Jam + Minyak Bawang Hitam Panggang',
     toppings: ['Chashu Torch 2 Slice', 'Ajitsuke Tamago', 'Jamur Kikurage', 'Daun Bawang Kyoto', 'Nori Premium'],
     desc: 'Signature ramen dengan kaldu kolagen kental yang dimasak 18 jam tanpa henti, disiram minyak bawang putih bakar hitam khas Kumamoto.',
-    accent: '#E11D48',
-    badge: 'BEST SELLER',
+    image: 'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=600&q=80',
+    badge: 'Best Seller',
   },
   {
-    code: '#02',
+    code: 'KB-02',
     cat: 'RAMEN',
     name: 'Aka Karai Spicy Miso Tori',
     jp: '赤辛味噌鶏白湯',
     price: 64000,
     kcal: '690 kcal',
     broth: 'Tori Paitan Gurih + Pasta Cabai Fermentasi Shinshu Miso',
-    toppings: ['Daging Ayam Cincang Pedas', 'Ajitsuke Tamago', 'Jagung Manis Bakar', 'Chili Threads'],
+    toppings: ['Ayam Cincang Pedas', 'Ajitsuke Tamago', 'Jagung Manis Bakar', 'Chili Threads'],
     desc: 'Perpaduan miso merah fermentasi dari Nagano dengan minyak cabai rayu buatan sendiri dan topping ayam cincang berbumbu pedas.',
-    accent: '#EA580C',
-    badge: 'SPICY LV.3',
+    image: 'https://images.unsplash.com/photo-1557872943-16a5ac26437e?auto=format&fit=crop&w=600&q=80',
+    badge: 'Spicy Lv.3',
   },
   {
-    code: '#03',
+    code: 'KB-03',
     cat: 'RAMEN',
     name: 'Truffle Shoyu Dry Mazemen',
     jp: '黒トリュフ醤油まぜそば',
     price: 74000,
     kcal: '620 kcal',
     broth: 'Dry Tare Shoyu Kedelai Hitam + Infusi Black Truffle Oil',
-    toppings: ['Sous-Vide Beef Brisket', 'Onsen Tamago 63°C', 'Crispy Shallot', 'Trufel Paste'],
+    toppings: ['Sous-Vide Beef Brisket', 'Onsen Tamago 63°C', 'Crispy Shallot', 'Truffle Paste'],
     desc: 'Ramen tanpa kuah (mazesoba) dengan mie gandum tebal yang dibalut saus shoyu kedelai hitam, kuning telur onsen, dan aroma truffle.',
-    accent: '#D97706',
-    badge: 'CHEF SPECIAL',
+    image: 'https://images.unsplash.com/photo-1617093727343-374698b1b08d?auto=format&fit=crop&w=600&q=80',
+    badge: 'Chef Special',
   },
   {
-    code: '#04',
+    code: 'KB-04',
     cat: 'RAMEN',
     name: 'Yuzu Shio Clear Broth',
     jp: '柚子塩淡麗ラーメン',
@@ -105,10 +131,10 @@ const KURO_CATALOG: KuroMenuItem[] = [
     broth: 'Kaldu Dashi Kombu & Katsuobushi + Kulit Jeruk Yuzu Kochi',
     toppings: ['Smoked Duck Breast', 'Menma Bambu Muda', 'Yuzu Zest', 'Ajitsuke Tamago'],
     desc: 'Kuah bening ringan nan menyegarkan dengan aroma jeruk yuzu asli Jepang, cocok bagi penikmat rasa umami bersih.',
-    accent: '#10B981',
+    image: 'https://images.unsplash.com/photo-1591814468924-caf88d1232e1?auto=format&fit=crop&w=600&q=80',
   },
   {
-    code: '#05',
+    code: 'KB-05',
     cat: 'YAKITORI',
     name: 'Negima Charcoal Skewer (3 Pcs)',
     jp: '炭火焼き鳥ねぎま',
@@ -117,10 +143,10 @@ const KURO_CATALOG: KuroMenuItem[] = [
     broth: 'Panggang Arang Binchotan + Saus Tare Karamel 3 Tahun',
     toppings: ['Paha Ayam Juicy', 'Batang Daun Bawang Bakar', 'Bubuk Sansho Pepper'],
     desc: 'Sate paha ayam dan daun bawang Jepang yang dipanggang di atas bara arang putih binchotan dengan olesan saus tare manis gurih.',
-    accent: '#F59E0B',
+    image: 'https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?auto=format&fit=crop&w=600&q=80',
   },
   {
-    code: '#06',
+    code: 'KB-06',
     cat: 'YAKITORI',
     name: 'Tsukune Meatball + Raw Yolk',
     jp: '月見つくね串',
@@ -129,10 +155,10 @@ const KURO_CATALOG: KuroMenuItem[] = [
     broth: 'Daging Ayam Cincang Tulang Muda + Saus Tare & Kuning Telur Omega',
     toppings: ['2 Skewer Tsukune', 'Kuning Telur Omega-3', 'Wijen Sangrai'],
     desc: 'Bakso ayam panggang bertekstur renyah tulang muda yang disajikan bersama celupan kuning telur omega segar.',
-    accent: '#EAB308',
+    image: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=600&q=80',
   },
   {
-    code: '#07',
+    code: 'KB-07',
     cat: 'IZAKAYA',
     name: 'Aburi Salmon Mentaiko Don',
     jp: '炙り明太サーモン丼',
@@ -141,11 +167,11 @@ const KURO_CATALOG: KuroMenuItem[] = [
     broth: 'Nasi Koshihikari Hangat + Saus Cod Roe Mentaiko Torch',
     toppings: ['Norwegian Salmon Belly', 'Saus Mentaiko Bakar', 'Tobiko', 'Rumput Laut Kizami'],
     desc: 'Nasi Jepang pulen dengan irisan perut salmon segar yang di-torch bersama saus telur ikan mentaiko gurih.',
-    accent: '#F43F5E',
-    badge: 'FAVORITE',
+    image: 'https://images.unsplash.com/photo-1579871494447-9811cf80d66c?auto=format&fit=crop&w=600&q=80',
+    badge: 'Favorite',
   },
   {
-    code: '#08',
+    code: 'KB-08',
     cat: 'DRINK',
     name: 'Cold Brew Hojicha Kyoto',
     jp: '水出し宇治ほうじ茶',
@@ -154,7 +180,7 @@ const KURO_CATALOG: KuroMenuItem[] = [
     broth: 'Daun Teh Hijau Panggang Uji Kyoto · Cold Steep 12 Jam',
     toppings: ['Zero Sugar', 'Refillable Ocha'],
     desc: 'Teh hijau panggang dari perkebunan Uji Kyoto yang diseduh dingin selama 12 jam untuk menghasilkan aroma smoky lembut.',
-    accent: '#84CC16',
+    image: 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?auto=format&fit=crop&w=600&q=80',
   },
 ];
 
@@ -164,11 +190,27 @@ export function KuroBentoPos({ activePage, onPageChange }: MultiPageDemoProps) {
   const [previewItem, setPreviewItem] = useState<KuroMenuItem | null>(null);
 
   const [booth, setBooth] = useState('04');
-  const [noodle, setNoodle] = useState('KATAME');
-  const [oil, setOil] = useState('RICH');
+  const [noodle, setNoodle] = useState<'KATAME' | 'FUTSU' | 'YAWARAKAME'>('KATAME');
+  const [oil, setOil] = useState<'RICH' | 'NORMAL' | 'LIGHT'>('RICH');
   const [items, setItems] = useState<KuroTicketItem[]>([
-    { code: '#01', name: 'Kuro Garlic Tonkotsu Ramen', jp: '黒マー油豚骨ラーメン', price: 68000, qty: 2, spec: 'KATAME · RICH' },
-    { code: '#05', name: 'Negima Charcoal Skewer (3 Pcs)', jp: '炭火焼き鳥ねぎま', price: 38000, qty: 1, spec: 'YAKITORI' },
+    {
+      code: 'KB-01',
+      name: 'Kuro Garlic Tonkotsu Ramen',
+      jp: '黒マー油豚骨ラーメン',
+      price: 68000,
+      qty: 2,
+      spec: 'KATAME · RICH',
+      image: KURO_CATALOG[0].image,
+    },
+    {
+      code: 'KB-05',
+      name: 'Negima Charcoal Skewer (3 Pcs)',
+      jp: '炭火焼き鳥ねぎま',
+      price: 38000,
+      qty: 1,
+      spec: 'YAKITORI',
+      image: KURO_CATALOG[4].image,
+    },
   ]);
   const [stamped, setStamped] = useState(false);
 
@@ -202,12 +244,34 @@ export function KuroBentoPos({ activePage, onPageChange }: MultiPageDemoProps) {
         copy[idx] = { ...copy[idx], qty: copy[idx].qty + 1 };
         return copy;
       }
-      return [...prev, { code: menu.code, name: menu.name, jp: menu.jp, price: menu.price, qty: 1, spec }];
+      return [
+        ...prev,
+        {
+          code: menu.code,
+          name: menu.name,
+          jp: menu.jp,
+          price: menu.price,
+          qty: 1,
+          spec,
+          image: menu.image,
+        },
+      ];
     });
     if (goPos) {
       setPreviewItem(null);
       setPage(2);
     }
+  };
+
+  const adjustItemQty = (code: string, spec: string, delta: number) => {
+    setStamped(false);
+    setItems((prev) =>
+      prev
+        .map((item) =>
+          item.code === code && item.spec === spec ? { ...item, qty: item.qty + delta } : item
+        )
+        .filter((item) => item.qty > 0)
+    );
   };
 
   const fireToKitchen = () => {
@@ -242,227 +306,225 @@ export function KuroBentoPos({ activePage, onPageChange }: MultiPageDemoProps) {
     catFilter === 'ALL' ? KURO_CATALOG : KURO_CATALOG.filter((m) => m.cat === catFilter);
 
   return (
-    <div className="min-h-[780px] bg-[#0C0C0E] text-[#E4E4E7] font-mono flex flex-col justify-between">
-      {/* FULL WEBSITE HEADER & 3-PAGE NAVIGATION */}
+    <div className="min-h-[820px] bg-[#0D0E11] text-zinc-100 font-sans flex flex-col justify-between">
       <div>
-        <header className="border-b border-[#27272A] bg-[#121216]">
-          <div className="px-4 sm:px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 bg-[#E11D48] text-white flex items-center justify-center font-serif font-bold text-lg">
+        {/* Brand Top Navigation */}
+        <header className="border-b border-white/10 bg-[#121318]/95 backdrop-blur-md sticky top-0 z-30">
+          <div className="px-5 sm:px-8 py-4 flex flex-wrap items-center justify-between gap-4">
+            <div className="flex items-center gap-3.5">
+              <div className="w-10 h-10 rounded-xl bg-[#E11D48] text-white flex items-center justify-center font-serif font-bold text-xl shadow-lg shadow-[#E11D48]/25">
                 黒
               </div>
               <div>
-                <div className="flex items-center gap-2">
-                  <span className="font-sans font-extrabold text-base tracking-tight text-white">
-                    KUROBENTO SHIBUYA
+                <div className="flex items-center gap-2.5">
+                  <span className="font-bold text-base tracking-tight text-white">
+                    KuroBento Shibuya
                   </span>
-                  <span className="text-[10px] px-1.5 py-0.5 bg-[#E11D48]/20 text-[#E11D48] border border-[#E11D48]/40 font-bold">
-                    営業中 · OPEN
+                  <span className="inline-flex items-center gap-1 text-[11px] px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 font-medium">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                    Senopati Flagship
                   </span>
                 </div>
-                <p className="text-[11px] text-zinc-400">
-                  Craft Ramen &amp; Binchotan Izakaya · Senopati Flagship
+                <p className="text-xs text-zinc-400">
+                  Craft Tonkotsu Ramen &amp; Binchotan Charcoal Izakaya
                 </p>
               </div>
             </div>
 
-            {/* 3-Page Website Navigation Bar */}
-            <nav className="flex flex-wrap items-center gap-1.5" aria-label="Navigasi Website KuroBento">
+            <nav className="flex flex-wrap items-center gap-1.5 bg-black/40 p-1.5 rounded-xl border border-white/10">
               <button
                 type="button"
                 onClick={() => setPage(1)}
-                className={`px-3.5 py-2 text-xs font-bold transition border ${
+                className={`px-3.5 py-2 rounded-lg text-xs font-semibold transition ${
                   page === 1
-                    ? 'bg-[#E11D48] text-white border-[#E11D48]'
-                    : 'bg-[#18181E] text-zinc-300 border-[#27272A] hover:text-white'
+                    ? 'bg-white text-zinc-950 shadow-sm'
+                    : 'text-zinc-400 hover:text-white'
                 }`}
               >
-                01 · Katalog &amp; Preview Menu
+                01 · Storefront &amp; Menu
               </button>
               <button
                 type="button"
                 onClick={() => setPage(2)}
-                className={`px-3.5 py-2 text-xs font-bold transition border flex items-center gap-2 ${
+                className={`px-3.5 py-2 rounded-lg text-xs font-semibold transition flex items-center gap-2 ${
                   page === 2
-                    ? 'bg-[#E11D48] text-white border-[#E11D48]'
-                    : 'bg-[#18181E] text-zinc-300 border-[#27272A] hover:text-white'
+                    ? 'bg-[#E11D48] text-white shadow-sm'
+                    : 'text-zinc-400 hover:text-white'
                 }`}
               >
-                <span>02 · Kasir Shokuken POS</span>
-                <span className="px-1.5 py-0.5 text-[10px] bg-black/40 text-amber-300">
+                <span>02 · Touch POS Register</span>
+                <span className="px-1.5 py-0.5 rounded-full text-[10px] bg-black/30 text-white font-mono">
                   {totalCartQty}
                 </span>
               </button>
               <button
                 type="button"
                 onClick={() => setPage(3)}
-                className={`px-3.5 py-2 text-xs font-bold transition border flex items-center gap-2 ${
+                className={`px-3.5 py-2 rounded-lg text-xs font-semibold transition flex items-center gap-2 ${
                   page === 3
-                    ? 'bg-[#E11D48] text-white border-[#E11D48]'
-                    : 'bg-[#18181E] text-zinc-300 border-[#27272A] hover:text-white'
+                    ? 'bg-white text-zinc-950 shadow-sm'
+                    : 'text-zinc-400 hover:text-white'
                 }`}
               >
-                <span>03 · Monitor Dapur KDS</span>
-                <span className="px-1.5 py-0.5 text-[10px] bg-black/40 text-emerald-300">
-                  {kdsQueue.filter((k) => k.status !== 'SERVED').length} Aktif
+                <span>03 · Kitchen KDS</span>
+                <span className="px-1.5 py-0.5 rounded-full text-[10px] bg-emerald-500/20 text-emerald-300 font-mono">
+                  {kdsQueue.filter((k) => k.status !== 'SERVED').length}
                 </span>
               </button>
             </nav>
           </div>
         </header>
 
-        {/* ===================================================================
-         * HALAMAN 1: STOREFRONT E-MENU & VISUAL PRODUCT PREVIEW
-         * ================================================================= */}
+        {/* HALAMAN 1: BRAND STOREFRONT & PRODUCT PREVIEW */}
         {page === 1 && (
-          <div className="p-5 sm:p-8 space-y-7">
-            {/* Storefront Hero Banner */}
-            <div className="border border-[#27272A] bg-[#14141A] p-6 sm:p-8 grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
-              <div className="lg:col-span-8 space-y-3">
-                <div className="inline-flex items-center gap-2 text-[11px] text-[#E11D48] font-bold">
-                  <span>[ HALAMAN 1 · DIGITAL STOREFRONT &amp; MENU PREVIEW ]</span>
-                  <span className="text-zinc-500">|</span>
-                  <span className="text-amber-400">SUHU KALDU KETTLE: 96.4°C</span>
+          <div className="p-6 sm:p-8 space-y-8">
+            {/* Editorial Storefront Hero */}
+            <div className="relative rounded-3xl overflow-hidden border border-white/10 bg-[#15171E] grid grid-cols-1 lg:grid-cols-12">
+              <div className="lg:col-span-7 p-6 sm:p-10 flex flex-col justify-between gap-6">
+                <div className="space-y-4">
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#E11D48]/15 border border-[#E11D48]/30 text-[#FB7185] text-xs font-medium">
+                    <Flame className="w-3.5 h-3.5" />
+                    <span>Kaldu Kolagen 18 Jam · Arang Putih Binchotan</span>
+                  </div>
+                  <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white leading-tight">
+                    Semangkuk Presisi Kuliner Malam Shibuya di Jantung Jakarta.
+                  </h1>
+                  <p className="text-sm text-zinc-400 max-w-xl leading-relaxed">
+                    Pilih hidangan dari katalog visual di bawah untuk meninjau komposisi kaldu, daftar topping autentik, serta kustomisasi tekstur mie sebelum dikirim ke terminal kasir.
+                  </p>
                 </div>
-                <h1 className="font-sans text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
-                  Kaldu Kolagen 18 Jam &amp; Mie Hakata Gandum Utuh.
-                </h1>
-                <p className="font-sans text-sm text-zinc-300 max-w-2xl leading-relaxed">
-                  Klik kartu hidangan di bawah untuk membuka <strong>Preview Komposisi &amp; Anatomi Bowl</strong> (kaldu, potongan chashu, tingkat kematangan mie), atau langsung tambahkan ke pesanan Booth #{booth}.
-                </p>
+
+                <div className="flex flex-wrap items-center gap-3 pt-2">
+                  <button
+                    type="button"
+                    onClick={() => setPage(2)}
+                    className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-[#E11D48] hover:bg-[#BE123C] text-white text-xs font-semibold transition shadow-lg shadow-[#E11D48]/25"
+                  >
+                    <ShoppingBag className="w-4 h-4" />
+                    <span>Buka Terminal Kasir ({totalCartQty} Item · Rp {grandTotal.toLocaleString('id-ID')})</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setPage(3)}
+                    className="inline-flex items-center gap-2 px-4 py-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-zinc-200 text-xs font-medium transition"
+                  >
+                    <UtensilsCrossed className="w-4 h-4 text-zinc-400" />
+                    <span>Monitor Dapur KDS</span>
+                  </button>
+                </div>
               </div>
-              <div className="lg:col-span-4 bg-[#0C0C0E] border border-[#27272A] p-4 space-y-3">
-                <div className="flex items-center justify-between text-xs border-b border-[#27272A] pb-2">
-                  <span className="text-zinc-400">MEJA AKTIF SAAT INI</span>
-                  <span className="text-[#E11D48] font-bold">BOOTH #{booth}</span>
+
+              <div className="lg:col-span-5 relative min-h-[260px]">
+                <img
+                  src="https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=900&q=80"
+                  alt="Kuro Garlic Tonkotsu Ramen"
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#15171E] via-transparent to-transparent lg:bg-gradient-to-r lg:from-[#15171E] lg:via-transparent lg:to-transparent" />
+                <div className="absolute bottom-4 right-4 bg-black/75 backdrop-blur-md border border-white/15 rounded-2xl p-3.5 text-xs">
+                  <div className="font-mono text-[10px] text-[#FB7185] font-semibold">SIGNATURE BOWL</div>
+                  <div className="font-bold text-white mt-0.5">Kuro Garlic Tonkotsu</div>
+                  <div className="font-mono text-zinc-300 mt-0.5">Rp 68.000 · 740 kcal</div>
                 </div>
-                <div className="flex items-center justify-between text-xs">
-                  <span className="text-zinc-400">Item di Slip Pesanan:</span>
-                  <span className="text-white font-bold">{totalCartQty} Porsi (Rp {subtotal.toLocaleString('id-ID')})</span>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setPage(2)}
-                  className="w-full py-2.5 bg-[#E11D48] hover:bg-rose-600 text-white text-xs font-bold tracking-wider transition"
-                >
-                  LANJUT KE TERMINAL KASIR POS →
-                </button>
               </div>
             </div>
 
-            {/* Category Filter Bar */}
-            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#27272A] pb-4">
+            {/* Category Pills */}
+            <div className="flex flex-wrap items-center justify-between gap-4">
               <div className="flex flex-wrap gap-2">
-                {(['ALL', 'RAMEN', 'YAKITORI', 'IZAKAYA', 'DRINK'] as const).map((cat) => (
+                {(
+                  [
+                    { id: 'ALL', label: 'Semua Menu' },
+                    { id: 'RAMEN', label: 'Craft Ramen' },
+                    { id: 'YAKITORI', label: 'Binchotan Yakitori' },
+                    { id: 'IZAKAYA', label: 'Donburi & Izakaya' },
+                    { id: 'DRINK', label: 'Cold Brew Ocha' },
+                  ] as const
+                ).map((cat) => (
                   <button
-                    key={cat}
+                    key={cat.id}
                     type="button"
-                    onClick={() => setCatFilter(cat)}
-                    className={`px-3.5 py-2 text-xs font-bold border transition ${
-                      catFilter === cat
-                        ? 'border-[#E11D48] bg-[#E11D48]/15 text-white'
-                        : 'border-[#27272A] bg-[#141418] text-zinc-400 hover:text-white'
+                    onClick={() => setCatFilter(cat.id)}
+                    className={`px-4 py-2 rounded-full text-xs font-semibold transition ${
+                      catFilter === cat.id
+                        ? 'bg-white text-zinc-950 shadow-sm'
+                        : 'bg-[#171921] text-zinc-400 hover:text-white border border-white/10'
                     }`}
                   >
-                    {cat === 'ALL' ? 'SEMUA HIDANGAN (8)' : cat}
+                    {cat.label}
                   </button>
                 ))}
               </div>
-              <span className="text-xs text-zinc-400">
-                Klik <strong>[ PREVIEW PRODUK ]</strong> untuk melihat rincian komposisi
+              <span className="font-mono text-xs text-zinc-400">
+                Menampilkan {filteredCatalog.length} hidangan autentik
               </span>
             </div>
 
             {/* Visual Product Cards Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {filteredCatalog.map((item) => (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+              {filteredCatalog.map((menu) => (
                 <div
-                  key={item.code}
-                  className="border border-[#27272A] bg-[#141419] flex flex-col justify-between hover:border-zinc-500 transition group"
+                  key={menu.code}
+                  className="group rounded-2xl bg-[#15171E] border border-white/10 hover:border-white/25 overflow-hidden flex flex-col justify-between transition duration-200"
                 >
                   <div>
-                    {/* Visual Culinary Artwork Header */}
                     <div
-                      onClick={() => setPreviewItem(item)}
-                      className="h-40 bg-[#09090B] border-b border-[#27272A] p-4 flex flex-col justify-between relative overflow-hidden cursor-pointer"
+                      onClick={() => setPreviewItem(menu)}
+                      className="relative aspect-[4/3] w-full overflow-hidden bg-zinc-900 cursor-pointer"
                     >
-                      <div
-                        className="absolute -right-6 -bottom-6 w-32 h-32 rounded-full opacity-20 group-hover:scale-110 transition"
-                        style={{ backgroundColor: item.accent }}
+                      <img
+                        src={menu.image}
+                        alt={menu.name}
+                        className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+                        loading="lazy"
                       />
-                      <div className="flex items-center justify-between z-10">
-                        <span className="px-2 py-0.5 bg-[#E11D48] text-white text-[10px] font-bold">
-                          {item.code} · {item.cat}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent" />
+                      {menu.badge && (
+                        <span className="absolute top-3 left-3 px-2.5 py-1 rounded-full text-[10px] font-semibold bg-[#E11D48] text-white shadow">
+                          {menu.badge}
                         </span>
-                        {item.badge && (
-                          <span className="px-2 py-0.5 bg-amber-500/20 text-amber-300 border border-amber-500/40 text-[10px] font-bold">
-                            {item.badge}
-                          </span>
-                        )}
-                      </div>
-
-                      {/* Stylized Ramen Bowl / Dish Visual Illustration */}
-                      <div className="z-10 my-auto flex items-center gap-3">
-                        <div
-                          className="w-14 h-14 rounded-full border-2 flex items-center justify-center font-serif text-xl font-bold shrink-0"
-                          style={{ borderColor: item.accent, color: item.accent, backgroundColor: '#121216' }}
-                        >
-                          {item.jp.slice(0, 2)}
-                        </div>
-                        <div className="min-w-0">
-                          <div className="text-[11px] text-zinc-400 truncate">{item.jp}</div>
-                          <div className="font-sans font-bold text-sm text-white leading-snug line-clamp-2">
-                            {item.name}
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="z-10 flex items-center justify-between text-[10px] text-zinc-400">
-                        <span>{item.kcal}</span>
-                        <span className="text-amber-300 underline">Klik untuk Preview →</span>
+                      )}
+                      <span className="absolute top-3 right-3 px-2 py-0.5 rounded-md text-[10px] font-mono bg-black/60 backdrop-blur-sm text-zinc-200 border border-white/15">
+                        {menu.kcal}
+                      </span>
+                      <div className="absolute bottom-3 left-3 right-3 flex items-end justify-between gap-2">
+                        <span className="text-xs text-zinc-300 font-medium">{menu.jp}</span>
+                        <span className="inline-flex items-center gap-1 text-[11px] text-white/90 bg-black/50 backdrop-blur-sm px-2 py-1 rounded-lg border border-white/15">
+                          <Eye className="w-3 h-3" />
+                          <span>Detail</span>
+                        </span>
                       </div>
                     </div>
 
-                    {/* Product Card Body */}
-                    <div className="p-4 space-y-3">
-                      <p className="font-sans text-xs text-zinc-300 line-clamp-2 leading-relaxed">
-                        {item.desc}
-                      </p>
-                      <div className="flex flex-wrap gap-1">
-                        {item.toppings.slice(0, 3).map((t) => (
-                          <span
-                            key={t}
-                            className="text-[10px] px-1.5 py-0.5 bg-[#0C0C0E] border border-[#27272A] text-zinc-300"
-                          >
-                            {t}
-                          </span>
-                        ))}
+                    <div className="p-4 space-y-2">
+                      <div className="flex items-center justify-between text-[11px] font-mono text-zinc-400">
+                        <span>{menu.cat}</span>
+                        <span>{menu.code}</span>
                       </div>
+                      <h2 className="font-bold text-base text-white leading-snug">{menu.name}</h2>
+                      <p className="text-xs text-zinc-400 line-clamp-2 leading-relaxed">{menu.desc}</p>
                     </div>
                   </div>
 
-                  {/* Card Footer Price & Actions */}
-                  <div className="p-4 pt-3 border-t border-[#27272A] space-y-2">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs text-zinc-400">HARGA PORSI</span>
-                      <span className="text-sm font-bold text-white">
-                        Rp {item.price.toLocaleString('id-ID')}
-                      </span>
+                  <div className="p-4 pt-3 border-t border-white/10 flex items-center justify-between gap-2">
+                    <div className="font-mono text-sm font-bold text-white">
+                      Rp {menu.price.toLocaleString('id-ID')}
                     </div>
-                    <div className="grid grid-cols-2 gap-1.5">
+                    <div className="flex items-center gap-1.5">
                       <button
                         type="button"
-                        onClick={() => setPreviewItem(item)}
-                        className="py-2 border border-[#27272A] bg-[#0C0C0E] hover:border-white text-zinc-200 text-[11px] font-bold transition"
+                        onClick={() => setPreviewItem(menu)}
+                        className="px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-zinc-200 text-xs font-medium transition"
                       >
-                        PREVIEW
+                        Preview
                       </button>
                       <button
                         type="button"
-                        onClick={() => addMenuToPos(item, false)}
-                        className="py-2 bg-[#E11D48] hover:bg-rose-600 text-white text-[11px] font-bold transition"
+                        onClick={() => addMenuToPos(menu, false)}
+                        className="px-3 py-1.5 rounded-lg bg-[#E11D48] hover:bg-[#BE123C] text-white text-xs font-semibold transition inline-flex items-center gap-1"
                       >
-                        + PESAN
+                        <Plus className="w-3.5 h-3.5" />
+                        <span>Order</span>
                       </button>
                     </div>
                   </div>
@@ -470,103 +532,85 @@ export function KuroBentoPos({ activePage, onPageChange }: MultiPageDemoProps) {
               ))}
             </div>
 
-            {/* PRODUCT PREVIEW MODAL (Inside Page 1) */}
+            {/* Product Preview Modal */}
             {previewItem && (
-              <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4">
-                <div className="bg-[#141419] border-2 border-[#E11D48] max-w-xl w-full p-6 space-y-5 shadow-2xl">
-                  <div className="flex items-start justify-between gap-4 border-b border-[#27272A] pb-4">
-                    <div>
-                      <span className="px-2 py-0.5 bg-[#E11D48] text-white text-[10px] font-bold">
-                        {previewItem.code} · {previewItem.cat} · {previewItem.kcal}
-                      </span>
-                      <h2 className="font-sans text-xl font-extrabold text-white mt-2">
-                        {previewItem.name}
-                      </h2>
-                      <div className="text-xs text-zinc-400">{previewItem.jp}</div>
-                    </div>
+              <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+                <div className="bg-[#161821] border border-white/15 rounded-3xl max-w-xl w-full overflow-hidden shadow-2xl">
+                  <div className="relative aspect-[16/9] w-full bg-zinc-900">
+                    <img
+                      src={previewItem.image}
+                      alt={previewItem.name}
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#161821] via-black/25 to-transparent" />
                     <button
                       type="button"
                       onClick={() => setPreviewItem(null)}
-                      className="px-2.5 py-1 border border-[#27272A] text-zinc-300 hover:text-white text-xs"
+                      className="absolute top-4 right-4 w-9 h-9 rounded-full bg-black/60 hover:bg-black text-white flex items-center justify-center border border-white/15 transition"
                     >
-                      [ TUTUP ✕ ]
+                      <X className="w-4 h-4" />
                     </button>
+                    <div className="absolute bottom-4 left-6 right-6">
+                      <span className="font-mono text-xs text-[#FB7185] font-semibold">
+                        {previewItem.code} · {previewItem.jp}
+                      </span>
+                      <h3 className="text-2xl font-bold text-white mt-0.5">{previewItem.name}</h3>
+                    </div>
                   </div>
 
-                  <div className="space-y-4 font-sans text-xs">
-                    <p className="text-zinc-200 leading-relaxed text-sm">{previewItem.desc}</p>
+                  <div className="p-6 space-y-5">
+                    <p className="text-sm text-zinc-300 leading-relaxed">{previewItem.desc}</p>
 
-                    <div className="p-3.5 bg-[#0C0C0E] border border-[#27272A] space-y-1">
-                      <div className="font-mono text-[10px] text-[#E11D48] font-bold uppercase">
-                        BASIS KALDU &amp; TEKNIK MASAK
+                    <div className="p-4 rounded-2xl bg-black/40 border border-white/10 space-y-2.5 text-xs">
+                      <div className="text-zinc-400 font-mono uppercase text-[10px]">
+                        Basis Kaldu &amp; Teknik Masak
                       </div>
-                      <div className="text-zinc-200 font-medium">{previewItem.broth}</div>
+                      <div className="text-white font-medium">{previewItem.broth}</div>
                     </div>
 
                     <div>
-                      <div className="font-mono text-[10px] text-zinc-400 uppercase mb-2">
-                        KOMPOSISI TOPPING DALAM PORSI:
+                      <div className="text-[11px] font-mono uppercase text-zinc-400 mb-2">
+                        Komposisi Topping Standar
                       </div>
                       <div className="flex flex-wrap gap-1.5">
                         {previewItem.toppings.map((t) => (
                           <span
                             key={t}
-                            className="font-mono text-[11px] px-2.5 py-1 bg-[#1C1C24] border border-zinc-700 text-white"
+                            className="px-2.5 py-1 rounded-lg bg-white/5 border border-white/10 text-xs text-zinc-200"
                           >
-                            ✓ {t}
+                            {t}
                           </span>
                         ))}
                       </div>
                     </div>
 
-                    {previewItem.cat === 'RAMEN' && (
-                      <div className="p-3.5 bg-[#0C0C0E] border border-[#27272A] space-y-2 font-mono">
-                        <div className="text-[10px] text-zinc-400">PILIH TEKSTUR MIE SEBELUM MASUK POS:</div>
-                        <div className="flex gap-2">
-                          {(['KATAME', 'FUTSU', 'YAWAME'] as const).map((n) => (
-                            <button
-                              key={n}
-                              type="button"
-                              onClick={() => setNoodle(n)}
-                              className={`px-3 py-1.5 text-xs border ${
-                                noodle === n
-                                  ? 'border-[#E11D48] bg-[#E11D48] text-white font-bold'
-                                  : 'border-[#27272A] text-zinc-400'
-                              }`}
-                            >
-                              {n}
-                            </button>
-                          ))}
-                        </div>
+                    <div className="pt-4 border-t border-white/10 flex flex-wrap items-center justify-between gap-3">
+                      <div>
+                        <span className="text-[11px] text-zinc-400 block">Harga Per Porsi</span>
+                        <span className="font-mono text-xl font-bold text-white">
+                          Rp {previewItem.price.toLocaleString('id-ID')}
+                        </span>
                       </div>
-                    )}
-                  </div>
-
-                  <div className="pt-4 border-t border-[#27272A] flex items-center justify-between gap-3">
-                    <div>
-                      <div className="text-[10px] text-zinc-400">HARGA SATUAN</div>
-                      <div className="text-lg font-bold text-white">
-                        Rp {previewItem.price.toLocaleString('id-ID')}
+                      <div className="flex gap-2">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            addMenuToPos(previewItem, false);
+                            setPreviewItem(null);
+                          }}
+                          className="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 text-white text-xs font-semibold transition"
+                        >
+                          + Tambah ke Keranjang
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => addMenuToPos(previewItem, true)}
+                          className="px-5 py-2.5 rounded-xl bg-[#E11D48] hover:bg-[#BE123C] text-white text-xs font-semibold transition inline-flex items-center gap-1.5"
+                        >
+                          <span>Proses di Kasir POS</span>
+                          <ArrowRight className="w-3.5 h-3.5" />
+                        </button>
                       </div>
-                    </div>
-                    <div className="flex gap-2">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          addMenuToPos(previewItem, false);
-                          setPreviewItem(null);
-                        }}
-                        className="px-4 py-2.5 border border-zinc-600 hover:border-white text-white text-xs font-bold"
-                      >
-                        + TAMBAH KE SLIP
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => addMenuToPos(previewItem, true)}
-                        className="px-4 py-2.5 bg-[#E11D48] hover:bg-rose-600 text-white text-xs font-bold"
-                      >
-                        PESAN &amp; BUKA KASIR POS →
-                      </button>
                     </div>
                   </div>
                 </div>
@@ -575,60 +619,110 @@ export function KuroBentoPos({ activePage, onPageChange }: MultiPageDemoProps) {
           </div>
         )}
 
-        {/* ===================================================================
-         * HALAMAN 2: SHOKUKEN POS TERMINAL & PERFORATED RECEIPT SLIP
-         * ================================================================= */}
+        {/* HALAMAN 2: 3-ZONE TOUCH POS REGISTER (iPad POS Layout) */}
         {page === 2 && (
-          <div className="grid grid-cols-1 lg:grid-cols-12">
-            {/* Left Vertical Booth Selector */}
-            <div className="lg:col-span-1 border-b lg:border-b-0 lg:border-r border-[#27272A] flex lg:flex-col">
-              {['01', '02', '03', '04', '05', '06', '07', '08'].map((b) => (
-                <button
-                  key={b}
-                  type="button"
-                  onClick={() => setBooth(b)}
-                  className={`flex-1 py-3 px-2 text-xs font-bold border-r lg:border-r-0 lg:border-b border-[#27272A] transition ${
-                    booth === b
-                      ? 'bg-[#E11D48] text-white'
-                      : 'bg-[#0C0C0E] text-zinc-500 hover:text-white hover:bg-[#16161B]'
-                  }`}
-                >
-                  #{b}
-                </button>
-              ))}
+          <div className="grid grid-cols-1 lg:grid-cols-12 min-h-[700px]">
+            {/* Zone 1: Left Category & Booth Rail */}
+            <div className="lg:col-span-2 border-b lg:border-b-0 lg:border-r border-white/10 bg-[#111319] p-4 flex flex-col justify-between gap-6">
+              <div className="space-y-5">
+                <div>
+                  <span className="font-mono text-[10px] uppercase tracking-wider text-zinc-400 block mb-2">
+                    Kategori Menu
+                  </span>
+                  <div className="flex lg:flex-col gap-1.5 overflow-x-auto">
+                    {(
+                      [
+                        { id: 'ALL', label: 'Semua Hidangan', count: KURO_CATALOG.length },
+                        { id: 'RAMEN', label: 'Ramen Bar', count: 4 },
+                        { id: 'YAKITORI', label: 'Yakitori Grill', count: 2 },
+                        { id: 'IZAKAYA', label: 'Donburi Bowl', count: 1 },
+                        { id: 'DRINK', label: 'Cold Ocha', count: 1 },
+                      ] as const
+                    ).map((c) => (
+                      <button
+                        key={c.id}
+                        type="button"
+                        onClick={() => setCatFilter(c.id)}
+                        className={`px-3 py-2.5 rounded-xl text-left text-xs font-semibold transition flex items-center justify-between gap-2 shrink-0 ${
+                          catFilter === c.id
+                            ? 'bg-[#E11D48] text-white shadow-sm'
+                            : 'bg-white/[0.03] hover:bg-white/[0.07] text-zinc-300'
+                        }`}
+                      >
+                        <span>{c.label}</span>
+                        <span className="font-mono text-[10px] opacity-80">{c.count}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="pt-4 border-t border-white/10">
+                  <span className="font-mono text-[10px] uppercase tracking-wider text-zinc-400 block mb-2">
+                    Pilih Nomor Booth
+                  </span>
+                  <div className="grid grid-cols-4 lg:grid-cols-2 gap-1.5 font-mono text-xs">
+                    {['01', '02', '04', '07', '09', '12'].map((b) => (
+                      <button
+                        key={b}
+                        type="button"
+                        onClick={() => setBooth(b)}
+                        className={`py-2 rounded-lg font-bold border transition ${
+                          booth === b
+                            ? 'bg-white text-zinc-950 border-white'
+                            : 'bg-white/[0.03] text-zinc-400 border-white/10 hover:text-white'
+                        }`}
+                      >
+                        B-{b}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div className="p-3 rounded-xl bg-white/[0.03] border border-white/10 text-[11px] text-zinc-400 space-y-1">
+                <div className="text-white font-semibold">Terminal #01 · Kasir Utama</div>
+                <div>Printer Thermal: Terhubung</div>
+              </div>
             </div>
 
-            {/* Center Shokuken Machine Buttons */}
-            <div className="lg:col-span-7 border-b lg:border-b-0 lg:border-r border-[#27272A] flex flex-col">
-              <div className="p-3 border-b border-[#27272A] bg-[#121216] flex flex-wrap items-center justify-between gap-2 text-[11px]">
-                <div className="flex items-center gap-1">
-                  <span className="text-zinc-400 mr-1">NOODLE:</span>
-                  {['KATAME', 'FUTSU', 'YAWAME'].map((n) => (
-                    <button
-                      key={n}
-                      type="button"
-                      onClick={() => setNoodle(n)}
-                      className={`px-2.5 py-1 border ${
-                        noodle === n
-                          ? 'border-[#E11D48] bg-[#E11D48]/20 text-white font-bold'
-                          : 'border-[#27272A] text-zinc-400'
-                      }`}
-                    >
-                      {n}
-                    </button>
-                  ))}
+            {/* Zone 2: Center Visual Product Grid + Tactile Modifiers */}
+            <div className="lg:col-span-6 p-5 sm:p-6 border-b lg:border-b-0 lg:border-r border-white/10 space-y-5">
+              {/* Ramen Customization Bar */}
+              <div className="p-4 rounded-2xl bg-[#161821] border border-white/10 flex flex-wrap items-center justify-between gap-4">
+                <div className="space-y-1">
+                  <span className="font-mono text-[10px] uppercase tracking-wider text-[#FB7185] font-semibold block">
+                    Preset Kustomisasi Ramen
+                  </span>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="text-xs text-zinc-400">Tekstur Mie:</span>
+                    {(['KATAME', 'FUTSU', 'YAWARAKAME'] as const).map((n) => (
+                      <button
+                        key={n}
+                        type="button"
+                        onClick={() => setNoodle(n)}
+                        className={`px-2.5 py-1 rounded-lg font-mono text-[11px] font-semibold transition ${
+                          noodle === n
+                            ? 'bg-white text-zinc-950'
+                            : 'bg-black/40 text-zinc-400 hover:text-white border border-white/10'
+                        }`}
+                      >
+                        {n}
+                      </button>
+                    ))}
+                  </div>
                 </div>
-                <div className="flex items-center gap-1">
-                  <span className="text-zinc-400 mr-1">GARLIC OIL:</span>
-                  {['LIGHT', 'RICH', 'BLACK-X'].map((o) => (
+
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-zinc-400">Kaldu:</span>
+                  {(['RICH', 'NORMAL', 'LIGHT'] as const).map((o) => (
                     <button
                       key={o}
                       type="button"
                       onClick={() => setOil(o)}
-                      className={`px-2.5 py-1 border ${
+                      className={`px-2.5 py-1 rounded-lg font-mono text-[11px] font-semibold transition ${
                         oil === o
-                          ? 'border-amber-500 bg-amber-500/20 text-amber-200 font-bold'
-                          : 'border-[#27272A] text-zinc-400'
+                          ? 'bg-[#E11D48] text-white'
+                          : 'bg-black/40 text-zinc-400 hover:text-white border border-white/10'
                       }`}
                     >
                       {o}
@@ -637,244 +731,275 @@ export function KuroBentoPos({ activePage, onPageChange }: MultiPageDemoProps) {
                 </div>
               </div>
 
-              <div className="flex-1 grid grid-cols-1 sm:grid-cols-2">
-                {KURO_CATALOG.map((btn, i) => (
-                  <div
-                    key={btn.code}
-                    className={`p-4 border-b border-[#27272A] ${
-                      i % 2 === 0 ? 'sm:border-r' : ''
-                    } hover:bg-[#16161D] transition flex flex-col justify-between gap-3`}
+              {/* Touch Product Tiles */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                {filteredCatalog.map((menu) => (
+                  <button
+                    key={menu.code}
+                    type="button"
+                    onClick={() => addMenuToPos(menu, false)}
+                    className="group text-left p-3 rounded-2xl bg-[#15171E] hover:bg-[#1B1E28] border border-white/10 hover:border-[#E11D48]/50 transition flex items-center gap-3.5 active:scale-[0.99]"
                   >
-                    <div className="flex items-start justify-between gap-2">
-                      <span className="px-2 py-0.5 bg-[#E11D48] text-white text-[10px] font-bold">
-                        {btn.code}
-                      </span>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setPreviewItem(btn);
-                          setPage(1);
-                        }}
-                        className="text-[10px] text-zinc-400 hover:text-white underline"
-                      >
-                        Detail Menu
-                      </button>
-                    </div>
-                    <div>
-                      <div className="text-xs text-zinc-400">{btn.jp}</div>
-                      <div className="font-sans font-bold text-sm sm:text-base text-white mt-0.5">
-                        {btn.name}
+                    <img
+                      src={menu.image}
+                      alt={menu.name}
+                      className="w-20 h-20 rounded-xl object-cover shrink-0 bg-zinc-900"
+                      loading="lazy"
+                    />
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center justify-between gap-1 font-mono text-[10px] text-zinc-400">
+                        <span>{menu.code}</span>
+                        <span className="text-[#FB7185]">{menu.cat}</span>
+                      </div>
+                      <div className="font-bold text-sm text-white truncate mt-0.5">{menu.name}</div>
+                      <div className="text-[11px] text-zinc-400 truncate">{menu.jp}</div>
+                      <div className="mt-2 flex items-center justify-between">
+                        <span className="font-mono text-xs font-bold text-white">
+                          Rp {menu.price.toLocaleString('id-ID')}
+                        </span>
+                        <span className="px-2 py-0.5 rounded-md bg-[#E11D48]/20 text-[#FB7185] font-mono text-[10px] font-semibold group-hover:bg-[#E11D48] group-hover:text-white transition">
+                          + Tap
+                        </span>
                       </div>
                     </div>
-                    <div className="flex items-center justify-between pt-2 border-t border-[#27272A]/80 text-xs">
-                      <span className="text-zinc-200 font-bold">
-                        Rp {btn.price.toLocaleString('id-ID')}
-                      </span>
-                      <button
-                        type="button"
-                        onClick={() => addMenuToPos(btn, false)}
-                        className="px-3 py-1 bg-[#E11D48] hover:bg-rose-600 text-white text-[11px] font-bold"
-                      >
-                        + CETAK TIKET
-                      </button>
-                    </div>
-                  </div>
+                  </button>
                 ))}
               </div>
             </div>
 
-            {/* Right Perforated Thermal Slip */}
-            <div className="lg:col-span-4 bg-[#141418] p-5 flex flex-col justify-between">
-              <div className="bg-[#F4F1EA] text-[#18181B] relative shadow-xl">
-                <div className="p-5 pb-6 space-y-4">
-                  <div className="flex items-start justify-between border-b border-dashed border-zinc-400 pb-3">
-                    <div>
-                      <div className="text-[10px] tracking-widest text-zinc-500">SHOKUKEN SLIP</div>
-                      <div className="font-bold text-base tracking-tight">KUROBENTO SHIBUYA</div>
-                      <div className="text-[11px] text-zinc-600">BOOTH #{booth} · KDS SYNC</div>
-                    </div>
-                    <div
-                      className={`w-10 h-10 border-2 flex items-center justify-center font-serif text-lg font-bold transition ${
-                        stamped
-                          ? 'border-[#E11D48] text-[#E11D48] rotate-[-8deg] opacity-100'
-                          : 'border-zinc-300 text-zinc-300 opacity-50'
-                      }`}
-                    >
-                      済
-                    </div>
+            {/* Zone 3: Right Floating Order Cart */}
+            <div className="lg:col-span-4 bg-[#12141B] p-5 sm:p-6 flex flex-col justify-between gap-6">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between pb-3 border-b border-white/10">
+                  <div>
+                    <span className="font-mono text-[10px] uppercase tracking-wider text-zinc-400 block">
+                      Active Order Ticket
+                    </span>
+                    <h2 className="text-lg font-bold text-white">Booth #{booth} · Dine-In</h2>
                   </div>
+                  <span className="px-2.5 py-1 rounded-full bg-white/10 font-mono text-xs font-bold text-white">
+                    {totalCartQty} Item
+                  </span>
+                </div>
 
-                  <div className="space-y-2.5 min-h-[210px]">
-                    {items.length === 0 ? (
-                      <p className="text-xs text-zinc-500 py-8 text-center">
-                        Belum ada item. Pilih dari Katalog (Hal 1) atau tombol mesin di kiri.
-                      </p>
-                    ) : (
-                      items.map((it, idx) => (
-                        <div key={`${it.code}-${idx}`} className="text-xs border-b border-zinc-300/60 pb-2">
-                          <div className="flex justify-between font-bold">
-                            <span>
-                              {it.qty}x {it.name}
-                            </span>
-                            <span>{(it.price * it.qty).toLocaleString('id-ID')}</span>
-                          </div>
-                          <div className="flex justify-between text-[10px] text-zinc-600 mt-0.5">
-                            <span>
-                              {it.jp} · {it.spec}
-                            </span>
-                            <button
-                              type="button"
-                              onClick={() => setItems((p) => p.filter((_, i) => i !== idx))}
-                              className="text-rose-700 underline"
-                            >
-                              VOID
-                            </button>
+                {/* Cart Items with - 1 + Stepper */}
+                <div className="space-y-2.5 max-h-[360px] overflow-y-auto pr-1">
+                  {items.length === 0 ? (
+                    <div className="py-12 text-center text-xs text-zinc-500">
+                      Belum ada menu dipilih. Ketuk kartu menu di tengah untuk menambahkan.
+                    </div>
+                  ) : (
+                    items.map((item) => (
+                      <div
+                        key={`${item.code}-${item.spec}`}
+                        className="p-3 rounded-xl bg-[#181B24] border border-white/10 flex items-center justify-between gap-3"
+                      >
+                        <img
+                          src={item.image}
+                          alt={item.name}
+                          className="w-12 h-12 rounded-lg object-cover shrink-0"
+                        />
+                        <div className="min-w-0 flex-1">
+                          <div className="font-semibold text-xs text-white truncate">{item.name}</div>
+                          <div className="font-mono text-[10px] text-[#FB7185] mt-0.5">{item.spec}</div>
+                          <div className="font-mono text-xs text-zinc-300 mt-1">
+                            Rp {(item.price * item.qty).toLocaleString('id-ID')}
                           </div>
                         </div>
-                      ))
-                    )}
-                  </div>
-
-                  <div className="border-t border-dashed border-zinc-400 pt-3 space-y-1 text-xs">
-                    <div className="flex justify-between text-zinc-600">
-                      <span>SUBTOTAL</span>
-                      <span>Rp {subtotal.toLocaleString('id-ID')}</span>
-                    </div>
-                    <div className="flex justify-between text-zinc-600">
-                      <span>TAX &amp; SVC 15%</span>
-                      <span>Rp {serviceTax.toLocaleString('id-ID')}</span>
-                    </div>
-                    <div className="flex justify-between text-base font-bold pt-1.5 border-t border-zinc-400">
-                      <span>TOTAL</span>
-                      <span>Rp {grandTotal.toLocaleString('id-ID')}</span>
-                    </div>
-                  </div>
+                        <div className="flex items-center gap-1.5 bg-black/40 p-1 rounded-lg border border-white/10">
+                          <button
+                            type="button"
+                            onClick={() => adjustItemQty(item.code, item.spec, -1)}
+                            className="w-6 h-6 rounded-md bg-white/5 hover:bg-white/15 flex items-center justify-center text-zinc-200"
+                          >
+                            <Minus className="w-3 h-3" />
+                          </button>
+                          <span className="font-mono text-xs font-bold w-5 text-center text-white">
+                            {item.qty}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => adjustItemQty(item.code, item.spec, 1)}
+                            className="w-6 h-6 rounded-md bg-white/5 hover:bg-white/15 flex items-center justify-center text-zinc-200"
+                          >
+                            <Plus className="w-3 h-3" />
+                          </button>
+                        </div>
+                      </div>
+                    ))
+                  )}
                 </div>
               </div>
 
-              <div className="mt-4 space-y-2">
-                <button
-                  type="button"
-                  disabled={items.length === 0}
-                  onClick={fireToKitchen}
-                  className="w-full py-3.5 bg-[#E11D48] hover:bg-rose-600 text-white text-xs font-bold tracking-widest transition disabled:opacity-40"
-                >
-                  {stamped ? 'TERKIRIM KE KDS DAPUR (済)' : 'FIRE TICKET TO KITCHEN (KDS)'}
-                </button>
+              {/* Totals & Charge Button */}
+              <div className="space-y-4 pt-4 border-t border-white/10">
+                <div className="space-y-1.5 text-xs">
+                  <div className="flex justify-between text-zinc-400">
+                    <span>Subtotal Hidangan</span>
+                    <span className="font-mono">Rp {subtotal.toLocaleString('id-ID')}</span>
+                  </div>
+                  <div className="flex justify-between text-zinc-400">
+                    <span>Service &amp; PB1 (15%)</span>
+                    <span className="font-mono">Rp {serviceTax.toLocaleString('id-ID')}</span>
+                  </div>
+                  <div className="flex justify-between text-base font-bold text-white pt-2 border-t border-white/10">
+                    <span>Total Tagihan</span>
+                    <span className="font-mono text-lg text-[#FB7185]">
+                      Rp {grandTotal.toLocaleString('id-ID')}
+                    </span>
+                  </div>
+                </div>
+
                 {stamped && (
+                  <div className="p-3 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-xs text-emerald-200 flex items-center justify-between gap-2">
+                    <span>Tiket Booth #{booth} terkirim ke KDS Dapur!</span>
+                    <button
+                      type="button"
+                      onClick={() => setPage(3)}
+                      className="font-semibold underline text-white shrink-0"
+                    >
+                      Lihat KDS →
+                    </button>
+                  </div>
+                )}
+
+                <div className="grid grid-cols-2 gap-2">
                   <button
                     type="button"
-                    onClick={() => setPage(3)}
-                    className="w-full py-2.5 border border-emerald-500/50 bg-emerald-500/10 text-emerald-300 text-xs font-bold"
+                    onClick={fireToKitchen}
+                    className="py-3.5 px-4 rounded-xl bg-[#E11D48] hover:bg-[#BE123C] text-white font-semibold text-xs transition shadow-lg shadow-[#E11D48]/25 flex items-center justify-center gap-1.5"
                   >
-                    LIHAT TIKET DI LAYAR KDS (HALAMAN 3) →
+                    <Flame className="w-4 h-4" />
+                    <span>Charge &amp; Kirim KDS</span>
                   </button>
-                )}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      fireToKitchen();
+                      setPage(3);
+                    }}
+                    className="py-3.5 px-4 rounded-xl bg-white hover:bg-zinc-200 text-zinc-950 font-semibold text-xs transition flex items-center justify-center gap-1.5"
+                  >
+                    <span>Layar KDS</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
         )}
 
-        {/* ===================================================================
-         * HALAMAN 3: KITCHEN DISPLAY SYSTEM (KDS) & STOK BAHAN DAPUR
-         * ================================================================= */}
+        {/* HALAMAN 3: LIVE KITCHEN KDS & STOCK TELEMETRY */}
         {page === 3 && (
-          <div className="p-5 sm:p-8 space-y-7">
-            <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[#27272A] pb-4">
+          <div className="p-6 sm:p-8 space-y-8">
+            <div className="flex flex-wrap items-center justify-between gap-4">
               <div>
-                <span className="text-[11px] text-[#E11D48] font-bold">
-                  [ HALAMAN 3 · KITCHEN DISPLAY SYSTEM &amp; BROTH TELEMETRY ]
+                <span className="font-mono text-xs text-[#FB7185] font-semibold uppercase tracking-wider">
+                  Kitchen Display System · Real-Time Queue
                 </span>
-                <h2 className="font-sans text-2xl font-extrabold text-white mt-1">
-                  Monitor Antrean Masak Dapur &amp; Inventaris Harian
+                <h2 className="text-2xl font-bold text-white mt-0.5">
+                  Monitor Antrean Masak Ramen &amp; Binchotan Grill
                 </h2>
               </div>
               <button
                 type="button"
                 onClick={() => setPage(2)}
-                className="px-4 py-2 border border-[#27272A] bg-[#141419] hover:border-white text-xs font-bold"
+                className="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 text-xs font-semibold text-white transition"
               >
-                ← Input Pesanan Baru di POS
+                ← Kembali ke Kasir POS
               </button>
             </div>
 
-            {/* Active KDS Tickets */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
               {kdsQueue.map((ticket) => (
                 <div
                   key={ticket.id}
-                  className={`border p-5 flex flex-col justify-between gap-4 ${
-                    ticket.status === 'COOKING'
-                      ? 'border-[#E11D48] bg-[#161215]'
-                      : ticket.status === 'PLATING'
-                        ? 'border-amber-500 bg-[#171510]'
-                        : 'border-emerald-700 bg-[#0F1714] opacity-75'
-                  }`}
+                  className="rounded-2xl bg-[#15171E] border border-white/10 p-5 flex flex-col justify-between gap-5"
                 >
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between border-b border-[#27272A] pb-2.5">
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between border-b border-white/10 pb-3">
                       <div>
-                        <span className="text-xs font-bold text-white">{ticket.id}</span>
-                        <span className="ml-2 px-2 py-0.5 bg-white/10 text-white text-[11px] font-bold">
-                          BOOTH #{ticket.booth}
-                        </span>
+                        <span className="font-mono text-xs text-zinc-400">{ticket.id}</span>
+                        <div className="text-lg font-bold text-white">Booth #{ticket.booth}</div>
                       </div>
-                      <span className="text-[11px] text-zinc-400">{ticket.time}</span>
+                      <div className="text-right">
+                        <span
+                          className={`inline-block px-2.5 py-1 rounded-full font-mono text-[10px] font-bold ${
+                            ticket.status === 'COOKING'
+                              ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+                              : ticket.status === 'PLATING'
+                                ? 'bg-blue-500/20 text-blue-300 border border-blue-500/30'
+                                : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+                          }`}
+                        >
+                          {ticket.status}
+                        </span>
+                        <div className="font-mono text-[11px] text-zinc-400 mt-1">{ticket.time}</div>
+                      </div>
                     </div>
 
-                    <div className="space-y-2">
+                    <div className="space-y-2.5">
                       {ticket.items.map((it, idx) => (
-                        <div key={idx} className="text-xs border-b border-zinc-800 pb-1.5">
-                          <div className="font-sans font-bold text-white">
-                            {it.qty}x {it.name}
+                        <div key={idx} className="flex items-start justify-between gap-2 text-xs">
+                          <div>
+                            <span className="font-bold text-white">
+                              {it.qty}x {it.name}
+                            </span>
+                            <div className="font-mono text-[10px] text-zinc-400">{it.spec}</div>
                           </div>
-                          <div className="text-[10px] text-amber-300">{it.spec}</div>
                         </div>
                       ))}
                     </div>
                   </div>
 
-                  <div className="pt-2 flex items-center justify-between gap-2">
-                    <span className="text-[10px] font-bold px-2 py-1 bg-black/50 text-zinc-200">
-                      STATUS: {ticket.status}
-                    </span>
-                    {ticket.status !== 'SERVED' && (
-                      <button
-                        type="button"
-                        onClick={() => advanceKds(ticket.id)}
-                        className="px-3 py-1.5 bg-white text-black text-[11px] font-bold hover:bg-zinc-200"
-                      >
-                        {ticket.status === 'COOKING' ? 'LANJUT PLATING →' : 'TANDAI SAJI ✓'}
-                      </button>
-                    )}
-                  </div>
+                  {ticket.status !== 'SERVED' ? (
+                    <button
+                      type="button"
+                      onClick={() => advanceKds(ticket.id)}
+                      className="w-full py-2.5 rounded-xl bg-[#E11D48] hover:bg-[#BE123C] text-white text-xs font-semibold transition"
+                    >
+                      {ticket.status === 'COOKING' ? 'Lanjut ke Plating →' : 'Tandai Selesai Saji ✓'}
+                    </button>
+                  ) : (
+                    <div className="w-full py-2.5 rounded-xl bg-emerald-500/10 text-emerald-300 text-center text-xs font-mono font-semibold">
+                      Hidangan Telah Disajikan
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
 
-            {/* Kitchen Stock Gauge Table */}
-            <div className="border border-[#27272A] bg-[#121216] p-5 space-y-4">
-              <div className="text-xs font-bold text-zinc-300 uppercase">
-                STOK BAHAN BAKU SHIFT MALAM (REAL-TIME)
+            {/* Kitchen Stock Gauge */}
+            <div className="rounded-2xl border border-white/10 bg-[#15171E] p-6 space-y-4">
+              <div className="text-xs font-mono uppercase tracking-wider text-zinc-400 font-semibold">
+                Stok Bahan Baku Dapur Shift Malam
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 {[
-                  { label: 'Kaldu Tonkotsu 18-Jam', val: '42 Liter', pct: 78, status: 'NORMAL' },
-                  { label: 'Mie Gandum Hakata Fresh', val: '115 Porsi', pct: 64, status: 'NORMAL' },
-                  { label: 'Chashu Belly Roll', val: '19 Slice', pct: 24, status: 'RE-PREP' },
-                  { label: 'Ajitsuke Tamago 63°C', val: '54 Butir', pct: 82, status: 'NORMAL' },
+                  { label: 'Kaldu Tonkotsu 18-Jam', val: '42 Liter', pct: 78, status: 'Optimal' },
+                  { label: 'Mie Gandum Hakata Fresh', val: '115 Porsi', pct: 64, status: 'Optimal' },
+                  { label: 'Chashu Belly Roll', val: '19 Slice', pct: 24, status: 'Re-Prep' },
+                  { label: 'Ajitsuke Tamago 63°C', val: '54 Butir', pct: 82, status: 'Optimal' },
                 ].map((st) => (
-                  <div key={st.label} className="p-4 bg-[#0C0C0E] border border-[#27272A] space-y-2">
-                    <div className="flex justify-between text-[11px]">
+                  <div key={st.label} className="p-4 rounded-xl bg-black/30 border border-white/10 space-y-2">
+                    <div className="flex justify-between text-xs">
                       <span className="text-zinc-400">{st.label}</span>
-                      <span className={st.status === 'RE-PREP' ? 'text-[#E11D48] font-bold' : 'text-emerald-400'}>
+                      <span
+                        className={
+                          st.status === 'Re-Prep'
+                            ? 'text-[#FB7185] font-semibold'
+                            : 'text-emerald-400 font-medium'
+                        }
+                      >
                         {st.status}
                       </span>
                     </div>
-                    <div className="text-lg font-bold text-white">{st.val}</div>
-                    <div className="w-full h-1.5 bg-zinc-800">
+                    <div className="text-lg font-bold text-white font-mono">{st.val}</div>
+                    <div className="w-full h-1.5 rounded-full bg-zinc-800 overflow-hidden">
                       <div
-                        className={`h-full ${st.status === 'RE-PREP' ? 'bg-[#E11D48]' : 'bg-emerald-500'}`}
+                        className={`h-full rounded-full ${
+                          st.status === 'Re-Prep' ? 'bg-[#E11D48]' : 'bg-emerald-500'
+                        }`}
                         style={{ width: `${st.pct}%` }}
                       />
                     </div>
@@ -886,18 +1011,17 @@ export function KuroBentoPos({ activePage, onPageChange }: MultiPageDemoProps) {
         )}
       </div>
 
-      {/* FULL WEBSITE FOOTER */}
-      <footer className="border-t border-[#27272A] bg-[#09090B] px-6 py-4 flex flex-wrap items-center justify-between gap-4 text-[11px] text-zinc-500">
-        <div>KUROBENTO SHIBUYA INDONESIA · JL. SENOPATI NO. 48 JAKARTA SELATAN</div>
-        <div className="flex items-center gap-4">
+      <footer className="border-t border-white/10 bg-[#090A0D] px-6 py-4 flex flex-wrap items-center justify-between gap-4 text-xs text-zinc-500">
+        <div>KuroBento Shibuya Indonesia · Jl. Senopati No. 48 Jakarta Selatan</div>
+        <div className="flex items-center gap-4 text-zinc-400">
           <button type="button" onClick={() => setPage(1)} className="hover:text-white">
-            Hal 1: Katalog Menu
+            01 Storefront
           </button>
           <button type="button" onClick={() => setPage(2)} className="hover:text-white">
-            Hal 2: Kasir POS
+            02 Touch POS
           </button>
           <button type="button" onClick={() => setPage(3)} className="hover:text-white">
-            Hal 3: Dapur KDS
+            03 Kitchen KDS
           </button>
         </div>
       </footer>
@@ -906,7 +1030,7 @@ export function KuroBentoPos({ activePage, onPageChange }: MultiPageDemoProps) {
 }
 
 /* ============================================================================
- * 2. BREWLAB ROASTERY · 3-Page Coffee Storefront, Barista POS & Pickup Board
+ * 2. BREWLAB ROASTERY · Coffee Storefront, iPad Barista POS & Pickup Board
  * ========================================================================== */
 interface BrewCatalogItem {
   id: string;
@@ -919,13 +1043,14 @@ interface BrewCatalogItem {
   roast: string;
   recipe: string;
   desc: string;
+  image: string;
 }
 
 const BREW_CATALOG: BrewCatalogItem[] = [
   {
     id: 'br1',
     cat: 'ESPRESSO BAR',
-    origin: 'CIWIDEY · WASHED PROCESS',
+    origin: 'Ciwidey · Washed Process',
     name: 'Oat Spanish Cortado Latte',
     price: 38000,
     pastry: false,
@@ -933,11 +1058,12 @@ const BREW_CATALOG: BrewCatalogItem[] = [
     roast: 'Medium-Dark Espresso Omni',
     recipe: 'Dose 18.5g · Yield 36g · 93°C · 27 dtk + 140ml Minor Figures Oat',
     desc: 'Double ristretto dari biji kopi Ciwidey Jawa Barat yang dipadukan susu gandum barista grade dan sentuhan susu kental manis organik.',
+    image: 'https://images.unsplash.com/photo-1534778101976-62847782c213?auto=format&fit=crop&w=600&q=80',
   },
   {
     id: 'br2',
     cat: 'MANUAL BREW',
-    origin: 'ETHIOPIA GUJI · NATURAL',
+    origin: 'Ethiopia Guji · Natural',
     name: 'Pour Over V60 Seasonal Filter',
     price: 42000,
     pastry: false,
@@ -945,11 +1071,12 @@ const BREW_CATALOG: BrewCatalogItem[] = [
     roast: 'Light Nordic Filter',
     recipe: 'Dose 15g · Air 240ml (91°C) · 3x Pouring · Total 02:25',
     desc: 'Seduhan manual V60 dengan profil floral dan buah persik segar dari dataran tinggi Guji, Ethiopia (2.100 mdpl).',
+    image: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=600&q=80',
   },
   {
     id: 'br3',
     cat: 'ESPRESSO BAR',
-    origin: 'UJI KYOTO · CEREMONIAL',
+    origin: 'Uji Kyoto · Ceremonial',
     name: 'Dirty Matcha Espresso Fusion',
     price: 44000,
     pastry: false,
@@ -957,11 +1084,12 @@ const BREW_CATALOG: BrewCatalogItem[] = [
     roast: 'Ceremonial First-Harvest + House Blend',
     recipe: '3g Uji Matcha Whisked + Cold Milk + 1 Shot Hot Espresso Float',
     desc: 'Lapisan matcha seremonial Jepang kental di dasar gelas, susu dingin segar, dan tuangan shot espresso panas di bagian atas.',
+    image: 'https://images.unsplash.com/photo-1515823064-d6e0c04616a7?auto=format&fit=crop&w=600&q=80',
   },
   {
     id: 'br4',
     cat: 'ESPRESSO BAR',
-    origin: 'ACEH GAYO · PANTAN MUSARA',
+    origin: 'Aceh Gayo · Pantan Musara',
     name: 'Iced Sparkling Yuzu Americano',
     price: 36000,
     pastry: false,
@@ -969,11 +1097,12 @@ const BREW_CATALOG: BrewCatalogItem[] = [
     roast: 'Medium Roast',
     recipe: 'Double Espresso Aceh Gayo + Yuzu Puree 20ml + Soda Water',
     desc: 'Kombinasi menyegarkan antara double shot espresso Aceh Gayo dengan bulir jeruk yuzu asli dan air soda dingin.',
+    image: 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&w=600&q=80',
   },
   {
     id: 'br5',
     cat: 'PASTRY',
-    origin: 'FRENCH ELLE & VIRE BUTTER',
+    origin: 'French Elle & Vire Butter',
     name: 'Artisan Pain au Chocolat',
     price: 31000,
     pastry: true,
@@ -981,11 +1110,12 @@ const BREW_CATALOG: BrewCatalogItem[] = [
     roast: 'Baked Fresh 06:30 WIB',
     recipe: 'Laminasi 72 Jam · Panggang Konveksi 195°C selama 16 Menit',
     desc: 'Pastry berlapis renyah dengan mentega Prancis dan dua batang cokelat hitam Valrhona 70% yang meleleh saat disajikan hangat.',
+    image: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=600&q=80',
   },
   {
     id: 'br6',
     cat: 'ROASTERY BEANS',
-    origin: 'FLORES BAJAWA · HONEY 250G',
+    origin: 'Flores Bajawa · Honey 250g',
     name: 'Kemasan Biji Kopi Flores 250g',
     price: 115000,
     pastry: true,
@@ -993,6 +1123,7 @@ const BREW_CATALOG: BrewCatalogItem[] = [
     roast: 'Whole Bean / Grind on Request',
     recipe: 'Kemasan Valve One-Way 250g · Tanggal Sangrai Pekan Ini',
     desc: 'Biji kopi arabika Flores Bajawa olahan madu (honey process) dalam kemasan 250 gram untuk seduhan rumahan.',
+    image: 'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&w=600&q=80',
   },
 ];
 
@@ -1001,16 +1132,22 @@ export function BrewLabPos({ activePage, onPageChange }: MultiPageDemoProps) {
   const [catFilter, setCatFilter] = useState<'ALL' | BrewCatalogItem['cat']>('ALL');
   const [previewBean, setPreviewBean] = useState<BrewCatalogItem | null>(null);
 
-  const [expandedId, setExpandedId] = useState<string>('br1');
   const [milk, setMilk] = useState<'Dairy' | 'Oat' | 'Soy'>('Oat');
   const [sweet, setSweet] = useState<'0%' | '50%' | '100%'>('50%');
   const [shot, setShot] = useState<'Single' | 'Double'>('Single');
   const [cupName, setCupName] = useState('BIRU');
   const [paidMethod, setPaidMethod] = useState<string | null>(null);
   const [orders, setOrders] = useState<
-    { id: string; name: string; meta: string; price: number; qty: number }[]
+    { id: string; name: string; meta: string; price: number; qty: number; image: string }[]
   >([
-    { id: 'br1-Oat-50%-Single', name: 'Oat Spanish Cortado Latte', meta: 'Oat · 50% · Single', price: 44000, qty: 1 },
+    {
+      id: 'br1-Oat-50%-Single',
+      name: 'Oat Spanish Cortado Latte',
+      meta: 'Oat · 50% · Single',
+      price: 44000,
+      qty: 1,
+      image: BREW_CATALOG[0].image,
+    },
   ]);
 
   const [pickupBoard, setPickupBoard] = useState([
@@ -1020,7 +1157,9 @@ export function BrewLabPos({ activePage, onPageChange }: MultiPageDemoProps) {
 
   const commitDrink = (item: BrewCatalogItem, goPos = false) => {
     setPaidMethod(null);
-    const extra = item.pastry ? 0 : (milk === 'Oat' ? 6000 : milk === 'Soy' ? 4000 : 0) + (shot === 'Double' ? 5000 : 0);
+    const extra = item.pastry
+      ? 0
+      : (milk === 'Oat' ? 6000 : milk === 'Soy' ? 4000 : 0) + (shot === 'Double' ? 5000 : 0);
     const meta = item.pastry ? 'Fresh Serve' : `${milk} · ${sweet} · ${shot}`;
     const key = `${item.id}-${meta}`;
     setOrders((prev) => {
@@ -1030,12 +1169,21 @@ export function BrewLabPos({ activePage, onPageChange }: MultiPageDemoProps) {
         c[idx] = { ...c[idx], qty: c[idx].qty + 1 };
         return c;
       }
-      return [...prev, { id: key, name: item.name, meta, price: item.price + extra, qty: 1 }];
+      return [...prev, { id: key, name: item.name, meta, price: item.price + extra, qty: 1, image: item.image }];
     });
     if (goPos) {
       setPreviewBean(null);
       setPage(2);
     }
+  };
+
+  const adjustOrderQty = (id: string, delta: number) => {
+    setPaidMethod(null);
+    setOrders((prev) =>
+      prev
+        .map((o) => (o.id === id ? { ...o, qty: o.qty + delta } : o))
+        .filter((o) => o.qty > 0)
+    );
   };
 
   const settleOrder = (method: string) => {
@@ -1051,91 +1199,106 @@ export function BrewLabPos({ activePage, onPageChange }: MultiPageDemoProps) {
   };
 
   const total = orders.reduce((s, o) => s + o.price * o.qty, 0);
+  const totalCups = orders.reduce((s, o) => s + o.qty, 0);
   const filtered = catFilter === 'ALL' ? BREW_CATALOG : BREW_CATALOG.filter((i) => i.cat === catFilter);
 
   return (
-    <div className="min-h-[780px] bg-[#F4EFE6] text-[#1C1917] flex flex-col justify-between">
+    <div className="min-h-[820px] bg-[#FBF9F5] text-[#1C1917] flex flex-col justify-between">
       <div>
-        {/* FULL WEBSITE HEADER */}
-        <header className="border-b-2 border-[#1C1917] bg-[#EAE2D3] px-5 sm:px-8 py-4 flex flex-wrap items-center justify-between gap-4">
-          <div>
-            <span className="font-mono text-[10px] tracking-widest uppercase text-[#D94E34] font-bold block">
-              SMALL-BATCH MICRO ROASTERY &amp; ESPRESSO BAR
-            </span>
-            <div className="font-serif text-2xl sm:text-3xl font-bold tracking-tight">
-              BrewLab Roastery · Bandung
+        {/* Clean Blue Bottle / Nordic Roastery Header */}
+        <header className="border-b border-stone-200 bg-white/90 backdrop-blur-md px-5 sm:px-8 py-4 flex flex-wrap items-center justify-between gap-4">
+          <div className="flex items-center gap-3.5">
+            <div className="w-10 h-10 rounded-full bg-[#C85A32] text-white flex items-center justify-center">
+              <Coffee className="w-5 h-5" />
+            </div>
+            <div>
+              <span className="font-mono text-[10px] tracking-widest uppercase text-[#C85A32] font-semibold block">
+                Small-Batch Roastery &amp; Espresso Bar
+              </span>
+              <div className="font-serif text-2xl font-bold tracking-tight text-stone-900">
+                BrewLab Roastery · Bandung
+              </div>
             </div>
           </div>
 
-          <nav className="flex flex-wrap gap-2 font-mono text-xs font-bold">
+          <nav className="flex flex-wrap gap-1.5 bg-stone-100 p-1.5 rounded-xl border border-stone-200 text-xs font-semibold">
             <button
               type="button"
               onClick={() => setPage(1)}
-              className={`px-3.5 py-2 border border-[#1C1917] transition ${
-                page === 1 ? 'bg-[#1C1917] text-[#F4EFE6]' : 'bg-[#F4EFE6] text-[#1C1917]'
+              className={`px-3.5 py-2 rounded-lg transition ${
+                page === 1 ? 'bg-white text-stone-900 shadow-sm' : 'text-stone-600 hover:text-stone-900'
               }`}
             >
-              01 · Katalog Kopi &amp; Beans
+              01 · Storefront &amp; Beans
             </button>
             <button
               type="button"
               onClick={() => setPage(2)}
-              className={`px-3.5 py-2 border border-[#1C1917] transition ${
-                page === 2 ? 'bg-[#D94E34] text-white border-[#D94E34]' : 'bg-[#F4EFE6] text-[#1C1917]'
+              className={`px-3.5 py-2 rounded-lg transition flex items-center gap-1.5 ${
+                page === 2 ? 'bg-[#C85A32] text-white shadow-sm' : 'text-stone-600 hover:text-stone-900'
               }`}
             >
-              02 · Kasir Barista POS ({orders.reduce((s, o) => s + o.qty, 0)})
+              <span>02 · Barista iPad POS</span>
+              <span className="px-1.5 py-0.5 rounded-full text-[10px] bg-black/15 font-mono">
+                {totalCups}
+              </span>
             </button>
             <button
               type="button"
               onClick={() => setPage(3)}
-              className={`px-3.5 py-2 border border-[#1C1917] transition ${
-                page === 3 ? 'bg-[#1C1917] text-[#F4EFE6]' : 'bg-[#F4EFE6] text-[#1C1917]'
+              className={`px-3.5 py-2 rounded-lg transition ${
+                page === 3 ? 'bg-white text-stone-900 shadow-sm' : 'text-stone-600 hover:text-stone-900'
               }`}
             >
-              03 · Layar Pickup &amp; Laporan
+              03 · Pickup &amp; Telemetry
             </button>
           </nav>
         </header>
 
-        {/* HALAMAN 1: COFFEE & ROASTERY PRODUCT CATALOG */}
+        {/* HALAMAN 1: STOREFRONT & ROASTERY CATALOG */}
         {page === 1 && (
           <div className="p-6 sm:p-10 space-y-8">
-            <div className="border-2 border-[#1C1917] bg-[#EAE2D3] p-6 sm:p-8 grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
-              <div className="lg:col-span-8 space-y-2">
-                <span className="font-mono text-xs font-bold uppercase text-[#D94E34]">
-                  [ HALAMAN 1 · STOREFRONT KATALOG MINUMAN &amp; BIJI KOPI ]
+            <div className="rounded-3xl border border-stone-200 bg-[#F3EFE6] overflow-hidden grid grid-cols-1 lg:grid-cols-12 items-center">
+              <div className="lg:col-span-7 p-6 sm:p-10 space-y-4">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white text-[#C85A32] text-xs font-semibold border border-stone-200">
+                  Sangrai Segar Tiap Pekan · La Marzocco KB90
                 </span>
-                <h1 className="font-serif text-3xl sm:text-4xl font-bold">
-                  Sangrai Segar Tiap Pekan, Diseduh Presisi di Bar.
+                <h1 className="font-serif text-3xl sm:text-4xl font-bold text-stone-900 leading-tight">
+                  Ekstraksi Presisi dari Petani Hulu ke Cangkir Pagi Anda.
                 </h1>
-                <p className="text-sm text-stone-700 max-w-2xl leading-relaxed">
-                  Eksplorasi menu espresso, seduhan manual V60, pastry Prancis, dan kemasan biji kopi 250g. Klik kartu produk untuk melihat <strong>Resep Ekstraksi &amp; Tasting Notes</strong>.
+                <p className="text-sm text-stone-600 max-w-xl leading-relaxed">
+                  Telusuri kurasi espresso single-origin, manual brew V60, viennoiserie Prancis, hingga biji kopi sangrai 250g. Ketuk kartu untuk membaca profil sangrai dan resep seduh barista.
                 </p>
-              </div>
-              <div className="lg:col-span-4 bg-[#F4EFE6] border border-[#1C1917] p-4 space-y-3 font-mono text-xs">
-                <div className="flex justify-between">
-                  <span>PESANAN AKTIF ({cupName}):</span>
-                  <span className="font-bold">Rp {total.toLocaleString('id-ID')}</span>
+                <div className="pt-2 flex flex-wrap gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setPage(2)}
+                    className="px-5 py-3 rounded-xl bg-stone-900 hover:bg-[#C85A32] text-white text-xs font-semibold transition inline-flex items-center gap-2"
+                  >
+                    <span>Buka Barista Register ({totalCups} Cup · Rp {total.toLocaleString('id-ID')})</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </button>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => setPage(2)}
-                  className="w-full py-2.5 bg-[#1C1917] hover:bg-[#D94E34] text-[#F4EFE6] font-bold transition"
-                >
-                  BUKA KASIR BARISTA (HAL 2) →
-                </button>
+              </div>
+              <div className="lg:col-span-5 h-full min-h-[250px] relative">
+                <img
+                  src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=900&q=80"
+                  alt="Specialty Pour Over Coffee"
+                  className="w-full h-full object-cover"
+                />
               </div>
             </div>
 
-            <div className="flex flex-wrap gap-2 font-mono text-xs">
+            <div className="flex flex-wrap gap-2">
               {(['ALL', 'ESPRESSO BAR', 'MANUAL BREW', 'ROASTERY BEANS', 'PASTRY'] as const).map((c) => (
                 <button
                   key={c}
                   type="button"
                   onClick={() => setCatFilter(c)}
-                  className={`px-3.5 py-2 border border-[#1C1917] font-bold ${
-                    catFilter === c ? 'bg-[#1C1917] text-[#F4EFE6]' : 'bg-white/60 text-[#1C1917]'
+                  className={`px-4 py-2 rounded-full text-xs font-semibold transition ${
+                    catFilter === c
+                      ? 'bg-stone-900 text-white'
+                      : 'bg-white text-stone-600 hover:text-stone-900 border border-stone-200'
                   }`}
                 >
                   {c}
@@ -1147,52 +1310,59 @@ export function BrewLabPos({ activePage, onPageChange }: MultiPageDemoProps) {
               {filtered.map((item) => (
                 <div
                   key={item.id}
-                  className="border-2 border-[#1C1917] bg-[#FAF6F0] flex flex-col justify-between"
+                  className="group rounded-2xl border border-stone-200 bg-white overflow-hidden shadow-sm hover:shadow-md transition flex flex-col justify-between"
                 >
                   <div>
                     <div
                       onClick={() => setPreviewBean(item)}
-                      className="p-5 bg-[#EAE2D3] border-b border-[#1C1917] cursor-pointer space-y-3"
+                      className="relative aspect-[4/3] w-full overflow-hidden bg-stone-100 cursor-pointer"
                     >
-                      <div className="flex justify-between font-mono text-[10px] font-bold">
-                        <span className="text-[#D94E34]">{item.cat}</span>
-                        <span>{item.origin}</span>
+                      <img
+                        src={item.image}
+                        alt={item.name}
+                        className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+                        loading="lazy"
+                      />
+                      <span className="absolute top-3 left-3 px-2.5 py-1 rounded-full text-[10px] font-mono font-semibold bg-white/90 backdrop-blur-sm text-stone-900">
+                        {item.cat}
+                      </span>
+                    </div>
+
+                    <div className="p-5 space-y-3">
+                      <div className="font-mono text-[11px] text-[#C85A32] font-semibold">
+                        {item.origin}
                       </div>
-                      <h2 className="font-serif text-2xl font-bold leading-snug">{item.name}</h2>
-                      <div className="flex flex-wrap gap-1.5">
+                      <h2 className="font-serif text-xl font-bold text-stone-900">{item.name}</h2>
+                      <p className="text-xs text-stone-600 leading-relaxed line-clamp-2">{item.desc}</p>
+                      <div className="flex flex-wrap gap-1.5 pt-1">
                         {item.notes.map((n) => (
                           <span
                             key={n}
-                            className="font-mono text-[10px] px-2 py-0.5 bg-[#F4EFE6] border border-[#1C1917]"
+                            className="text-[11px] px-2.5 py-0.5 rounded-full bg-[#F3EFE6] text-stone-700 font-medium"
                           >
                             {n}
                           </span>
                         ))}
                       </div>
                     </div>
-
-                    <div className="p-5 space-y-3">
-                      <p className="text-xs text-stone-700 leading-relaxed">{item.desc}</p>
-                      <div className="font-mono text-[11px] text-stone-600 border-t border-dashed border-[#1C1917]/30 pt-2">
-                        Resep: {item.recipe}
-                      </div>
-                    </div>
                   </div>
 
-                  <div className="p-5 pt-3 border-t border-[#1C1917] flex items-center justify-between gap-2 font-mono text-xs">
-                    <span className="font-bold text-sm">Rp {item.price.toLocaleString('id-ID')}</span>
+                  <div className="p-5 pt-3 border-t border-stone-100 flex items-center justify-between">
+                    <span className="font-mono text-sm font-bold text-stone-900">
+                      Rp {item.price.toLocaleString('id-ID')}
+                    </span>
                     <div className="flex gap-2">
                       <button
                         type="button"
                         onClick={() => setPreviewBean(item)}
-                        className="px-3 py-1.5 border border-[#1C1917] hover:bg-[#1C1917] hover:text-white font-bold transition"
+                        className="px-3 py-1.5 rounded-lg border border-stone-200 hover:border-stone-900 text-xs font-medium transition"
                       >
-                        Preview
+                        Resep
                       </button>
                       <button
                         type="button"
                         onClick={() => commitDrink(item, false)}
-                        className="px-3 py-1.5 bg-[#D94E34] text-white font-bold"
+                        className="px-3.5 py-1.5 rounded-lg bg-[#C85A32] hover:bg-[#b04b25] text-white text-xs font-semibold transition"
                       >
                         + Order
                       </button>
@@ -1203,40 +1373,58 @@ export function BrewLabPos({ activePage, onPageChange }: MultiPageDemoProps) {
             </div>
 
             {previewBean && (
-              <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4">
-                <div className="bg-[#FAF6F0] border-2 border-[#1C1917] max-w-lg w-full p-6 space-y-5 shadow-2xl">
-                  <div className="flex justify-between items-start border-b border-[#1C1917] pb-3">
-                    <div>
-                      <span className="font-mono text-[10px] font-bold text-[#D94E34]">
-                        {previewBean.origin}
-                      </span>
-                      <h3 className="font-serif text-2xl font-bold mt-1">{previewBean.name}</h3>
-                    </div>
+              <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+                <div className="bg-white rounded-3xl max-w-lg w-full overflow-hidden shadow-2xl border border-stone-200">
+                  <div className="relative aspect-[16/9] bg-stone-100">
+                    <img
+                      src={previewBean.image}
+                      alt={previewBean.name}
+                      className="w-full h-full object-cover"
+                    />
                     <button
                       type="button"
                       onClick={() => setPreviewBean(null)}
-                      className="font-mono text-xs border border-[#1C1917] px-2.5 py-1"
+                      className="absolute top-4 right-4 w-9 h-9 rounded-full bg-white/90 text-stone-900 flex items-center justify-center shadow"
                     >
-                      TUTUP ✕
+                      <X className="w-4 h-4" />
                     </button>
                   </div>
-                  <p className="text-sm text-stone-700 leading-relaxed">{previewBean.desc}</p>
-                  <div className="p-4 bg-[#EAE2D3] border border-[#1C1917] font-mono text-xs space-y-1.5">
-                    <div><strong>ROAST PROFILE:</strong> {previewBean.roast}</div>
-                    <div><strong>PARAMETER BARISTA:</strong> {previewBean.recipe}</div>
-                    <div><strong>TASTING NOTES:</strong> {previewBean.notes.join(' · ')}</div>
-                  </div>
-                  <div className="flex justify-between items-center pt-2">
-                    <span className="font-serif text-2xl font-bold">
-                      Rp {previewBean.price.toLocaleString('id-ID')}
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => commitDrink(previewBean, true)}
-                      className="px-5 py-2.5 bg-[#1C1917] hover:bg-[#D94E34] text-white font-mono text-xs font-bold"
-                    >
-                      MASUKKAN KE REGISTER BARISTA →
-                    </button>
+                  <div className="p-6 space-y-4">
+                    <div>
+                      <span className="font-mono text-xs font-semibold text-[#C85A32]">
+                        {previewBean.origin}
+                      </span>
+                      <h3 className="font-serif text-2xl font-bold text-stone-900 mt-0.5">
+                        {previewBean.name}
+                      </h3>
+                    </div>
+                    <p className="text-sm text-stone-600 leading-relaxed">{previewBean.desc}</p>
+                    <div className="p-4 rounded-2xl bg-[#F3EFE6] space-y-1.5 text-xs">
+                      <div>
+                        <span className="font-semibold text-stone-900">Profil Sangrai:</span>{' '}
+                        <span className="text-stone-700">{previewBean.roast}</span>
+                      </div>
+                      <div>
+                        <span className="font-semibold text-stone-900">Resep Ekstraksi:</span>{' '}
+                        <span className="text-stone-700">{previewBean.recipe}</span>
+                      </div>
+                      <div>
+                        <span className="font-semibold text-stone-900">Tasting Notes:</span>{' '}
+                        <span className="text-stone-700">{previewBean.notes.join(' · ')}</span>
+                      </div>
+                    </div>
+                    <div className="flex justify-between items-center pt-2">
+                      <span className="font-mono text-xl font-bold text-stone-900">
+                        Rp {previewBean.price.toLocaleString('id-ID')}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => commitDrink(previewBean, true)}
+                        className="px-5 py-2.5 rounded-xl bg-stone-900 hover:bg-[#C85A32] text-white text-xs font-semibold transition"
+                      >
+                        Masukkan ke Register Barista →
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -1244,132 +1432,196 @@ export function BrewLabPos({ activePage, onPageChange }: MultiPageDemoProps) {
           </div>
         )}
 
-        {/* HALAMAN 2: BARISTA TOUCH POS */}
+        {/* HALAMAN 2: 3-ZONE TOUCH BARISTA POS */}
         {page === 2 && (
-          <div className="grid grid-cols-1 lg:grid-cols-12">
-            <div className="lg:col-span-8 p-6 sm:p-10 border-b lg:border-b-0 lg:border-r border-[#1C1917]/20">
-              <div className="flex flex-wrap items-baseline justify-between gap-2 pb-4 border-b-2 border-[#1C1917]">
-                <div>
-                  <span className="font-mono text-[11px] tracking-widest uppercase text-[#D94E34] font-bold">
-                    HALAMAN 2 · SPEED-BAR BARISTA TOUCH REGISTER
-                  </span>
-                  <h2 className="font-serif text-2xl sm:text-3xl font-bold mt-1">
-                    Modifier Susu, Gula &amp; Espresso Shot
-                  </h2>
+          <div className="grid grid-cols-1 lg:grid-cols-12 min-h-[700px]">
+            {/* Zone 1: Left Category & Modifier Rail */}
+            <div className="lg:col-span-3 border-b lg:border-b-0 lg:border-r border-stone-200 bg-[#F3EFE6]/70 p-5 space-y-6">
+              <div>
+                <span className="font-mono text-[10px] uppercase tracking-wider text-stone-500 font-semibold block mb-2.5">
+                  Stasiun Bar
+                </span>
+                <div className="space-y-1.5">
+                  {(['ALL', 'ESPRESSO BAR', 'MANUAL BREW', 'ROASTERY BEANS', 'PASTRY'] as const).map((c) => (
+                    <button
+                      key={c}
+                      type="button"
+                      onClick={() => setCatFilter(c)}
+                      className={`w-full px-3.5 py-2.5 rounded-xl text-left text-xs font-semibold transition flex items-center justify-between ${
+                        catFilter === c
+                          ? 'bg-stone-900 text-white shadow-sm'
+                          : 'bg-white/80 hover:bg-white text-stone-700 border border-stone-200/70'
+                      }`}
+                    >
+                      <span>{c}</span>
+                      <span className="font-mono text-[10px] opacity-75">→</span>
+                    </button>
+                  ))}
                 </div>
-                <span className="font-mono text-xs text-stone-600">LINE 1 · LA MARZOCCO KB90</span>
               </div>
 
-              <div className="divide-y divide-[#1C1917]/15">
-                {BREW_CATALOG.map((item) => {
-                  const isOpen = expandedId === item.id;
-                  return (
-                    <div key={item.id} className="py-4">
-                      <div className="flex items-center justify-between gap-4">
-                        <button
-                          type="button"
-                          onClick={() => setExpandedId(item.id)}
-                          className="text-left flex-1 group"
-                        >
-                          <span className="font-mono text-[10px] tracking-widest text-stone-500 block">
-                            {item.origin}
-                          </span>
-                          <span className="font-serif text-xl font-bold group-hover:text-[#D94E34] transition">
-                            {item.name}
-                          </span>
-                        </button>
-                        <div className="flex items-center gap-4 shrink-0">
-                          <span className="font-mono text-sm font-bold">
-                            Rp {item.price.toLocaleString('id-ID')}
-                          </span>
-                          <button
-                            type="button"
-                            onClick={() => commitDrink(item, false)}
-                            className="px-4 py-2 bg-[#1C1917] hover:bg-[#D94E34] text-[#F4EFE6] font-mono text-xs font-bold transition"
-                          >
-                            + ADD
-                          </button>
-                        </div>
-                      </div>
+              {/* Tactile Cup Modifiers */}
+              <div className="p-4 rounded-2xl bg-white border border-stone-200 space-y-4">
+                <div className="text-xs font-bold text-stone-900 flex items-center gap-1.5">
+                  <SlidersHorizontal className="w-3.5 h-3.5 text-[#C85A32]" />
+                  <span>Modifier Minuman Aktif</span>
+                </div>
 
-                      {isOpen && !item.pastry && (
-                        <div className="mt-4 pt-3 border-t border-dashed border-[#1C1917]/20 flex flex-wrap items-center gap-4 text-xs font-mono">
-                          <div className="flex items-center border border-[#1C1917]">
-                            {(['Dairy', 'Oat', 'Soy'] as const).map((m) => (
-                              <button
-                                key={m}
-                                type="button"
-                                onClick={() => setMilk(m)}
-                                className={`px-3 py-1.5 ${milk === m ? 'bg-[#1C1917] text-[#F4EFE6]' : 'bg-transparent'}`}
-                              >
-                                {m}
-                              </button>
-                            ))}
-                          </div>
-                          <div className="flex items-center border border-[#1C1917]">
-                            {(['0%', '50%', '100%'] as const).map((sw) => (
-                              <button
-                                key={sw}
-                                type="button"
-                                onClick={() => setSweet(sw)}
-                                className={`px-3 py-1.5 ${sweet === sw ? 'bg-[#D94E34] text-white' : 'bg-transparent'}`}
-                              >
-                                {sw}
-                              </button>
-                            ))}
-                          </div>
-                          <div className="flex items-center border border-[#1C1917]">
-                            {(['Single', 'Double'] as const).map((sh) => (
-                              <button
-                                key={sh}
-                                type="button"
-                                onClick={() => setShot(sh)}
-                                className={`px-3 py-1.5 ${shot === sh ? 'bg-[#1C1917] text-[#F4EFE6]' : 'bg-transparent'}`}
-                              >
-                                {sh}
-                              </button>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
+                <div className="space-y-1.5">
+                  <span className="text-[11px] text-stone-500 block">Pilihan Susu</span>
+                  <div className="grid grid-cols-3 gap-1.5 text-xs">
+                    {(['Dairy', 'Oat', 'Soy'] as const).map((m) => (
+                      <button
+                        key={m}
+                        type="button"
+                        onClick={() => setMilk(m)}
+                        className={`py-1.5 rounded-lg font-medium border transition ${
+                          milk === m
+                            ? 'bg-stone-900 text-white border-stone-900'
+                            : 'bg-stone-50 text-stone-700 border-stone-200'
+                        }`}
+                      >
+                        {m}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="space-y-1.5">
+                  <span className="text-[11px] text-stone-500 block">Tingkat Manis</span>
+                  <div className="grid grid-cols-3 gap-1.5 text-xs">
+                    {(['0%', '50%', '100%'] as const).map((sw) => (
+                      <button
+                        key={sw}
+                        type="button"
+                        onClick={() => setSweet(sw)}
+                        className={`py-1.5 rounded-lg font-medium border transition ${
+                          sweet === sw
+                            ? 'bg-[#C85A32] text-white border-[#C85A32]'
+                            : 'bg-stone-50 text-stone-700 border-stone-200'
+                        }`}
+                      >
+                        {sw}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="space-y-1.5">
+                  <span className="text-[11px] text-stone-500 block">Espresso Shot</span>
+                  <div className="grid grid-cols-2 gap-1.5 text-xs">
+                    {(['Single', 'Double'] as const).map((sh) => (
+                      <button
+                        key={sh}
+                        type="button"
+                        onClick={() => setShot(sh)}
+                        className={`py-1.5 rounded-lg font-medium border transition ${
+                          shot === sh
+                            ? 'bg-stone-900 text-white border-stone-900'
+                            : 'bg-stone-50 text-stone-700 border-stone-200'
+                        }`}
+                      >
+                        {sh}
+                      </button>
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
 
-            <div className="lg:col-span-4 bg-[#EAE2D3] p-6 sm:p-8 flex flex-col justify-between">
-              <div className="space-y-5">
-                <div className="flex items-center justify-between border-b-2 border-[#1C1917] pb-3">
-                  <label htmlFor="brew-cup-call" className="font-mono text-xs font-bold">
-                    [ CUP CALLOUT ]
-                  </label>
-                  <input
-                    id="brew-cup-call"
-                    type="text"
-                    value={cupName}
-                    onChange={(e) => setCupName(e.target.value.toUpperCase())}
-                    className="w-32 text-right font-mono font-bold text-sm bg-transparent border-b border-[#1C1917] focus:outline-none text-[#D94E34]"
-                  />
+            {/* Zone 2: Center Visual Product Grid */}
+            <div className="lg:col-span-5 p-5 sm:p-6 border-b lg:border-b-0 lg:border-r border-stone-200">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                {filtered.map((item) => (
+                  <button
+                    key={item.id}
+                    type="button"
+                    onClick={() => commitDrink(item, false)}
+                    className="group text-left rounded-2xl bg-white border border-stone-200 hover:border-[#C85A32] overflow-hidden shadow-sm transition active:scale-[0.99]"
+                  >
+                    <div className="aspect-[16/10] w-full overflow-hidden bg-stone-100">
+                      <img
+                        src={item.image}
+                        alt={item.name}
+                        className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+                        loading="lazy"
+                      />
+                    </div>
+                    <div className="p-3.5 space-y-1">
+                      <div className="font-mono text-[10px] text-[#C85A32] font-semibold truncate">
+                        {item.origin}
+                      </div>
+                      <div className="font-serif font-bold text-sm text-stone-900 truncate">
+                        {item.name}
+                      </div>
+                      <div className="pt-1 flex items-center justify-between">
+                        <span className="font-mono text-xs font-bold text-stone-900">
+                          Rp {item.price.toLocaleString('id-ID')}
+                        </span>
+                        <span className="text-[11px] font-semibold text-[#C85A32]">+ Tambah</span>
+                      </div>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Zone 3: Right Floating Order Cart */}
+            <div className="lg:col-span-4 bg-white p-5 sm:p-6 flex flex-col justify-between gap-6">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between border-b border-stone-200 pb-3">
+                  <div>
+                    <label htmlFor="brew-cup-call" className="font-mono text-[10px] uppercase text-stone-500 block">
+                      Nama Panggilan Cup
+                    </label>
+                    <input
+                      id="brew-cup-call"
+                      type="text"
+                      value={cupName}
+                      onChange={(e) => setCupName(e.target.value.toUpperCase())}
+                      className="font-serif font-bold text-lg text-stone-900 bg-transparent border-b border-stone-300 focus:border-[#C85A32] focus:outline-none w-40"
+                    />
+                  </div>
+                  <span className="px-2.5 py-1 rounded-full bg-[#F3EFE6] font-mono text-xs font-bold text-stone-800">
+                    {totalCups} Cup
+                  </span>
                 </div>
 
-                <div className="space-y-3 min-h-[240px]">
+                <div className="space-y-2.5 max-h-[340px] overflow-y-auto">
                   {orders.map((o) => (
-                    <div key={o.id} className="flex justify-between items-start gap-2 pb-3 border-b border-[#1C1917]/15">
-                      <div>
-                        <div className="font-serif font-bold text-base">
-                          {o.qty}x {o.name}
+                    <div
+                      key={o.id}
+                      className="p-3 rounded-xl bg-[#FBF9F5] border border-stone-200 flex items-center justify-between gap-3"
+                    >
+                      <img
+                        src={o.image}
+                        alt={o.name}
+                        className="w-12 h-12 rounded-lg object-cover shrink-0"
+                      />
+                      <div className="min-w-0 flex-1">
+                        <div className="font-serif font-bold text-xs text-stone-900 truncate">
+                          {o.name}
                         </div>
-                        <div className="font-mono text-[11px] text-stone-600">{o.meta}</div>
+                        <div className="font-mono text-[10px] text-stone-500">{o.meta}</div>
+                        <div className="font-mono text-xs font-bold text-stone-900 mt-0.5">
+                          Rp {(o.price * o.qty).toLocaleString('id-ID')}
+                        </div>
                       </div>
-                      <div className="text-right font-mono text-xs">
-                        <div className="font-bold">Rp {(o.price * o.qty).toLocaleString('id-ID')}</div>
+                      <div className="flex items-center gap-1 bg-white p-1 rounded-lg border border-stone-200">
                         <button
                           type="button"
-                          onClick={() => setOrders((p) => p.filter((x) => x.id !== o.id))}
-                          className="text-[#D94E34] underline mt-0.5"
+                          onClick={() => adjustOrderQty(o.id, -1)}
+                          className="w-6 h-6 rounded hover:bg-stone-100 flex items-center justify-center"
                         >
-                          Remove
+                          <Minus className="w-3 h-3" />
+                        </button>
+                        <span className="font-mono text-xs font-bold w-5 text-center">{o.qty}</span>
+                        <button
+                          type="button"
+                          onClick={() => adjustOrderQty(o.id, 1)}
+                          className="w-6 h-6 rounded hover:bg-stone-100 flex items-center justify-center"
+                        >
+                          <Plus className="w-3 h-3" />
                         </button>
                       </div>
                     </div>
@@ -1377,41 +1629,41 @@ export function BrewLabPos({ activePage, onPageChange }: MultiPageDemoProps) {
                 </div>
               </div>
 
-              <div className="space-y-4 pt-4 border-t-2 border-[#1C1917]">
+              <div className="space-y-4 pt-4 border-t border-stone-200">
                 <div className="flex justify-between items-baseline">
-                  <span className="font-mono text-xs font-bold">AMOUNT DUE</span>
-                  <span className="font-serif text-3xl font-bold">
+                  <span className="text-xs text-stone-500 font-medium">Total Pembayaran</span>
+                  <span className="font-serif text-2xl font-bold text-stone-900">
                     Rp {total.toLocaleString('id-ID')}
                   </span>
                 </div>
 
                 {paidMethod && (
-                  <div className="p-2.5 bg-[#1C1917] text-[#F4EFE6] font-mono text-xs text-center space-y-1">
-                    <div>SETTLED VIA {paidMethod} · CUP #{cupName || 'GUEST'} MASUK ANTREAN</div>
+                  <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-900 flex items-center justify-between">
+                    <span>Dibayar via {paidMethod} · Masuk antrean bar!</span>
                     <button
                       type="button"
                       onClick={() => setPage(3)}
-                      className="underline text-amber-300 block w-full"
+                      className="font-bold underline"
                     >
-                      Lihat Layar Pickup Pelanggan (Hal 3) →
+                      Layar Pickup →
                     </button>
                   </div>
                 )}
 
-                <div className="grid grid-cols-2 gap-2 font-mono text-xs font-bold">
+                <div className="grid grid-cols-2 gap-2 text-xs font-semibold">
                   <button
                     type="button"
-                    onClick={() => settleOrder('EXACT CASH')}
-                    className="py-3.5 border-2 border-[#1C1917] hover:bg-[#1C1917] hover:text-[#F4EFE6] transition"
+                    onClick={() => settleOrder('Tunai Pas')}
+                    className="py-3 rounded-xl border border-stone-300 hover:bg-stone-100 text-stone-900 transition"
                   >
-                    EXACT CASH
+                    Tunai Pas
                   </button>
                   <button
                     type="button"
-                    onClick={() => settleOrder('QRIS TAP')}
-                    className="py-3.5 bg-[#D94E34] hover:bg-[#be4029] text-white transition"
+                    onClick={() => settleOrder('QRIS Tap')}
+                    className="py-3 rounded-xl bg-[#C85A32] hover:bg-[#b04b25] text-white transition"
                   >
-                    QRIS TAP
+                    Charge QRIS Tap
                   </button>
                 </div>
               </div>
@@ -1419,41 +1671,45 @@ export function BrewLabPos({ activePage, onPageChange }: MultiPageDemoProps) {
           </div>
         )}
 
-        {/* HALAMAN 3: CUSTOMER PICKUP BOARD & ROASTERY DAILY REPORT */}
+        {/* HALAMAN 3: PICKUP BOARD & ROASTERY TELEMETRY */}
         {page === 3 && (
           <div className="p-6 sm:p-10 space-y-8">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-              <div className="lg:col-span-7 border-2 border-[#1C1917] bg-[#FAF6F0] p-6 space-y-4">
-                <div className="flex justify-between items-center border-b-2 border-[#1C1917] pb-3">
+              <div className="lg:col-span-7 rounded-2xl border border-stone-200 bg-white p-6 space-y-4">
+                <div className="flex justify-between items-center border-b border-stone-200 pb-3">
                   <div>
-                    <span className="font-mono text-[10px] font-bold text-[#D94E34]">
-                      HALAMAN 3 · BAR PICKUP MONITOR
+                    <span className="font-mono text-[10px] uppercase tracking-wider text-[#C85A32] font-semibold">
+                      Live Espresso Bar Display
                     </span>
-                    <h2 className="font-serif text-2xl font-bold">Status Panggilan Cup Pelanggan</h2>
+                    <h2 className="font-serif text-2xl font-bold text-stone-900">
+                      Status Panggilan Cup Pelanggan
+                    </h2>
                   </div>
-                  <span className="font-mono text-xs">LIVE BAR DISPLAY</span>
+                  <span className="px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 font-mono text-xs font-semibold">
+                    Real-Time
+                  </span>
                 </div>
 
                 <div className="space-y-3">
                   {pickupBoard.map((c) => (
                     <div
                       key={c.code}
-                      className="p-4 border border-[#1C1917] bg-[#F4EFE6] flex items-center justify-between gap-4"
+                      className="p-4 rounded-xl border border-stone-200 bg-[#FBF9F5] flex items-center justify-between gap-4"
                     >
                       <div>
                         <div className="font-mono text-xs text-stone-500">{c.code}</div>
-                        <div className="font-serif text-xl font-bold">{c.guest}</div>
-                        <div className="text-xs text-stone-700">{c.drink}</div>
+                        <div className="font-serif text-xl font-bold text-stone-900">{c.guest}</div>
+                        <div className="text-xs text-stone-600">{c.drink}</div>
                       </div>
-                      <div className="text-right font-mono">
+                      <div className="text-right">
                         <span
-                          className={`px-3 py-1 text-xs font-bold inline-block ${
+                          className={`px-3 py-1 rounded-full text-xs font-semibold inline-block ${
                             c.state === 'READY'
-                              ? 'bg-emerald-800 text-white'
-                              : 'bg-[#D94E34] text-white'
+                              ? 'bg-emerald-700 text-white'
+                              : 'bg-[#C85A32] text-white'
                           }`}
                         >
-                          {c.state === 'READY' ? 'SIAP DIAMBIL DI BAR' : 'SEDANG DISEDUH'}
+                          {c.state === 'READY' ? 'Siap Diambil di Bar' : 'Sedang Diseduh'}
                         </span>
                         {c.state === 'BREWING' && (
                           <button
@@ -1463,7 +1719,7 @@ export function BrewLabPos({ activePage, onPageChange }: MultiPageDemoProps) {
                                 prev.map((x) => (x.code === c.code ? { ...x, state: 'READY' } : x))
                               )
                             }
-                            className="block text-[11px] underline mt-1.5 ml-auto"
+                            className="block text-xs text-stone-600 hover:text-stone-900 underline mt-1.5 ml-auto"
                           >
                             Tandai Selesai Seduh →
                           </button>
@@ -1474,29 +1730,31 @@ export function BrewLabPos({ activePage, onPageChange }: MultiPageDemoProps) {
                 </div>
               </div>
 
-              <div className="lg:col-span-5 border-2 border-[#1C1917] bg-[#EAE2D3] p-6 space-y-5 font-mono text-xs">
-                <div className="border-b-2 border-[#1C1917] pb-3">
-                  <div className="text-[10px] text-[#D94E34] font-bold">ROASTERY TELEMETRY</div>
-                  <div className="font-serif text-xl font-bold text-[#1C1917]">
-                    Rekap Shift &amp; Gramasi Hopper
+              <div className="lg:col-span-5 rounded-2xl border border-stone-200 bg-[#F3EFE6] p-6 space-y-4">
+                <div className="border-b border-stone-300 pb-3">
+                  <div className="font-mono text-[10px] uppercase tracking-wider text-[#C85A32] font-semibold">
+                    Roastery Telemetry
+                  </div>
+                  <div className="font-serif text-xl font-bold text-stone-900">
+                    Gramasi Hopper &amp; Rekap Shift
                   </div>
                 </div>
-                <div className="space-y-3">
-                  <div className="p-3 bg-[#F4EFE6] border border-[#1C1917] flex justify-between">
-                    <span>Hopper 1 (Ciwidey Espresso)</span>
-                    <span className="font-bold">1.840 g tersisa</span>
+                <div className="space-y-2.5 text-xs">
+                  <div className="p-3.5 rounded-xl bg-white border border-stone-200 flex justify-between">
+                    <span className="text-stone-600">Hopper 1 (Ciwidey Espresso)</span>
+                    <span className="font-mono font-bold text-stone-900">1.840 g tersisa</span>
                   </div>
-                  <div className="p-3 bg-[#F4EFE6] border border-[#1C1917] flex justify-between">
-                    <span>Hopper 2 (Ethiopia Guji Filter)</span>
-                    <span className="font-bold">620 g tersisa</span>
+                  <div className="p-3.5 rounded-xl bg-white border border-stone-200 flex justify-between">
+                    <span className="text-stone-600">Hopper 2 (Ethiopia Guji Filter)</span>
+                    <span className="font-mono font-bold text-stone-900">620 g tersisa</span>
                   </div>
-                  <div className="p-3 bg-[#F4EFE6] border border-[#1C1917] flex justify-between">
-                    <span>Susu Oat Barista Stock</span>
-                    <span className="font-bold">18 Karton</span>
+                  <div className="p-3.5 rounded-xl bg-white border border-stone-200 flex justify-between">
+                    <span className="text-stone-600">Stok Susu Oat Barista</span>
+                    <span className="font-mono font-bold text-stone-900">18 Karton</span>
                   </div>
-                  <div className="p-3 bg-[#1C1917] text-[#F4EFE6] flex justify-between">
-                    <span>Total Cup Terjual Shift Pagi</span>
-                    <span className="font-bold">84 Cups · Rp 3.420.000</span>
+                  <div className="p-4 rounded-xl bg-stone-900 text-white flex justify-between items-center">
+                    <span>Total Penjualan Shift Pagi</span>
+                    <span className="font-mono font-bold text-sm">84 Cups · Rp 3.420.000</span>
                   </div>
                 </div>
               </div>
@@ -1505,12 +1763,12 @@ export function BrewLabPos({ activePage, onPageChange }: MultiPageDemoProps) {
         )}
       </div>
 
-      <footer className="border-t-2 border-[#1C1917] bg-[#EAE2D3] px-6 py-4 flex flex-wrap items-center justify-between gap-4 font-mono text-[11px]">
-        <span>BREWLAB ROASTERY · JL. PROGO NO. 19 BANDUNG · BUKA 07:00 - 22:00 WIB</span>
-        <div className="flex gap-4 font-bold">
-          <button type="button" onClick={() => setPage(1)} className="underline">Hal 1: Katalog</button>
-          <button type="button" onClick={() => setPage(2)} className="underline">Hal 2: Kasir POS</button>
-          <button type="button" onClick={() => setPage(3)} className="underline">Hal 3: Pickup</button>
+      <footer className="border-t border-stone-200 bg-white px-6 py-4 flex flex-wrap items-center justify-between gap-4 text-xs text-stone-500">
+        <span>BrewLab Roastery · Jl. Progo No. 19 Bandung · 07:00 s/d 22:00 WIB</span>
+        <div className="flex gap-4 font-semibold text-stone-800">
+          <button type="button" onClick={() => setPage(1)}>01 Storefront</button>
+          <button type="button" onClick={() => setPage(2)}>02 Barista POS</button>
+          <button type="button" onClick={() => setPage(3)}>03 Pickup Board</button>
         </div>
       </footer>
     </div>
@@ -1518,7 +1776,7 @@ export function BrewLabPos({ activePage, onPageChange }: MultiPageDemoProps) {
 }
 
 /* ============================================================================
- * 3. APOTEK MEDIKA · 3-Page Pharmacy Catalog, SIMRS FEFO POS & Batch Warehouse
+ * 3. APOTEK MEDIKA · Clinical Pharmacy Storefront, FEFO POS & Batch Warehouse
  * ========================================================================== */
 const SIMRS_DRUGS = [
   {
@@ -1532,8 +1790,9 @@ const SIMRS_DRUGS = [
     price: 12000,
     bpom: 'DBL7801900110A1',
     zat: 'Paracetamol Micronized 500 mg',
-    indikasi: 'Meredakan demam serta nyeri ringan hingga sedang (sakit kepala, sakit gigi).',
-    dosis: 'Dewasa: 1-2 kaplet, 3-4 kali sehari sesudah makan.',
+    indikasi: 'Meredakan demam serta nyeri ringan hingga sedang seperti sakit kepala dan nyeri otot.',
+    dosis: 'Dewasa: 1 sampai 2 kaplet, 3 sampai 4 kali sehari sesudah makan.',
+    image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80',
   },
   {
     code: 'OBT-014',
@@ -1546,8 +1805,9 @@ const SIMRS_DRUGS = [
     price: 18500,
     bpom: 'GKL8912004401A1',
     zat: 'Amoxicillin Trihydrate setara 500 mg',
-    indikasi: 'Infeksi saluran pernapasan, saluran kemih, dan jaringan lunak (Wajib Resep Dokter).',
-    dosis: 'Dewasa: 500 mg tiap 8 jam (habiskan seluruh strip).',
+    indikasi: 'Terapi infeksi saluran pernapasan, saluran kemih, dan jaringan lunak dengan resep dokter.',
+    dosis: 'Dewasa: 500 mg tiap 8 jam, wajib dihabiskan seluruh strip.',
+    image: 'https://images.unsplash.com/photo-1471864190281-a93a3070b6de?auto=format&fit=crop&w=600&q=80',
   },
   {
     code: 'OBT-029',
@@ -1560,8 +1820,9 @@ const SIMRS_DRUGS = [
     price: 15000,
     bpom: 'DTL0422101917A1',
     zat: 'Cetirizine Dihydrochloride 10 mg',
-    indikasi: 'Rinitis alergi musiman, urtikaria kronis, dan gatal alergi kulit.',
-    dosis: '1 tablet sekali sehari pada malam hari.',
+    indikasi: 'Meredakan rinitis alergi musiman, bersin, serta urtikaria dan gatal alergi kulit.',
+    dosis: 'Dewasa: 1 tablet sekali sehari pada malam hari.',
+    image: 'https://images.unsplash.com/photo-1587854692152-cbe660dbde88?auto=format&fit=crop&w=600&q=80',
   },
   {
     code: 'OBT-052',
@@ -1574,8 +1835,9 @@ const SIMRS_DRUGS = [
     price: 24000,
     bpom: 'GKL9904511203A1',
     zat: 'Omeprazole Enteric-Coated Pellets 20 mg',
-    indikasi: 'Terapi GERD, tukak lambung, dan hipersekresi asam lambung.',
+    indikasi: 'Penanganan refluks gastroesofageal (GERD), tukak lambung, dan hipersekresi asam lambung.',
     dosis: '1 kapsul sekali sehari 30 menit sebelum makan pagi.',
+    image: 'https://images.unsplash.com/photo-1628771065518-0d82f1938462?auto=format&fit=crop&w=600&q=80',
   },
   {
     code: 'OBT-088',
@@ -1588,8 +1850,9 @@ const SIMRS_DRUGS = [
     price: 45000,
     bpom: 'SD201356111',
     zat: 'Vitamin D3 (Cholecalciferol) 1000 IU (25 mcg)',
-    indikasi: 'Memenuhi kebutuhan Vitamin D harian untuk imunitas dan kepadatan tulang.',
+    indikasi: 'Memenuhi kebutuhan Vitamin D harian untuk menjaga daya tahan tubuh dan penyerapan kalsium tulang.',
     dosis: '1 kapsul lunak sehari sesudah makan.',
+    image: 'https://images.unsplash.com/photo-1550572017-edd951b55104?auto=format&fit=crop&w=600&q=80',
   },
   {
     code: 'OBT-095',
@@ -1602,8 +1865,9 @@ const SIMRS_DRUGS = [
     price: 345000,
     bpom: 'AKL 20501912440',
     zat: 'Manset Lengan Universal 22-42 cm + Sensor Intellisense',
-    indikasi: 'Pemantauan tekanan darah sistolik/diastolik dan detak jantung mandiri di rumah.',
+    indikasi: 'Pemantauan tekanan darah sistolik, diastolik, dan indikator detak jantung mandiri di rumah.',
     dosis: 'Gunakan dalam posisi duduk tenang selama 5 menit.',
+    image: 'https://images.unsplash.com/photo-1631549916768-4119b2e5f926?auto=format&fit=crop&w=600&q=80',
   },
 ];
 
@@ -1617,7 +1881,14 @@ export function ApotekMedikaPos({ activePage, onPageChange }: MultiPageDemoProps
   const [mealRule, setMealRule] = useState<'Sesudah Makan' | 'Sebelum Makan'>('Sesudah Makan');
   const [doseQty, setDoseQty] = useState('3 x 1 Tablet');
   const [dispensed, setDispensed] = useState([
-    { code: 'OBT-001', name: 'Paracetamol 500mg Strip 10 Kaplet', batch: 'PCM-26A', qty: 1, price: 12000 },
+    {
+      code: 'OBT-001',
+      name: 'Paracetamol 500mg Strip 10 Kaplet',
+      batch: 'PCM-26A',
+      qty: 1,
+      price: 12000,
+      image: SIMRS_DRUGS[0].image,
+    },
   ]);
 
   const addRow = (d: (typeof SIMRS_DRUGS)[0], goPos = false) => {
@@ -1628,12 +1899,20 @@ export function ApotekMedikaPos({ activePage, onPageChange }: MultiPageDemoProps
         copy[idx] = { ...copy[idx], qty: copy[idx].qty + 1 };
         return copy;
       }
-      return [...prev, { code: d.code, name: d.name, batch: d.batch, qty: 1, price: d.price }];
+      return [...prev, { code: d.code, name: d.name, batch: d.batch, qty: 1, price: d.price, image: d.image }];
     });
     if (goPos) {
       setPreviewDrug(null);
       setPage(2);
     }
+  };
+
+  const adjustDrugQty = (code: string, delta: number) => {
+    setDispensed((prev) =>
+      prev
+        .map((item) => (item.code === code ? { ...item, qty: item.qty + delta } : item))
+        .filter((item) => item.qty > 0)
+    );
   };
 
   const rows = SIMRS_DRUGS.filter(
@@ -1647,49 +1926,45 @@ export function ApotekMedikaPos({ activePage, onPageChange }: MultiPageDemoProps
   const subtotal = dispensed.reduce((s, d) => s + d.price * d.qty, 0);
 
   return (
-    <div className="min-h-[780px] bg-[#F8FAFC] text-[#0F172A] font-sans flex flex-col justify-between">
+    <div className="min-h-[820px] bg-[#F6F8F7] text-slate-900 flex flex-col justify-between">
       <div>
-        {/* FULL WEBSITE HEADER */}
-        <header className="bg-[#064E3B] text-white px-5 py-3.5 flex flex-wrap items-center justify-between gap-4">
-          <div>
-            <div className="font-mono text-[10px] text-emerald-300 font-bold">
-              SIMRS &amp; TELEFARMASI TERPADU · SIPA 1998/2026
+        <header className="bg-[#064E3B] text-white px-6 py-4 flex flex-wrap items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-emerald-400/20 border border-emerald-400/30 flex items-center justify-center text-emerald-300">
+              <ShieldCheck className="w-5 h-5" />
             </div>
-            <div className="font-bold text-xl tracking-tight">
-              APOTEK MEDIKA FARMA
+            <div>
+              <div className="font-mono text-[10px] text-emerald-300 font-semibold uppercase tracking-wider">
+                SIMRS &amp; Telefarmasi Terpadu · SIPA 1998/2026
+              </div>
+              <div className="font-bold text-xl tracking-tight">Apotek Medika Farma</div>
             </div>
           </div>
 
-          <nav className="flex flex-wrap gap-1.5 font-mono text-xs font-bold">
+          <nav className="flex flex-wrap gap-1.5 bg-[#04392B] p-1.5 rounded-xl border border-emerald-700/60 text-xs font-semibold">
             <button
               type="button"
               onClick={() => setPage(1)}
-              className={`px-3.5 py-2 border transition ${
-                page === 1
-                  ? 'bg-white text-[#064E3B] border-white'
-                  : 'bg-[#065F46] text-emerald-100 border-emerald-500/40'
+              className={`px-3.5 py-2 rounded-lg transition ${
+                page === 1 ? 'bg-white text-[#064E3B]' : 'text-emerald-100 hover:text-white'
               }`}
             >
-              01 · E-Katalog Obat &amp; Alkes
+              01 · Katalog Obat &amp; Alkes
             </button>
             <button
               type="button"
               onClick={() => setPage(2)}
-              className={`px-3.5 py-2 border transition ${
-                page === 2
-                  ? 'bg-white text-[#064E3B] border-white'
-                  : 'bg-[#065F46] text-emerald-100 border-emerald-500/40'
+              className={`px-3.5 py-2 rounded-lg transition ${
+                page === 2 ? 'bg-emerald-400 text-[#04392B] font-bold' : 'text-emerald-100 hover:text-white'
               }`}
             >
-              02 · Kasir FEFO &amp; Etiket ({dispensed.length})
+              02 · Kasir FEFO &amp; Etiket ({dispensed.reduce((s, i) => s + i.qty, 0)})
             </button>
             <button
               type="button"
               onClick={() => setPage(3)}
-              className={`px-3.5 py-2 border transition ${
-                page === 3
-                  ? 'bg-white text-[#064E3B] border-white'
-                  : 'bg-[#065F46] text-emerald-100 border-emerald-500/40'
+              className={`px-3.5 py-2 rounded-lg transition ${
+                page === 3 ? 'bg-white text-[#064E3B]' : 'text-emerald-100 hover:text-white'
               }`}
             >
               03 · Gudang Batch &amp; Defekta
@@ -1697,77 +1972,97 @@ export function ApotekMedikaPos({ activePage, onPageChange }: MultiPageDemoProps
           </nav>
         </header>
 
-        {/* HALAMAN 1: E-KATALOG OBAT & MONOGRAFI */}
+        {/* HALAMAN 1: CLINICAL STOREFRONT & PRODUCT PREVIEW */}
         {page === 1 && (
-          <div className="p-6 sm:p-8 space-y-6">
-            <div className="bg-white border border-slate-300 p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
-              <div className="lg:col-span-8 space-y-2">
-                <span className="font-mono text-xs font-bold text-[#065F46]">
-                  [ HALAMAN 1 · KATALOG SEDIAAN FARMASI &amp; ALAT KESEHATAN ]
+          <div className="p-6 sm:p-8 space-y-8">
+            <div className="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 grid grid-cols-1 lg:grid-cols-12 gap-6 items-center shadow-sm">
+              <div className="lg:col-span-8 space-y-3">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-[#065F46] text-xs font-semibold border border-emerald-200">
+                  Terverifikasi BPOM RI · Sistem Batch FEFO Otomatis
                 </span>
-                <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900">
-                  Cek Komposisi Zat Aktif, Nomor BPOM &amp; Ketersediaan Batch FEFO.
+                <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 leading-tight">
+                  Transparansi Zat Aktif, Nomor Izin Edar, dan Ketersediaan Batch Real-Time.
                 </h1>
-                <p className="text-sm text-slate-600">
-                  Klik <strong>Preview Indikasi &amp; Dosis</strong> pada kartu obat untuk membaca monografi klinis lengkap sebelum memasukkan ke daftar penebusan kasir.
+                <p className="text-sm text-slate-600 max-w-2xl leading-relaxed">
+                  Setiap sediaan farmasi dan alat kesehatan menampilkan foto kemasan, komposisi zat aktif, nomor registrasi BPOM, serta tanggal kadaluarsa terdekat untuk menjamin keselamatan pasien.
                 </p>
               </div>
-              <div className="lg:col-span-4 bg-emerald-50 border border-emerald-200 p-4 space-y-2 font-mono text-xs">
-                <div className="font-bold text-[#064E3B]">RESEP AKTIF: {patient}</div>
-                <div>Total Sediaan: {dispensed.length} Item (Rp {subtotal.toLocaleString('id-ID')})</div>
+              <div className="lg:col-span-4 bg-[#F0FDF4] rounded-2xl border border-emerald-200 p-5 space-y-3 text-xs">
+                <div className="font-mono text-[11px] text-emerald-800 font-semibold">
+                  RESEP PASIEN AKTIF
+                </div>
+                <div className="font-bold text-base text-slate-900">{patient}</div>
+                <div className="text-slate-600">
+                  {dispensed.length} jenis sediaan · Total Rp {subtotal.toLocaleString('id-ID')}
+                </div>
                 <button
                   type="button"
                   onClick={() => setPage(2)}
-                  className="w-full py-2.5 bg-[#065F46] text-white font-bold"
+                  className="w-full py-2.5 rounded-xl bg-[#065F46] hover:bg-[#047857] text-white font-semibold transition"
                 >
-                  PROSES DI KASIR &amp; CETAK ETIKET →
+                  Proses Penebusan &amp; Cetak Etiket →
                 </button>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
               {SIMRS_DRUGS.map((d) => (
-                <div key={d.code} className="bg-white border border-slate-300 flex flex-col justify-between">
+                <div
+                  key={d.code}
+                  className="group bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition flex flex-col justify-between"
+                >
                   <div>
-                    <div className="p-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between font-mono text-[11px]">
-                      <span className="font-bold text-slate-700">{d.code} · BATCH {d.batch}</span>
+                    <div
+                      onClick={() => setPreviewDrug(d)}
+                      className="relative aspect-[4/3] w-full overflow-hidden bg-slate-100 cursor-pointer"
+                    >
+                      <img
+                        src={d.image}
+                        alt={d.name}
+                        className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+                        loading="lazy"
+                      />
                       <span
-                        className={`px-2 py-0.5 font-bold ${
+                        className={`absolute top-3 left-3 px-2.5 py-1 rounded-full text-[10px] font-mono font-bold ${
                           d.rx
-                            ? 'bg-rose-100 text-rose-800 border border-rose-300'
-                            : 'bg-emerald-100 text-emerald-800 border border-emerald-300'
+                            ? 'bg-rose-600 text-white'
+                            : 'bg-emerald-700 text-white'
                         }`}
                       >
                         {d.cat}
                       </span>
+                      <span className="absolute bottom-3 right-3 px-2.5 py-1 rounded-md bg-white/90 backdrop-blur-sm font-mono text-[10px] font-semibold text-slate-800">
+                        Exp {d.exp}
+                      </span>
                     </div>
-                    <div className="p-5 space-y-2.5">
+
+                    <div className="p-5 space-y-2">
+                      <div className="flex justify-between font-mono text-[11px] text-slate-500">
+                        <span>{d.code} · Batch {d.batch}</span>
+                        <span>Stok {d.stock}</span>
+                      </div>
                       <h2 className="font-bold text-base text-slate-900">{d.name}</h2>
-                      <div className="font-mono text-xs text-[#065F46] font-semibold">
-                        Zat Aktif: {d.zat}
-                      </div>
+                      <div className="text-xs font-medium text-[#065F46]">{d.zat}</div>
                       <p className="text-xs text-slate-600 line-clamp-2">{d.indikasi}</p>
-                      <div className="font-mono text-[11px] text-slate-500 pt-1">
-                        Izin Edar: {d.bpom} · Exp: {d.exp}
-                      </div>
                     </div>
                   </div>
-                  <div className="p-4 border-t border-slate-200 flex items-center justify-between font-mono text-xs">
-                    <span className="font-bold text-sm text-slate-900">
+
+                  <div className="p-5 pt-3 border-t border-slate-100 flex items-center justify-between">
+                    <span className="font-mono font-bold text-sm text-slate-900">
                       Rp {d.price.toLocaleString('id-ID')}
                     </span>
-                    <div className="flex gap-1.5">
+                    <div className="flex gap-2">
                       <button
                         type="button"
                         onClick={() => setPreviewDrug(d)}
-                        className="px-3 py-1.5 border border-slate-300 hover:border-slate-800 font-bold"
+                        className="px-3 py-1.5 rounded-lg border border-slate-200 hover:border-slate-800 text-xs font-medium transition"
                       >
                         Monografi
                       </button>
                       <button
                         type="button"
                         onClick={() => addRow(d, false)}
-                        className="px-3 py-1.5 bg-[#065F46] text-white font-bold"
+                        className="px-3.5 py-1.5 rounded-lg bg-[#065F46] hover:bg-[#047857] text-white text-xs font-semibold transition"
                       >
                         + Tebus
                       </button>
@@ -1778,52 +2073,59 @@ export function ApotekMedikaPos({ activePage, onPageChange }: MultiPageDemoProps
             </div>
 
             {previewDrug && (
-              <div className="fixed inset-0 z-50 bg-slate-900/70 flex items-center justify-center p-4">
-                <div className="bg-white border-2 border-[#065F46] max-w-lg w-full p-6 space-y-4 shadow-2xl">
-                  <div className="flex justify-between items-start border-b border-slate-200 pb-3">
-                    <div>
-                      <span className="font-mono text-xs font-bold text-[#065F46]">
-                        {previewDrug.code} · {previewDrug.bpom}
-                      </span>
-                      <h3 className="font-bold text-xl mt-1">{previewDrug.name}</h3>
-                    </div>
+              <div className="fixed inset-0 z-50 bg-slate-900/65 backdrop-blur-sm flex items-center justify-center p-4">
+                <div className="bg-white rounded-3xl max-w-lg w-full overflow-hidden shadow-2xl border border-slate-200">
+                  <div className="relative aspect-[16/9] bg-slate-100">
+                    <img
+                      src={previewDrug.image}
+                      alt={previewDrug.name}
+                      className="w-full h-full object-cover"
+                    />
                     <button
                       type="button"
                       onClick={() => setPreviewDrug(null)}
-                      className="font-mono text-xs border border-slate-300 px-2.5 py-1"
+                      className="absolute top-4 right-4 w-9 h-9 rounded-full bg-white text-slate-900 flex items-center justify-center shadow"
                     >
-                      TUTUP ✕
+                      <X className="w-4 h-4" />
                     </button>
                   </div>
-                  <div className="space-y-3 text-xs">
-                    <div className="p-3 bg-slate-50 border border-slate-200">
-                      <div className="font-mono font-bold text-slate-500">KOMPOSISI ZAT AKTIF</div>
-                      <div className="font-semibold text-sm mt-0.5">{previewDrug.zat}</div>
-                    </div>
+                  <div className="p-6 space-y-4">
                     <div>
-                      <div className="font-mono font-bold text-slate-500">INDIKASI KLINIS</div>
-                      <p className="text-slate-700 mt-0.5">{previewDrug.indikasi}</p>
+                      <span className="font-mono text-xs font-semibold text-[#065F46]">
+                        {previewDrug.code} · {previewDrug.bpom}
+                      </span>
+                      <h3 className="font-bold text-xl text-slate-900 mt-0.5">{previewDrug.name}</h3>
                     </div>
-                    <div>
-                      <div className="font-mono font-bold text-slate-500">ATURAN PAKAI STANDAR</div>
-                      <p className="text-slate-700 mt-0.5">{previewDrug.dosis}</p>
+                    <div className="space-y-3 text-xs">
+                      <div className="p-3.5 rounded-xl bg-emerald-50/70 border border-emerald-200">
+                        <div className="font-mono text-[10px] uppercase text-emerald-800 font-semibold">
+                          Komposisi Zat Aktif
+                        </div>
+                        <div className="font-semibold text-sm text-slate-900 mt-0.5">
+                          {previewDrug.zat}
+                        </div>
+                      </div>
+                      <div>
+                        <div className="font-semibold text-slate-900">Indikasi Klinis</div>
+                        <p className="text-slate-600 mt-0.5">{previewDrug.indikasi}</p>
+                      </div>
+                      <div>
+                        <div className="font-semibold text-slate-900">Aturan Pakai Standar</div>
+                        <p className="text-slate-600 mt-0.5">{previewDrug.dosis}</p>
+                      </div>
                     </div>
-                    <div className="font-mono text-[11px] text-slate-600 flex justify-between pt-2 border-t border-slate-200">
-                      <span>BATCH FEFO: {previewDrug.batch} (EXP {previewDrug.exp})</span>
-                      <span>STOK: {previewDrug.stock} UNIT</span>
+                    <div className="flex justify-between items-center pt-3 border-t border-slate-200">
+                      <span className="font-mono text-lg font-bold text-slate-900">
+                        HET Rp {previewDrug.price.toLocaleString('id-ID')}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => addRow(previewDrug, true)}
+                        className="px-5 py-2.5 rounded-xl bg-[#065F46] text-white text-xs font-semibold"
+                      >
+                        Masukkan ke Kasir &amp; Etiket →
+                      </button>
                     </div>
-                  </div>
-                  <div className="flex justify-between items-center pt-3 border-t border-slate-200">
-                    <span className="font-mono text-lg font-bold">
-                      HET Rp {previewDrug.price.toLocaleString('id-ID')}
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => addRow(previewDrug, true)}
-                      className="px-4 py-2.5 bg-[#065F46] text-white font-mono text-xs font-bold"
-                    >
-                      MASUKKAN KE KASIR &amp; CETAK ETIKET →
-                    </button>
                   </div>
                 </div>
               </div>
@@ -1831,123 +2133,90 @@ export function ApotekMedikaPos({ activePage, onPageChange }: MultiPageDemoProps
           </div>
         )}
 
-        {/* HALAMAN 2: SIMRS FEFO POS & ETIKET OBAT */}
+        {/* HALAMAN 2: 3-ZONE TOUCH PHARMACY POS & E-ETIKET */}
         {page === 2 && (
-          <div>
-            <div className="p-3 bg-white border-b border-slate-300 flex flex-wrap items-center gap-3 text-xs">
-              <input
-                type="text"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder="Filter kode obat, nama generik, atau nomor batch FEFO..."
-                className="flex-1 min-w-[240px] px-3 py-1.5 border border-slate-300 bg-slate-50 font-mono focus:border-[#065F46] focus:outline-none"
-              />
-              <button
-                type="button"
-                onClick={() => setOnlyRx((v) => !v)}
-                className={`px-3 py-1.5 font-mono font-bold border ${
-                  onlyRx ? 'bg-rose-700 text-white border-rose-700' : 'bg-white border-slate-300'
-                }`}
-              >
-                {onlyRx ? 'Filter: Hanya Obat Resep (K)' : 'Filter: Semua Golongan'}
-              </button>
-            </div>
-
-            <div className="overflow-x-auto bg-white border-b border-slate-300">
-              <table className="w-full text-xs text-left border-collapse">
-                <thead className="bg-slate-100 border-b border-slate-300 font-mono text-[11px] text-slate-700">
-                  <tr>
-                    <th className="py-2 px-3 border-r border-slate-200">KODE</th>
-                    <th className="py-2 px-3 border-r border-slate-200">NAMA OBAT &amp; SEDIAAN</th>
-                    <th className="py-2 px-3 border-r border-slate-200">BATCH</th>
-                    <th className="py-2 px-3 border-r border-slate-200">EXP (FEFO)</th>
-                    <th className="py-2 px-3 border-r border-slate-200 text-right">STOK</th>
-                    <th className="py-2 px-3 border-r border-slate-200 text-right">HARGA HET</th>
-                    <th className="py-2 px-3 text-center">AKSI</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-200">
-                  {rows.map((r, i) => (
-                    <tr key={r.code} className={i % 2 === 1 ? 'bg-slate-50/70' : 'bg-white'}>
-                      <td className="py-2 px-3 font-mono border-r border-slate-200">{r.code}</td>
-                      <td className="py-2 px-3 font-semibold border-r border-slate-200">
-                        {r.name}{' '}
-                        {r.rx && (
-                          <span className="ml-1 font-mono text-[10px] px-1 bg-rose-100 text-rose-800 border border-rose-300">
-                            K
-                          </span>
-                        )}
-                      </td>
-                      <td className="py-2 px-3 font-mono border-r border-slate-200">{r.batch}</td>
-                      <td className="py-2 px-3 font-mono border-r border-slate-200 text-[#065F46] font-bold">
-                        {r.exp}
-                      </td>
-                      <td className="py-2 px-3 font-mono border-r border-slate-200 text-right">{r.stock}</td>
-                      <td className="py-2 px-3 font-mono border-r border-slate-200 text-right">
-                        Rp {r.price.toLocaleString('id-ID')}
-                      </td>
-                      <td className="py-2 px-3 text-center">
-                        <button
-                          type="button"
-                          onClick={() => addRow(r, false)}
-                          className="px-2.5 py-1 bg-[#065F46] hover:bg-[#047857] text-white font-mono text-[11px] font-bold"
-                        >
-                          + DISPENSE
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-12">
-              <div className="lg:col-span-7 p-5 border-b lg:border-b-0 lg:border-r border-slate-300 bg-white flex flex-col justify-between gap-4">
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <h2 className="font-mono text-xs font-bold uppercase text-slate-600">
-                      Rincian Penyerahan Obat Pasien
-                    </h2>
-                    <span className="font-mono text-sm font-bold text-[#065F46]">
-                      TOTAL: Rp {subtotal.toLocaleString('id-ID')}
-                    </span>
-                  </div>
-                  <div className="border border-slate-200 divide-y divide-slate-200 text-xs">
-                    {dispensed.map((d) => (
-                      <div key={d.code} className="p-2.5 flex items-center justify-between gap-2">
-                        <div>
-                          <span className="font-mono text-slate-500 mr-2">[{d.batch}]</span>
-                          <span className="font-bold">
-                            {d.qty}x {d.name}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-3 font-mono">
-                          <span>Rp {(d.price * d.qty).toLocaleString('id-ID')}</span>
-                          <button
-                            type="button"
-                            onClick={() => setDispensed((p) => p.filter((x) => x.code !== d.code))}
-                            className="text-rose-700 underline"
-                          >
-                            Del
-                          </button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="pt-2 flex flex-wrap gap-2 text-xs">
+          <div className="grid grid-cols-1 lg:grid-cols-12 min-h-[700px]">
+            {/* Zone 1: Left Filter & E-Etiket Configurator */}
+            <div className="lg:col-span-3 border-b lg:border-b-0 lg:border-r border-slate-200 bg-white p-5 space-y-5">
+              <div className="space-y-2">
+                <label className="font-mono text-[10px] uppercase tracking-wider text-slate-500 font-semibold block">
+                  Cari Sediaan / Batch FEFO
+                </label>
+                <div className="relative">
+                  <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                   <input
                     type="text"
-                    value={patient}
-                    onChange={(e) => setPatient(e.target.value)}
-                    placeholder="Nama Pasien"
-                    className="px-3 py-1.5 border border-slate-300 flex-1"
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    placeholder="Nama obat atau batch..."
+                    className="w-full pl-8 pr-3 py-2 rounded-xl border border-slate-200 bg-slate-50 text-xs focus:outline-none focus:border-[#065F46]"
                   />
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setOnlyRx((v) => !v)}
+                  className={`w-full py-2 px-3 rounded-xl text-xs font-semibold border transition ${
+                    onlyRx
+                      ? 'bg-rose-600 text-white border-rose-600'
+                      : 'bg-slate-50 text-slate-700 border-slate-200'
+                  }`}
+                >
+                  {onlyRx ? 'Menampilkan: Wajib Resep (K)' : 'Semua Golongan Obat'}
+                </button>
+              </div>
+
+              {/* Live Etiket Preview Card */}
+              <div className="rounded-2xl border-2 border-[#1E40AF] bg-white overflow-hidden shadow-sm">
+                <div className="bg-[#1E40AF] text-white px-3.5 py-2 text-center">
+                  <div className="font-bold text-xs">ETIKET OBAT DALAM</div>
+                  <div className="text-[10px] text-blue-200">Apotek Medika Farma · SIPA 1998/2026</div>
+                </div>
+                <div className="p-3.5 space-y-3 text-xs">
+                  <div>
+                    <span className="text-[10px] text-slate-500 block">Nama Pasien</span>
+                    <input
+                      type="text"
+                      value={patient}
+                      onChange={(e) => setPatient(e.target.value)}
+                      className="w-full font-bold text-slate-900 border-b border-slate-300 py-0.5 focus:outline-none"
+                    />
+                  </div>
+                  <div className="grid grid-cols-3 gap-1">
+                    {(['Pagi', 'Siang', 'Malam'] as const).map((t) => (
+                      <button
+                        key={t}
+                        type="button"
+                        onClick={() => setTiming(t)}
+                        className={`py-1 rounded-md font-mono text-[11px] border ${
+                          timing === t
+                            ? 'bg-[#1E40AF] text-white border-[#1E40AF] font-bold'
+                            : 'border-slate-200 text-slate-600'
+                        }`}
+                      >
+                        {t}
+                      </button>
+                    ))}
+                  </div>
+                  <div className="grid grid-cols-2 gap-1">
+                    {(['Sebelum Makan', 'Sesudah Makan'] as const).map((m) => (
+                      <button
+                        key={m}
+                        type="button"
+                        onClick={() => setMealRule(m)}
+                        className={`py-1 rounded-md text-[10px] font-medium border ${
+                          mealRule === m
+                            ? 'bg-blue-50 text-[#1E40AF] border-[#1E40AF] font-bold'
+                            : 'border-slate-200 text-slate-600'
+                        }`}
+                      >
+                        {m}
+                      </button>
+                    ))}
+                  </div>
                   <select
                     value={doseQty}
                     onChange={(e) => setDoseQty(e.target.value)}
-                    className="px-3 py-1.5 border border-slate-300 bg-white font-mono"
+                    className="w-full px-2.5 py-1.5 rounded-lg border border-slate-200 bg-slate-50 font-mono text-xs font-semibold text-center text-[#1E40AF]"
                   >
                     <option>3 x 1 Tablet</option>
                     <option>2 x 1 Kapsul</option>
@@ -1955,62 +2224,113 @@ export function ApotekMedikaPos({ activePage, onPageChange }: MultiPageDemoProps
                   </select>
                 </div>
               </div>
+            </div>
 
-              <div className="lg:col-span-5 p-5 bg-slate-100 flex flex-col justify-between gap-3">
-                <div className="bg-white border-2 border-[#1E40AF] shadow-sm">
-                  <div className="bg-[#1E40AF] text-white px-3 py-1.5 text-center">
-                    <div className="font-bold text-xs tracking-wide">APOTEK MEDIKA FARMA</div>
-                    <div className="text-[10px]">APA: Apt. Raka Pratama, S.Farm · SIPA 1998/2026</div>
+            {/* Zone 2: Center Visual Product Grid */}
+            <div className="lg:col-span-5 p-5 sm:p-6 border-b lg:border-b-0 lg:border-r border-slate-200">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                {rows.map((r) => (
+                  <button
+                    key={r.code}
+                    type="button"
+                    onClick={() => addRow(r, false)}
+                    className="group text-left rounded-2xl bg-white border border-slate-200 hover:border-[#065F46] p-3 transition shadow-sm flex items-center gap-3 active:scale-[0.99]"
+                  >
+                    <img
+                      src={r.image}
+                      alt={r.name}
+                      className="w-16 h-16 rounded-xl object-cover shrink-0 bg-slate-100"
+                      loading="lazy"
+                    />
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center justify-between font-mono text-[10px] text-slate-500">
+                        <span>{r.batch}</span>
+                        <span className="text-[#065F46] font-bold">Exp {r.exp}</span>
+                      </div>
+                      <div className="font-bold text-xs text-slate-900 truncate mt-0.5">{r.name}</div>
+                      <div className="mt-1.5 flex items-center justify-between">
+                        <span className="font-mono text-xs font-bold text-slate-900">
+                          Rp {r.price.toLocaleString('id-ID')}
+                        </span>
+                        <span className="px-2 py-0.5 rounded bg-emerald-50 text-[#065F46] font-mono text-[10px] font-bold">
+                          + Dispense
+                        </span>
+                      </div>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Zone 3: Right Floating Dispensing Cart */}
+            <div className="lg:col-span-4 bg-white p-5 sm:p-6 flex flex-col justify-between gap-6">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between border-b border-slate-200 pb-3">
+                  <div>
+                    <span className="font-mono text-[10px] uppercase text-slate-500 block">
+                      Keranjang Tebus Resep
+                    </span>
+                    <h2 className="font-bold text-base text-slate-900">{patient}</h2>
                   </div>
-                  <div className="p-3.5 text-xs space-y-2.5">
-                    <div className="flex justify-between font-mono text-[11px] border-b border-slate-200 pb-1.5">
-                      <span>No. R/: 0182/XI</span>
-                      <span>Tgl: 18/11/2026</span>
-                    </div>
-                    <div className="font-bold">
-                      Nama Pasien: <span className="underline">{patient}</span>
-                    </div>
-                    <div className="font-mono text-sm font-bold text-[#1E40AF] text-center py-1 bg-blue-50 border border-blue-200">
-                      {doseQty} · {mealRule}
-                    </div>
-                    <div className="flex justify-center gap-4 text-[11px] font-mono pt-1">
-                      {(['Pagi', 'Siang', 'Malam'] as const).map((t) => (
-                        <button
-                          key={t}
-                          type="button"
-                          onClick={() => setTiming(t)}
-                          className="flex items-center gap-1"
-                        >
-                          <span className="w-3.5 h-3.5 border border-[#1E40AF] inline-flex items-center justify-center text-[10px] font-bold">
-                            {timing === t ? '✓' : ''}
-                          </span>
-                          <span>{t}</span>
-                        </button>
-                      ))}
-                    </div>
-                    <div className="flex justify-center gap-4 text-[11px] pt-1">
-                      {(['Sebelum Makan', 'Sesudah Makan'] as const).map((m) => (
-                        <button
-                          key={m}
-                          type="button"
-                          onClick={() => setMealRule(m)}
-                          className={`px-2 py-0.5 border text-[10px] ${
-                            mealRule === m ? 'border-[#1E40AF] bg-blue-50 font-bold' : 'border-slate-300'
-                          }`}
-                        >
-                          {m}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
+                  <span className="px-2.5 py-1 rounded-full bg-emerald-50 text-[#065F46] font-mono text-xs font-bold">
+                    FEFO Active
+                  </span>
                 </div>
 
+                <div className="space-y-2.5 max-h-[340px] overflow-y-auto">
+                  {dispensed.map((d) => (
+                    <div
+                      key={d.code}
+                      className="p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between gap-3"
+                    >
+                      <img
+                        src={d.image}
+                        alt={d.name}
+                        className="w-11 h-11 rounded-lg object-cover shrink-0"
+                      />
+                      <div className="min-w-0 flex-1">
+                        <div className="font-bold text-xs text-slate-900 truncate">{d.name}</div>
+                        <div className="font-mono text-[10px] text-slate-500">Batch {d.batch}</div>
+                        <div className="font-mono text-xs font-bold text-[#065F46]">
+                          Rp {(d.price * d.qty).toLocaleString('id-ID')}
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-1 bg-white p-1 rounded-lg border border-slate-200">
+                        <button
+                          type="button"
+                          onClick={() => adjustDrugQty(d.code, -1)}
+                          className="w-6 h-6 rounded hover:bg-slate-100 flex items-center justify-center"
+                        >
+                          <Minus className="w-3 h-3" />
+                        </button>
+                        <span className="font-mono text-xs font-bold w-5 text-center">{d.qty}</span>
+                        <button
+                          type="button"
+                          onClick={() => adjustDrugQty(d.code, 1)}
+                          className="w-6 h-6 rounded hover:bg-slate-100 flex items-center justify-center"
+                        >
+                          <Plus className="w-3 h-3" />
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="space-y-4 pt-4 border-t border-slate-200">
+                <div className="flex justify-between items-baseline">
+                  <span className="text-xs text-slate-500 font-medium">Total Penebusan Resep</span>
+                  <span className="font-mono text-xl font-bold text-slate-900">
+                    Rp {subtotal.toLocaleString('id-ID')}
+                  </span>
+                </div>
                 <button
                   type="button"
                   onClick={() => setPage(3)}
-                  className="w-full py-2.5 bg-[#065F46] hover:bg-[#047857] text-white font-mono text-xs font-bold"
+                  className="w-full py-3.5 rounded-xl bg-[#065F46] hover:bg-[#047857] text-white text-xs font-semibold transition flex items-center justify-center gap-2"
                 >
-                  CETAK ETIKET &amp; AUDIT GUDANG BATCH (HAL 3) →
+                  <Printer className="w-4 h-4" />
+                  <span>Cetak Etiket &amp; Lihat Gudang Batch →</span>
                 </button>
               </div>
             </div>
@@ -2022,70 +2342,67 @@ export function ApotekMedikaPos({ activePage, onPageChange }: MultiPageDemoProps
           <div className="p-6 sm:p-8 space-y-6">
             <div className="flex flex-wrap items-center justify-between gap-4">
               <div>
-                <span className="font-mono text-xs font-bold text-[#065F46]">
-                  [ HALAMAN 3 · AUDIT STOK GUDANG FEFO &amp; BUKU DEFEKTA ]
+                <span className="font-mono text-xs font-semibold text-[#065F46] uppercase">
+                  Warehouse FEFO Ledger &amp; Defekta
                 </span>
-                <h2 className="text-2xl font-bold mt-1">
-                  Prioritas Pengeluaran Batch &amp; Peringatan Stok Kritis
+                <h2 className="text-2xl font-bold text-slate-900 mt-0.5">
+                  Urutan Pengeluaran Batch &amp; Peringatan Stok Kritis
                 </h2>
               </div>
               <button
                 type="button"
-                onClick={() => setPage(1)}
-                className="px-4 py-2 border border-slate-300 bg-white font-mono text-xs font-bold"
+                onClick={() => setPage(2)}
+                className="px-4 py-2 rounded-xl border border-slate-300 bg-white text-xs font-semibold"
               >
-                ← Kembali ke Katalog Obat
+                ← Kembali ke Kasir FEFO
               </button>
             </div>
 
-            <div className="bg-white border border-slate-300 overflow-x-auto">
-              <table className="w-full text-xs text-left border-collapse">
-                <thead className="bg-slate-100 border-b border-slate-300 font-mono">
-                  <tr>
-                    <th className="p-3">URUTAN FEFO</th>
-                    <th className="p-3">NOMOR BATCH</th>
-                    <th className="p-3">NAMA SEDIAAN</th>
-                    <th className="p-3">TGL KADALUARSA</th>
-                    <th className="p-3 text-right">SISA STOK</th>
-                    <th className="p-3">STATUS DEFEKTA</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-200">
-                  {[...SIMRS_DRUGS]
-                    .sort((a, b) => a.exp.localeCompare(b.exp))
-                    .map((d, idx) => (
-                      <tr key={d.code}>
-                        <td className="p-3 font-mono font-bold text-[#065F46]">PRIORITAS #{idx + 1}</td>
-                        <td className="p-3 font-mono">{d.batch}</td>
-                        <td className="p-3 font-semibold">{d.name}</td>
-                        <td className="p-3 font-mono font-bold">{d.exp}</td>
-                        <td className="p-3 font-mono text-right">{d.stock} Unit</td>
-                        <td className="p-3 font-mono">
-                          <span
-                            className={`px-2 py-0.5 text-[10px] font-bold ${
-                              d.stock < 20
-                                ? 'bg-amber-100 text-amber-900 border border-amber-300'
-                                : 'bg-emerald-100 text-emerald-900'
-                            }`}
-                          >
-                            {d.stock < 20 ? 'RE-ORDER SP (STOK TIPIS)' : 'STOK AMAN'}
-                          </span>
-                        </td>
-                      </tr>
-                    ))}
-                </tbody>
-              </table>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {[...SIMRS_DRUGS]
+                .sort((a, b) => a.exp.localeCompare(b.exp))
+                .map((d, idx) => (
+                  <div
+                    key={d.code}
+                    className="bg-white rounded-2xl border border-slate-200 p-4 flex items-center gap-4 shadow-sm"
+                  >
+                    <img
+                      src={d.image}
+                      alt={d.name}
+                      className="w-16 h-16 rounded-xl object-cover shrink-0"
+                    />
+                    <div className="min-w-0 flex-1 space-y-1">
+                      <div className="flex items-center justify-between font-mono text-[10px]">
+                        <span className="font-bold text-[#065F46]">FEFO #{idx + 1} · {d.batch}</span>
+                        <span className="text-slate-500">Exp {d.exp}</span>
+                      </div>
+                      <div className="font-bold text-xs text-slate-900 truncate">{d.name}</div>
+                      <div className="flex items-center justify-between pt-1">
+                        <span className="font-mono text-xs text-slate-700">{d.stock} Unit</span>
+                        <span
+                          className={`px-2 py-0.5 rounded-full font-mono text-[10px] font-semibold ${
+                            d.stock < 20
+                              ? 'bg-amber-100 text-amber-800'
+                              : 'bg-emerald-50 text-emerald-700'
+                          }`}
+                        >
+                          {d.stock < 20 ? 'Re-Order SP' : 'Stok Aman'}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
             </div>
           </div>
         )}
       </div>
 
-      <footer className="border-t border-slate-300 bg-white px-6 py-4 flex flex-wrap items-center justify-between gap-4 font-mono text-[11px] text-slate-600">
-        <span>APOTEK MEDIKA FARMA · LAYANAN RESEP 24 JAM · TERINTEGRASI BPOM &amp; SIMRS</span>
-        <div className="flex gap-4 font-bold text-[#065F46]">
-          <button type="button" onClick={() => setPage(1)}>Hal 1: Katalog</button>
-          <button type="button" onClick={() => setPage(2)}>Hal 2: Kasir FEFO</button>
-          <button type="button" onClick={() => setPage(3)}>Hal 3: Gudang Batch</button>
+      <footer className="border-t border-slate-200 bg-white px-6 py-4 flex flex-wrap items-center justify-between gap-4 text-xs text-slate-500">
+        <span>Apotek Medika Farma · Layanan Resep 24 Jam · Terintegrasi BPOM &amp; SIMRS</span>
+        <div className="flex gap-4 font-semibold text-[#065F46]">
+          <button type="button" onClick={() => setPage(1)}>01 Katalog</button>
+          <button type="button" onClick={() => setPage(2)}>02 Kasir FEFO</button>
+          <button type="button" onClick={() => setPage(3)}>03 Gudang Batch</button>
         </div>
       </footer>
     </div>
@@ -2093,213 +2410,249 @@ export function ApotekMedikaPos({ activePage, onPageChange }: MultiPageDemoProps
 }
 
 /* ============================================================================
- * 4. ATELIER LUXE · 3-Page Editorial Lookbook, Boutique POS & VIP Client CRM
+ * 4. ATELIER LUXE · SSENSE Editorial Lookbook, Boutique POS & VIP Client CRM
  * ========================================================================== */
 const LOOKBOOK = [
   {
-    ref: 'REF. AW26-01',
+    ref: 'AW26-01',
     cat: 'OUTERWEAR',
     name: 'Double-Faced Cashmere Trench',
     price: 4850000,
     sizes: ['36', '38', '40', '42'],
-    swatch: '#1F2937',
     fabric: '100% Inner Mongolian Cashmere (480 gsm) · Hand-finished lapel',
     origin: 'Tailored in Milan, Italy',
     stockMatrix: { senayan: 3, plazaId: 2, bali: 1 },
+    image: 'https://images.unsplash.com/photo-1539533018447-63fcce2678e3?auto=format&fit=crop&w=600&q=80',
   },
   {
-    ref: 'REF. AW26-04',
+    ref: 'AW26-04',
     cat: 'FOOTWEAR',
     name: 'Goodyear-Welted Suede Chelsea Boots',
     price: 3200000,
     sizes: ['40', '41', '42', '43'],
-    swatch: '#57534E',
     fabric: 'Tuscan Calf Suede · Vibram Commando Sole · Full Leather Lining',
     origin: 'Handcrafted in Florence, Italy',
     stockMatrix: { senayan: 4, plazaId: 1, bali: 2 },
+    image: 'https://images.unsplash.com/photo-1608256246200-53e635b5b65f?auto=format&fit=crop&w=600&q=80',
   },
   {
-    ref: 'REF. AW26-09',
+    ref: 'AW26-09',
     cat: 'LEATHER GOODS',
     name: 'Box Calfskin Architectural Tote',
     price: 5400000,
     sizes: ['OS'],
-    swatch: '#111111',
     fabric: 'Full-Grain French Box Calfskin · Brushed Brass Hardware',
     origin: 'Atelier Paris / Jakarta Flagship',
     stockMatrix: { senayan: 2, plazaId: 2, bali: 0 },
+    image: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=600&q=80',
   },
   {
-    ref: 'REF. AW26-12',
+    ref: 'AW26-12',
     cat: 'SILK SHIRTING',
     name: 'Mulberry Raw Silk Jacquard Shirt',
     price: 2150000,
     sizes: ['36', '38', '40'],
-    swatch: '#78716C',
     fabric: '22-Momme Mulberry Silk · Mother-of-Pearl Buttons',
     origin: 'Woven in Como, Italy',
     stockMatrix: { senayan: 5, plazaId: 4, bali: 3 },
+    image: 'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=600&q=80',
   },
 ];
 
 export function AtelierLuxePos({ activePage, onPageChange }: MultiPageDemoProps) {
   const [page, setPage] = useSyncedPage(activePage, onPageChange, 1);
   const [previewPiece, setPreviewPiece] = useState<(typeof LOOKBOOK)[0] | null>(null);
+  const [catFilter, setCatFilter] = useState<string>('ALL');
   const [sizePick, setSizePick] = useState<Record<string, string>>({
-    'REF. AW26-01': '38',
-    'REF. AW26-04': '42',
-    'REF. AW26-09': 'OS',
-    'REF. AW26-12': '38',
+    'AW26-01': '38',
+    'AW26-04': '42',
+    'AW26-09': 'OS',
+    'AW26-12': '38',
   });
   const [vip, setVip] = useState<'REGULAR' | 'SILVER 5%' | 'BLACK 15%'>('BLACK 15%');
-  const [bag, setBag] = useState<{ ref: string; name: string; size: string; price: number }[]>([
-    { ref: 'REF. AW26-01', name: 'Double-Faced Cashmere Trench', size: '38', price: 4850000 },
+  const [bag, setBag] = useState<
+    { ref: string; name: string; size: string; price: number; qty: number; image: string }[]
+  >([
+    {
+      ref: 'AW26-01',
+      name: 'Double-Faced Cashmere Trench',
+      size: '38',
+      price: 4850000,
+      qty: 1,
+      image: LOOKBOOK[0].image,
+    },
   ]);
 
   const rate = vip === 'BLACK 15%' ? 0.15 : vip === 'SILVER 5%' ? 0.05 : 0;
-  const gross = bag.reduce((s, b) => s + b.price, 0);
+  const gross = bag.reduce((s, b) => s + b.price * b.qty, 0);
   const disc = Math.round(gross * rate);
   const net = gross - disc;
+  const totalPieces = bag.reduce((s, b) => s + b.qty, 0);
 
   const addToBag = (item: (typeof LOOKBOOK)[0], goPos = false) => {
     const activeSize = sizePick[item.ref] || item.sizes[0];
-    setBag((p) => [...p, { ref: item.ref, name: item.name, size: activeSize, price: item.price }]);
+    setBag((prev) => {
+      const idx = prev.findIndex((b) => b.ref === item.ref && b.size === activeSize);
+      if (idx >= 0) {
+        const copy = [...prev];
+        copy[idx] = { ...copy[idx], qty: copy[idx].qty + 1 };
+        return copy;
+      }
+      return [
+        ...prev,
+        { ref: item.ref, name: item.name, size: activeSize, price: item.price, qty: 1, image: item.image },
+      ];
+    });
     if (goPos) {
       setPreviewPiece(null);
       setPage(2);
     }
   };
 
+  const adjustBagQty = (ref: string, size: string, delta: number) => {
+    setBag((prev) =>
+      prev
+        .map((b) => (b.ref === ref && b.size === size ? { ...b, qty: b.qty + delta } : b))
+        .filter((b) => b.qty > 0)
+    );
+  };
+
+  const filteredPieces =
+    catFilter === 'ALL' ? LOOKBOOK : LOOKBOOK.filter((i) => i.cat === catFilter);
+
   return (
-    <div className="min-h-[780px] bg-white text-[#111111] flex flex-col justify-between border-t border-[#111111]">
+    <div className="min-h-[820px] bg-[#FAF9F6] text-[#111111] flex flex-col justify-between">
       <div>
-        {/* FULL WEBSITE HEADER */}
-        <header className="px-6 py-4 border-b border-[#111111] flex flex-wrap items-center justify-between gap-4">
+        <header className="px-6 sm:px-8 py-5 border-b border-stone-200 bg-white flex flex-wrap items-center justify-between gap-4">
           <div>
-            <h1 className="font-serif text-2xl tracking-[0.22em]">ATELIER LUXE</h1>
-            <span className="font-mono text-[10px] uppercase tracking-widest text-neutral-500">
-              AUTUMN / WINTER 2026 ARCHIVE · SENAYAN &amp; PLAZA INDONESIA
+            <h1 className="font-serif text-2xl tracking-[0.24em] text-stone-950">ATELIER LUXE</h1>
+            <span className="font-mono text-[10px] uppercase tracking-widest text-stone-500">
+              Autumn / Winter 2026 Archive · Senayan &amp; Plaza Indonesia
             </span>
           </div>
 
-          <nav className="flex flex-wrap gap-2 font-mono text-xs">
+          <nav className="flex flex-wrap gap-1.5 bg-stone-100 p-1.5 rounded-xl border border-stone-200 text-xs font-medium">
             <button
               type="button"
               onClick={() => setPage(1)}
-              className={`px-4 py-2 border border-[#111111] transition ${
-                page === 1 ? 'bg-[#111111] text-white font-bold' : 'bg-white text-[#111111]'
+              className={`px-4 py-2 rounded-lg transition ${
+                page === 1 ? 'bg-stone-950 text-white' : 'text-stone-600 hover:text-stone-950'
               }`}
             >
-              01 · Lookbook &amp; Preview Koleksi
+              01 · Editorial Lookbook
             </button>
             <button
               type="button"
               onClick={() => setPage(2)}
-              className={`px-4 py-2 border border-[#111111] transition ${
-                page === 2 ? 'bg-[#111111] text-white font-bold' : 'bg-white text-[#111111]'
+              className={`px-4 py-2 rounded-lg transition ${
+                page === 2 ? 'bg-stone-950 text-white' : 'text-stone-600 hover:text-stone-950'
               }`}
             >
-              02 · Clienteling POS ({bag.length})
+              02 · Clienteling POS ({totalPieces})
             </button>
             <button
               type="button"
               onClick={() => setPage(3)}
-              className={`px-4 py-2 border border-[#111111] transition ${
-                page === 3 ? 'bg-[#111111] text-white font-bold' : 'bg-white text-[#111111]'
+              className={`px-4 py-2 rounded-lg transition ${
+                page === 3 ? 'bg-stone-950 text-white' : 'text-stone-600 hover:text-stone-950'
               }`}
             >
-              03 · VIP Client Book &amp; Stok Cabang
+              03 · VIP Client Book
             </button>
           </nav>
         </header>
 
-        {/* HALAMAN 1: EDITORIAL LOOKBOOK & GARMENT PREVIEW */}
+        {/* HALAMAN 1: SSENSE / TOTEME EDITORIAL LOOKBOOK */}
         {page === 1 && (
           <div className="p-6 sm:p-10 space-y-8">
-            <div className="border border-[#111111] bg-[#FAF9F6] p-6 sm:p-8 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-              <div className="space-y-2 max-w-2xl">
-                <span className="font-mono text-[10px] tracking-widest uppercase text-neutral-500">
-                  [ HALAMAN 1 · DIGITAL LOOKBOOK &amp; GARMENT SPECIFICATION ]
+            <div className="rounded-3xl bg-white border border-stone-200 p-6 sm:p-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+              <div className="space-y-3 max-w-2xl">
+                <span className="font-mono text-[11px] tracking-widest uppercase text-stone-500">
+                  Autumn / Winter 2026 Ready-to-Wear &amp; Leather Goods
                 </span>
-                <h2 className="font-serif text-3xl sm:text-4xl">
-                  Siluet Monokrom &amp; Material Cashmere Italia.
+                <h2 className="font-serif text-3xl sm:text-4xl text-stone-950 leading-tight">
+                  Siluet Monokrom Arsitektural &amp; Cashmere Terbaik dari Milan.
                 </h2>
-                <p className="text-xs sm:text-sm text-neutral-600 leading-relaxed">
-                  Klik setiap artikel untuk membuka <strong>Dossier Material, Dimensi Ukuran, dan Stok Antar Butik</strong> sebelum memasukkannya ke Client Bag.
+                <p className="text-sm text-stone-600 leading-relaxed">
+                  Pilih setiap artikel untuk memeriksa asal tekstil, ketersediaan stok lintas butik, serta memilih ukuran sebelum memasukkannya ke dalam Dossier Klien.
                 </p>
               </div>
               <button
                 type="button"
                 onClick={() => setPage(2)}
-                className="px-6 py-3.5 bg-[#111111] text-white font-mono text-xs tracking-widest uppercase self-start lg:self-auto"
+                className="px-6 py-3.5 rounded-xl bg-stone-950 hover:bg-stone-800 text-white font-mono text-xs tracking-wider uppercase shrink-0"
               >
-                Buka Clienteling Bag ({bag.length}) →
+                Buka Clienteling Bag ({totalPieces}) →
               </button>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {LOOKBOOK.map((item, idx) => {
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {LOOKBOOK.map((item) => {
                 const activeSize = sizePick[item.ref] || item.sizes[0];
                 return (
-                  <div key={item.ref} className="border border-[#111111] p-6 flex flex-col justify-between gap-5">
-                    <div className="space-y-4">
-                      <div className="flex justify-between font-mono text-[11px] text-neutral-500">
-                        <span>{item.ref} · {item.cat}</span>
-                        <span>{item.origin}</span>
-                      </div>
-
+                  <div
+                    key={item.ref}
+                    className="group bg-white rounded-2xl border border-stone-200 overflow-hidden flex flex-col justify-between transition hover:shadow-md"
+                  >
+                    <div>
                       <div
                         onClick={() => setPreviewPiece(item)}
-                        className="h-44 w-full border border-[#111111] p-4 flex flex-col justify-between cursor-pointer text-white"
-                        style={{ backgroundColor: item.swatch }}
+                        className="relative aspect-[4/3] w-full overflow-hidden bg-stone-100 cursor-pointer"
                       >
-                        <div className="flex justify-between font-mono text-[10px]">
-                          <span className="bg-black/60 px-2 py-0.5">ARCHIVE PIECE 0{idx + 1}</span>
-                          <span className="underline">INSPECT MATERIAL →</span>
-                        </div>
-                        <div>
-                          <div className="font-serif text-2xl">{item.name}</div>
-                          <div className="font-mono text-[11px] text-neutral-200 mt-1">{item.fabric}</div>
-                        </div>
+                        <img
+                          src={item.image}
+                          alt={item.name}
+                          className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+                          loading="lazy"
+                        />
+                        <span className="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-white/90 backdrop-blur-sm font-mono text-[10px] text-stone-900 font-semibold">
+                          {item.ref}
+                        </span>
                       </div>
 
-                      <div className="flex justify-between items-baseline">
-                        <span className="font-mono text-xs text-neutral-500">RETAIL PRICE</span>
-                        <span className="font-mono text-sm font-bold">
+                      <div className="p-5 space-y-2">
+                        <div className="font-mono text-[10px] uppercase tracking-wider text-stone-500">
+                          {item.cat} · {item.origin}
+                        </div>
+                        <h3 className="font-serif text-lg font-bold text-stone-950">{item.name}</h3>
+                        <p className="text-xs text-stone-600 line-clamp-2">{item.fabric}</p>
+                        <div className="font-mono text-sm font-bold text-stone-950 pt-1">
                           IDR {item.price.toLocaleString('id-ID')}
-                        </span>
+                        </div>
                       </div>
                     </div>
 
-                    <div className="space-y-3">
-                      <div className="flex gap-1.5">
+                    <div className="p-5 pt-0 space-y-3">
+                      <div className="flex gap-1">
                         {item.sizes.map((s) => (
                           <button
                             key={s}
                             type="button"
                             onClick={() => setSizePick((p) => ({ ...p, [item.ref]: s }))}
-                            className={`flex-1 py-1.5 font-mono text-xs border border-[#111111] ${
-                              activeSize === s ? 'bg-[#111111] text-white font-bold' : 'bg-white text-[#111111]'
+                            className={`flex-1 py-1.5 rounded-lg font-mono text-xs border transition ${
+                              activeSize === s
+                                ? 'bg-stone-950 text-white border-stone-950 font-bold'
+                                : 'bg-white text-stone-700 border-stone-200'
                             }`}
                           >
                             {s}
                           </button>
                         ))}
                       </div>
-                      <div className="grid grid-cols-2 gap-2 font-mono text-xs">
+                      <div className="grid grid-cols-2 gap-2 text-xs">
                         <button
                           type="button"
                           onClick={() => setPreviewPiece(item)}
-                          className="py-2.5 border border-[#111111] hover:bg-neutral-100 uppercase tracking-wider"
+                          className="py-2 rounded-lg border border-stone-200 hover:border-stone-950 font-medium"
                         >
-                          Preview Detail
+                          Dossier
                         </button>
                         <button
                           type="button"
                           onClick={() => addToBag(item, false)}
-                          className="py-2.5 bg-[#111111] text-white uppercase tracking-wider font-bold"
+                          className="py-2 rounded-lg bg-stone-950 text-white font-semibold"
                         >
-                          + Add Size {activeSize}
+                          + Size {activeSize}
                         </button>
                       </div>
                     </div>
@@ -2309,42 +2662,50 @@ export function AtelierLuxePos({ activePage, onPageChange }: MultiPageDemoProps)
             </div>
 
             {previewPiece && (
-              <div className="fixed inset-0 z-50 bg-black/75 flex items-center justify-center p-4">
-                <div className="bg-white border-2 border-[#111111] max-w-lg w-full p-6 space-y-5">
-                  <div className="flex justify-between items-start border-b border-[#111111] pb-3">
-                    <div>
-                      <span className="font-mono text-[10px] text-neutral-500">{previewPiece.ref}</span>
-                      <h3 className="font-serif text-2xl mt-1">{previewPiece.name}</h3>
-                    </div>
+              <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+                <div className="bg-white rounded-3xl max-w-lg w-full overflow-hidden shadow-2xl border border-stone-200">
+                  <div className="relative aspect-[16/10] bg-stone-100">
+                    <img
+                      src={previewPiece.image}
+                      alt={previewPiece.name}
+                      className="w-full h-full object-cover"
+                    />
                     <button
                       type="button"
                       onClick={() => setPreviewPiece(null)}
-                      className="font-mono text-xs border border-[#111111] px-2.5 py-1"
+                      className="absolute top-4 right-4 w-9 h-9 rounded-full bg-white text-stone-950 flex items-center justify-center shadow"
                     >
-                      CLOSE ✕
+                      <X className="w-4 h-4" />
                     </button>
                   </div>
-                  <div className="space-y-3 font-mono text-xs">
-                    <div><strong>KOMPOSISI MATERIAL:</strong> {previewPiece.fabric}</div>
-                    <div><strong>ATELIER ORIGIN:</strong> {previewPiece.origin}</div>
-                    <div className="p-3 bg-neutral-100 border border-[#111111] space-y-1">
-                      <div className="font-bold">KETERSEDIAAN STOK BUTIK:</div>
+                  <div className="p-6 space-y-4">
+                    <div>
+                      <span className="font-mono text-xs text-stone-500">
+                        {previewPiece.ref} · {previewPiece.origin}
+                      </span>
+                      <h3 className="font-serif text-2xl font-bold text-stone-950 mt-0.5">
+                        {previewPiece.name}
+                      </h3>
+                    </div>
+                    <p className="text-xs text-stone-600 leading-relaxed">{previewPiece.fabric}</p>
+                    <div className="p-4 rounded-2xl bg-stone-50 border border-stone-200 font-mono text-xs space-y-1">
+                      <div className="font-bold text-stone-900">Alokasi Stok Butik:</div>
                       <div>Senayan City Flagship: {previewPiece.stockMatrix.senayan} pcs</div>
                       <div>Plaza Indonesia Level 1: {previewPiece.stockMatrix.plazaId} pcs</div>
                       <div>Seminyak Resort Bali: {previewPiece.stockMatrix.bali} pcs</div>
                     </div>
-                  </div>
-                  <div className="flex justify-between items-center pt-3 border-t border-[#111111]">
-                    <span className="font-mono font-bold text-base">
-                      IDR {previewPiece.price.toLocaleString('id-ID')}
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => addToBag(previewPiece, true)}
-                      className="px-5 py-2.5 bg-[#111111] text-white font-mono text-xs font-bold uppercase tracking-wider"
-                    >
-                      MASUKKAN KE CLIENTELING POS →
-                    </button>
+                    <div className="flex justify-between items-center pt-2">
+                      <span className="font-mono font-bold text-base">
+                        IDR {previewPiece.price.toLocaleString('id-ID')}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => addToBag(previewPiece, true)}
+                        className="px-5 py-2.5 rounded-xl bg-stone-950 text-white text-xs font-semibold"
+                      >
+                        Masukkan ke Clienteling POS →
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -2352,98 +2713,166 @@ export function AtelierLuxePos({ activePage, onPageChange }: MultiPageDemoProps)
           </div>
         )}
 
-        {/* HALAMAN 2: BOUTIQUE CLIENTELING POS */}
+        {/* HALAMAN 2: 3-ZONE BOUTIQUE CLIENTELING POS */}
         {page === 2 && (
-          <div className="grid grid-cols-1 lg:grid-cols-12">
-            <div className="lg:col-span-8 border-b lg:border-b-0 lg:border-r border-[#111111] grid grid-cols-1 sm:grid-cols-2">
-              {LOOKBOOK.map((item, idx) => {
-                const activeSize = sizePick[item.ref] || item.sizes[0];
-                return (
-                  <div
-                    key={item.ref}
-                    className={`p-6 border-b border-[#111111] ${idx % 2 === 0 ? 'sm:border-r' : ''} flex flex-col justify-between gap-5`}
-                  >
-                    <div className="space-y-3">
-                      <div className="flex justify-between font-mono text-[11px] text-neutral-500">
-                        <span>{item.ref}</span>
-                        <span>IN STOCK</span>
-                      </div>
-                      <h2 className="font-serif text-xl">{item.name}</h2>
-                      <p className="font-mono text-[11px] text-neutral-600">{item.fabric}</p>
-                      <div className="font-mono text-xs font-bold">
-                        IDR {item.price.toLocaleString('id-ID')}
-                      </div>
-                    </div>
-
-                    <div className="space-y-3">
-                      <div className="flex gap-1">
-                        {item.sizes.map((s) => (
-                          <button
-                            key={s}
-                            type="button"
-                            onClick={() => setSizePick((p) => ({ ...p, [item.ref]: s }))}
-                            className={`flex-1 py-1.5 font-mono text-xs border border-[#111111] ${
-                              activeSize === s ? 'bg-[#111111] text-white font-bold' : 'bg-white text-[#111111]'
-                            }`}
-                          >
-                            {s}
-                          </button>
-                        ))}
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => addToBag(item, false)}
-                        className="w-full py-2.5 border border-[#111111] hover:bg-[#111111] hover:text-white font-mono text-[11px] tracking-widest uppercase transition"
-                      >
-                        Add Size {activeSize} to Dossier
-                      </button>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            <div className="lg:col-span-4 p-6 flex flex-col justify-between bg-[#FAFAFA]">
-              <div className="space-y-5">
-                <div className="border-b border-[#111111] pb-3">
-                  <span className="font-mono text-[10px] tracking-widest uppercase text-neutral-500 block">
-                    Client Dossier
-                  </span>
-                  <div className="font-serif text-xl mt-0.5">Clarissa V. · No. 0841</div>
+          <div className="grid grid-cols-1 lg:grid-cols-12 min-h-[700px]">
+            {/* Zone 1: Left Category & VIP Tier Rail */}
+            <div className="lg:col-span-3 border-b lg:border-b-0 lg:border-r border-stone-200 bg-white p-5 space-y-6">
+              <div>
+                <span className="font-mono text-[10px] uppercase tracking-wider text-stone-500 block mb-2.5">
+                  Kategori Koleksi
+                </span>
+                <div className="space-y-1.5">
+                  {['ALL', 'OUTERWEAR', 'FOOTWEAR', 'LEATHER GOODS', 'SILK SHIRTING'].map((c) => (
+                    <button
+                      key={c}
+                      type="button"
+                      onClick={() => setCatFilter(c)}
+                      className={`w-full px-3.5 py-2.5 rounded-xl text-left text-xs font-semibold transition ${
+                        catFilter === c
+                          ? 'bg-stone-950 text-white'
+                          : 'bg-stone-50 hover:bg-stone-100 text-stone-700'
+                      }`}
+                    >
+                      {c}
+                    </button>
+                  ))}
                 </div>
+              </div>
 
-                <div className="grid grid-cols-3 border border-[#111111] font-mono text-[10px]">
+              <div className="p-4 rounded-2xl bg-[#FAF9F6] border border-stone-200 space-y-3">
+                <div className="font-mono text-[10px] uppercase tracking-wider text-stone-500">
+                  Private Client Tier
+                </div>
+                <div className="font-serif text-lg font-bold">Clarissa V. · #0841</div>
+                <div className="space-y-1.5">
                   {(['REGULAR', 'SILVER 5%', 'BLACK 15%'] as const).map((tier) => (
                     <button
                       key={tier}
                       type="button"
                       onClick={() => setVip(tier)}
-                      className={`py-2 border-r last:border-r-0 border-[#111111] ${
-                        vip === tier ? 'bg-[#111111] text-white font-bold' : 'bg-white text-[#111111]'
+                      className={`w-full py-2 px-3 rounded-lg font-mono text-xs text-left transition ${
+                        vip === tier
+                          ? 'bg-stone-950 text-white font-bold'
+                          : 'bg-white text-stone-700 border border-stone-200'
                       }`}
                     >
                       {tier}
                     </button>
                   ))}
                 </div>
+              </div>
+            </div>
 
-                <div className="divide-y divide-neutral-300 min-h-[220px]">
-                  {bag.map((b, i) => (
-                    <div key={`${b.ref}-${i}`} className="py-3 flex justify-between items-start text-xs">
+            {/* Zone 2: Center Visual Garment Grid */}
+            <div className="lg:col-span-5 p-5 sm:p-6 border-b lg:border-b-0 lg:border-r border-stone-200">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {filteredPieces.map((item) => {
+                  const activeSize = sizePick[item.ref] || item.sizes[0];
+                  return (
+                    <div
+                      key={item.ref}
+                      className="rounded-2xl bg-white border border-stone-200 overflow-hidden p-3.5 flex flex-col justify-between gap-3"
+                    >
                       <div>
-                        <div className="font-serif text-sm">{b.name}</div>
-                        <div className="font-mono text-[10px] text-neutral-500">
-                          {b.ref} · SIZE {b.size}
+                        <img
+                          src={item.image}
+                          alt={item.name}
+                          className="w-full aspect-[4/3] rounded-xl object-cover bg-stone-100"
+                          loading="lazy"
+                        />
+                        <div className="mt-3 space-y-1">
+                          <div className="font-mono text-[10px] text-stone-500">{item.ref}</div>
+                          <div className="font-serif font-bold text-sm text-stone-950">{item.name}</div>
+                          <div className="font-mono text-xs font-bold">
+                            IDR {item.price.toLocaleString('id-ID')}
+                          </div>
                         </div>
                       </div>
-                      <div className="text-right font-mono">
-                        <div>{b.price.toLocaleString('id-ID')}</div>
+
+                      <div className="space-y-2">
+                        <div className="flex gap-1">
+                          {item.sizes.map((s) => (
+                            <button
+                              key={s}
+                              type="button"
+                              onClick={() => setSizePick((p) => ({ ...p, [item.ref]: s }))}
+                              className={`flex-1 py-1 rounded font-mono text-[11px] border ${
+                                activeSize === s
+                                  ? 'bg-stone-950 text-white border-stone-950 font-bold'
+                                  : 'border-stone-200 text-stone-700'
+                              }`}
+                            >
+                              {s}
+                            </button>
+                          ))}
+                        </div>
                         <button
                           type="button"
-                          onClick={() => setBag((p) => p.filter((_, idx) => idx !== i))}
-                          className="text-[10px] underline text-neutral-500"
+                          onClick={() => addToBag(item, false)}
+                          className="w-full py-2 rounded-lg bg-stone-950 hover:bg-stone-800 text-white text-xs font-semibold transition"
                         >
-                          Void
+                          + Add Size {activeSize}
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Zone 3: Right Floating Client Bag */}
+            <div className="lg:col-span-4 bg-white p-5 sm:p-6 flex flex-col justify-between gap-6">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between border-b border-stone-200 pb-3">
+                  <div>
+                    <span className="font-mono text-[10px] uppercase text-stone-500 block">
+                      Clienteling Bag
+                    </span>
+                    <h2 className="font-serif text-xl font-bold">Clarissa V.</h2>
+                  </div>
+                  <span className="px-2.5 py-1 rounded-full bg-stone-950 text-white font-mono text-xs">
+                    {vip}
+                  </span>
+                </div>
+
+                <div className="space-y-3 max-h-[340px] overflow-y-auto">
+                  {bag.map((b) => (
+                    <div
+                      key={`${b.ref}-${b.size}`}
+                      className="p-3 rounded-xl bg-[#FAF9F6] border border-stone-200 flex items-center justify-between gap-3"
+                    >
+                      <img
+                        src={b.image}
+                        alt={b.name}
+                        className="w-12 h-12 rounded-lg object-cover shrink-0"
+                      />
+                      <div className="min-w-0 flex-1">
+                        <div className="font-serif font-bold text-xs text-stone-950 truncate">
+                          {b.name}
+                        </div>
+                        <div className="font-mono text-[10px] text-stone-500">
+                          {b.ref} · Size {b.size}
+                        </div>
+                        <div className="font-mono text-xs font-bold mt-0.5">
+                          IDR {(b.price * b.qty).toLocaleString('id-ID')}
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-1 bg-white p-1 rounded-lg border border-stone-200">
+                        <button
+                          type="button"
+                          onClick={() => adjustBagQty(b.ref, b.size, -1)}
+                          className="w-6 h-6 rounded hover:bg-stone-100 flex items-center justify-center"
+                        >
+                          <Minus className="w-3 h-3" />
+                        </button>
+                        <span className="font-mono text-xs font-bold w-5 text-center">{b.qty}</span>
+                        <button
+                          type="button"
+                          onClick={() => adjustBagQty(b.ref, b.size, 1)}
+                          className="w-6 h-6 rounded hover:bg-stone-100 flex items-center justify-center"
+                        >
+                          <Plus className="w-3 h-3" />
                         </button>
                       </div>
                     </div>
@@ -2451,18 +2880,18 @@ export function AtelierLuxePos({ activePage, onPageChange }: MultiPageDemoProps)
                 </div>
               </div>
 
-              <div className="space-y-4 pt-4 border-t border-[#111111]">
-                <div className="space-y-1 font-mono text-xs">
-                  <div className="flex justify-between text-neutral-600">
-                    <span>GROSS</span>
+              <div className="space-y-4 pt-4 border-t border-stone-200">
+                <div className="space-y-1.5 font-mono text-xs">
+                  <div className="flex justify-between text-stone-500">
+                    <span>Gross Subtotal</span>
                     <span>IDR {gross.toLocaleString('id-ID')}</span>
                   </div>
-                  <div className="flex justify-between text-neutral-600">
-                    <span>PRIVILEGE ({vip})</span>
+                  <div className="flex justify-between text-stone-500">
+                    <span>Privilege ({vip})</span>
                     <span>- IDR {disc.toLocaleString('id-ID')}</span>
                   </div>
-                  <div className="flex justify-between text-base font-bold pt-2 border-t border-[#111111]">
-                    <span>NET TOTAL</span>
+                  <div className="flex justify-between text-base font-bold pt-2 border-t border-stone-200 text-stone-950">
+                    <span>Net Total</span>
                     <span>IDR {net.toLocaleString('id-ID')}</span>
                   </div>
                 </div>
@@ -2470,9 +2899,9 @@ export function AtelierLuxePos({ activePage, onPageChange }: MultiPageDemoProps)
                 <button
                   type="button"
                   onClick={() => setPage(3)}
-                  className="w-full py-4 bg-[#111111] hover:bg-neutral-800 text-white font-mono text-xs tracking-[0.18em] font-bold transition"
+                  className="w-full py-3.5 rounded-xl bg-stone-950 hover:bg-stone-800 text-white text-xs font-semibold tracking-wider uppercase transition"
                 >
-                  AUTHORIZE &amp; OPEN VIP BOOK →
+                  Authorize &amp; Open VIP Book →
                 </button>
               </div>
             </div>
@@ -2483,66 +2912,76 @@ export function AtelierLuxePos({ activePage, onPageChange }: MultiPageDemoProps)
         {page === 3 && (
           <div className="p-6 sm:p-10 space-y-8">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-              <div className="lg:col-span-6 border border-[#111111] p-6 space-y-4">
-                <div className="font-mono text-xs font-bold uppercase tracking-widest border-b border-[#111111] pb-2">
-                  DIREKTORI PRIVATE CLIENT (VIP CRM)
+              <div className="lg:col-span-6 bg-white rounded-2xl border border-stone-200 p-6 space-y-4">
+                <div className="font-mono text-xs font-bold uppercase tracking-wider text-stone-500 border-b border-stone-200 pb-3">
+                  Direktori Private Client (VIP CRM)
                 </div>
                 {[
                   { name: 'Clarissa V.', tier: 'BLACK 15%', spend: 'IDR 64.200.000', size: '38 / EU 39', stylist: 'Nadia' },
                   { name: 'Rendra Kusuma', tier: 'BLACK 15%', spend: 'IDR 41.850.000', size: '42 / EU 42', stylist: 'Dion' },
                   { name: 'Aurelia Tan', tier: 'SILVER 5%', spend: 'IDR 18.400.000', size: '36 / OS', stylist: 'Nadia' },
                 ].map((c) => (
-                  <div key={c.name} className="p-4 border border-neutral-300 flex justify-between items-center text-xs">
+                  <div
+                    key={c.name}
+                    className="p-4 rounded-xl border border-stone-200 bg-[#FAF9F6] flex justify-between items-center text-xs"
+                  >
                     <div>
-                      <div className="font-serif text-lg">{c.name}</div>
-                      <div className="font-mono text-[11px] text-neutral-500">
-                        Size Profile: {c.size} · Advisor: {c.stylist}
+                      <div className="font-serif text-lg font-bold">{c.name}</div>
+                      <div className="font-mono text-[11px] text-stone-500">
+                        Size: {c.size} · Advisor: {c.stylist}
                       </div>
                     </div>
                     <div className="text-right font-mono">
-                      <span className="px-2 py-0.5 bg-[#111111] text-white text-[10px] font-bold">{c.tier}</span>
-                      <div className="font-bold mt-1">{c.spend}</div>
+                      <span className="px-2.5 py-0.5 rounded-full bg-stone-950 text-white text-[10px] font-bold">
+                        {c.tier}
+                      </span>
+                      <div className="font-bold mt-1.5">{c.spend}</div>
                     </div>
                   </div>
                 ))}
               </div>
 
-              <div className="lg:col-span-6 border border-[#111111] p-6 space-y-4">
-                <div className="font-mono text-xs font-bold uppercase tracking-widest border-b border-[#111111] pb-2">
-                  MATRIKS STOK LINTAS BUTIK FLAGSHIP
+              <div className="lg:col-span-6 bg-white rounded-2xl border border-stone-200 p-6 space-y-4">
+                <div className="font-mono text-xs font-bold uppercase tracking-wider text-stone-500 border-b border-stone-200 pb-3">
+                  Matriks Stok Lintas Butik Flagship
                 </div>
-                <table className="w-full text-xs font-mono text-left border-collapse">
-                  <thead className="border-b border-[#111111]">
-                    <tr>
-                      <th className="py-2">ARTIKEL</th>
-                      <th className="py-2 text-center">SENAYAN</th>
-                      <th className="py-2 text-center">PLAZA ID</th>
-                      <th className="py-2 text-center">BALI</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-neutral-200">
-                    {LOOKBOOK.map((item) => (
-                      <tr key={item.ref}>
-                        <td className="py-3 font-sans font-semibold">{item.name}</td>
-                        <td className="py-3 text-center">{item.stockMatrix.senayan}</td>
-                        <td className="py-3 text-center">{item.stockMatrix.plazaId}</td>
-                        <td className="py-3 text-center">{item.stockMatrix.bali}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                <div className="space-y-3">
+                  {LOOKBOOK.map((item) => (
+                    <div
+                      key={item.ref}
+                      className="p-3.5 rounded-xl border border-stone-200 flex items-center justify-between gap-3 text-xs"
+                    >
+                      <div className="flex items-center gap-3 min-w-0">
+                        <img
+                          src={item.image}
+                          alt={item.name}
+                          className="w-12 h-12 rounded-lg object-cover shrink-0"
+                        />
+                        <div className="min-w-0">
+                          <div className="font-semibold text-stone-950 truncate">{item.name}</div>
+                          <div className="font-mono text-[10px] text-stone-500">{item.ref}</div>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3 font-mono text-[11px] shrink-0">
+                        <span className="px-2 py-1 rounded bg-stone-100">SNY: {item.stockMatrix.senayan}</span>
+                        <span className="px-2 py-1 rounded bg-stone-100">PLZ: {item.stockMatrix.plazaId}</span>
+                        <span className="px-2 py-1 rounded bg-stone-100">BALI: {item.stockMatrix.bali}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
         )}
       </div>
 
-      <footer className="border-t border-[#111111] px-6 py-4 flex flex-wrap justify-between gap-4 font-mono text-[11px] text-neutral-500">
-        <span>ATELIER LUXE FLAGSHIP · SENAYAN CITY &amp; PLAZA INDONESIA JAKARTA</span>
-        <div className="flex gap-4 text-[#111111] font-bold">
-          <button type="button" onClick={() => setPage(1)}>Hal 1: Lookbook</button>
-          <button type="button" onClick={() => setPage(2)}>Hal 2: Clienteling POS</button>
-          <button type="button" onClick={() => setPage(3)}>Hal 3: VIP &amp; Cabang</button>
+      <footer className="border-t border-stone-200 bg-white px-6 py-4 flex flex-wrap justify-between gap-4 text-xs text-stone-500">
+        <span>Atelier Luxe Flagship · Senayan City &amp; Plaza Indonesia Jakarta</span>
+        <div className="flex gap-4 text-stone-950 font-semibold">
+          <button type="button" onClick={() => setPage(1)}>01 Lookbook</button>
+          <button type="button" onClick={() => setPage(2)}>02 Clienteling POS</button>
+          <button type="button" onClick={() => setPage(3)}>03 VIP Book</button>
         </div>
       </footer>
     </div>
@@ -2550,13 +2989,49 @@ export function AtelierLuxePos({ activePage, onPageChange }: MultiPageDemoProps)
 }
 
 /* ============================================================================
- * 5. PITSTOP PRO · 3-Page Sparepart Catalog, 4-Bay PKB POS & Vehicle Tracker
+ * 5. PITSTOP PRO · Sparepart Storefront, 3-Zone PKB POS & Vehicle Tracker
  * ========================================================================== */
 const BAYS = [
-  { id: 'BAY-01', plate: 'B 1942 KRN', exp: '11·28', model: 'Civic Turbo RS', tech: 'Dani S.', state: 'LIFT UP', step: 3 },
-  { id: 'BAY-02', plate: 'B 8821 VRT', exp: '04·27', model: 'Fortuner VRZ', tech: 'Arif P.', state: 'FINAL QC', step: 4 },
-  { id: 'BAY-03', plate: 'B 2104 ZXA', exp: '09·29', model: 'Ioniq 5 Signature', tech: 'Reza M.', state: 'SCANNER', step: 2 },
-  { id: 'BAY-04', plate: 'D 404 RYZ', exp: '07·28', model: 'Innova Zenix Hybrid', tech: 'Budi H.', state: 'READY', step: 5 },
+  {
+    id: 'BAY-01',
+    plate: 'B 1942 KRN',
+    exp: '11·28',
+    model: 'Honda Civic RS Turbo',
+    tech: 'Dani S.',
+    state: 'LIFT UP',
+    step: 3,
+    image: 'https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?auto=format&fit=crop&w=600&q=80',
+  },
+  {
+    id: 'BAY-02',
+    plate: 'B 8821 VRT',
+    exp: '04·27',
+    model: 'Toyota Fortuner GR Sport',
+    tech: 'Arif P.',
+    state: 'FINAL QC',
+    step: 4,
+    image: 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=600&q=80',
+  },
+  {
+    id: 'BAY-03',
+    plate: 'B 2104 ZXA',
+    exp: '09·29',
+    model: 'Hyundai Ioniq 5 Signature',
+    tech: 'Reza M.',
+    state: 'SCANNER',
+    step: 2,
+    image: 'https://images.unsplash.com/photo-1593941707882-a5bba14938c7?auto=format&fit=crop&w=600&q=80',
+  },
+  {
+    id: 'BAY-04',
+    plate: 'D 404 RYZ',
+    exp: '07·28',
+    model: 'Innova Zenix Hybrid Q',
+    tech: 'Budi H.',
+    state: 'READY',
+    step: 5,
+    image: 'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=600&q=80',
+  },
 ];
 
 const WORKSHOP_CATALOG = [
@@ -2569,6 +3044,7 @@ const WORKSHOP_CATALOG = [
     compat: 'Semua Mesin Bensin Direct Injection (Honda Turbo, Toyota, Mazda SkyActiv)',
     spec: 'Pembersihan ruang bakar dengan cairan decarbonizer, kalibrasi ulang bukaan throttle body, dan uji semprotan injektor.',
     price: 285000,
+    image: 'https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?auto=format&fit=crop&w=600&q=80',
   },
   {
     id: 'L2',
@@ -2579,6 +3055,7 @@ const WORKSHOP_CATALOG = [
     compat: 'Sedan, SUV, MPV Ring 15 s/d Ring 21',
     spec: 'Penyelarasan sudut Camber, Caster, dan Toe dengan sensor kamera 3D serta timah tempel presisi.',
     price: 220000,
+    image: 'https://images.unsplash.com/photo-1580273916550-e323be2ae537?auto=format&fit=crop&w=600&q=80',
   },
   {
     id: 'P1',
@@ -2589,6 +3066,7 @@ const WORKSHOP_CATALOG = [
     compat: 'Civic RS, CR-V Turbo, Raize, Innova Zenix, HR-V',
     spec: 'Pelumas ester-fortified viskositas rendah untuk perlindungan turbocharger dan efisiensi bahan bakar hingga 10.000 KM.',
     price: 480000,
+    image: 'https://images.unsplash.com/photo-1635784063388-1ff609e12d7c?auto=format&fit=crop&w=600&q=80',
   },
   {
     id: 'P2',
@@ -2599,6 +3077,7 @@ const WORKSHOP_CATALOG = [
     compat: 'Fortuner VRZ, Pajero Sport, Kijang Innova',
     spec: 'Kompon keramik tahan suhu 650°C, bebas bunyi decit, dan minim residu debu hitam pada velg.',
     price: 390000,
+    image: 'https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=600&q=80',
   },
   {
     id: 'P3',
@@ -2609,6 +3088,7 @@ const WORKSHOP_CATALOG = [
     compat: 'Universal Honda / Toyota / Hyundai',
     spec: 'Saringan oli berkatup anti-drainback ditambah filter kabin karbon aktif penyaring polusi PM2.5.',
     price: 165000,
+    image: 'https://images.unsplash.com/photo-1625047509248-ec889cbff17f?auto=format&fit=crop&w=600&q=80',
   },
   {
     id: 'P4',
@@ -2619,61 +3099,104 @@ const WORKSHOP_CATALOG = [
     compat: 'Mesin 4-Silinder DOHC Turbo & Naturally Aspirated',
     spec: 'Elektroda pusat iridium 0.6mm untuk pengapian stabil dan usia pakai hingga 80.000 KM.',
     price: 520000,
+    image: 'https://images.unsplash.com/photo-1517524008697-84bbe3c3fd98?auto=format&fit=crop&w=600&q=80',
   },
 ];
 
 export function PitStopBengkelPos({ activePage, onPageChange }: MultiPageDemoProps) {
   const [page, setPage] = useSyncedPage(activePage, onPageChange, 1);
   const [previewPart, setPreviewPart] = useState<(typeof WORKSHOP_CATALOG)[0] | null>(null);
+  const [sectionFilter, setSectionFilter] = useState<'ALL' | 'JASA' | 'PART'>('ALL');
   const [bay, setBay] = useState(BAYS[0]);
   const [odometer, setOdometer] = useState('42.580');
   const [workItems, setWorkItems] = useState<
-    { id: string; section: 'JASA' | 'PART'; label: string; meta: string; price: number }[]
+    { id: string; section: 'JASA' | 'PART'; label: string; meta: string; price: number; qty: number; image: string }[]
   >([
-    { id: 'L1', section: 'JASA', label: 'Paket Tune Up Carbon Clean & GDI Injector', meta: 'Estimasi 1.5 Jam', price: 285000 },
-    { id: 'P1', section: 'PART', label: 'Oli Mesin Full Synthetic 0W-20 API SP (Galon 4L)', meta: 'OEM-0W20-4L', price: 480000 },
+    {
+      id: 'L1',
+      section: 'JASA',
+      label: 'Paket Tune Up Carbon Clean & GDI Injector',
+      meta: 'Estimasi 1.5 Jam',
+      price: 285000,
+      qty: 1,
+      image: WORKSHOP_CATALOG[0].image,
+    },
+    {
+      id: 'P1',
+      section: 'PART',
+      label: 'Oli Mesin Full Synthetic 0W-20 API SP (Galon 4L)',
+      meta: 'OEM-0W20-4L',
+      price: 480000,
+      qty: 1,
+      image: WORKSHOP_CATALOG[2].image,
+    },
   ]);
 
   const addLine = (item: (typeof WORKSHOP_CATALOG)[0], goPos = false) => {
-    setWorkItems((p) => [
-      ...p,
-      { id: `${item.id}-${Date.now()}`, section: item.section, label: item.name, meta: item.meta, price: item.price },
-    ]);
+    setWorkItems((prev) => {
+      const idx = prev.findIndex((w) => w.id === item.id);
+      if (idx >= 0) {
+        const copy = [...prev];
+        copy[idx] = { ...copy[idx], qty: copy[idx].qty + 1 };
+        return copy;
+      }
+      return [
+        ...prev,
+        {
+          id: item.id,
+          section: item.section,
+          label: item.name,
+          meta: item.meta,
+          price: item.price,
+          qty: 1,
+          image: item.image,
+        },
+      ];
+    });
     if (goPos) {
       setPreviewPart(null);
       setPage(2);
     }
   };
 
-  const total = workItems.reduce((s, w) => s + w.price, 0);
+  const adjustWorkQty = (id: string, delta: number) => {
+    setWorkItems((prev) =>
+      prev
+        .map((w) => (w.id === id ? { ...w, qty: w.qty + delta } : w))
+        .filter((w) => w.qty > 0)
+    );
+  };
+
+  const total = workItems.reduce((s, w) => s + w.price * w.qty, 0);
+  const filteredCatalog =
+    sectionFilter === 'ALL'
+      ? WORKSHOP_CATALOG
+      : WORKSHOP_CATALOG.filter((i) => i.section === sectionFilter);
 
   return (
-    <div className="min-h-[780px] bg-[#14181F] text-slate-100 font-sans flex flex-col justify-between">
+    <div className="min-h-[820px] bg-[#11141A] text-slate-100 font-sans flex flex-col justify-between">
       <div>
-        <div
-          className="h-2 w-full"
-          style={{
-            backgroundImage: 'repeating-linear-gradient(45deg, #F59E0B 0 12px, #111827 12px 24px)',
-          }}
-        />
-        <header className="px-5 py-3.5 bg-[#1B222C] border-b border-slate-700 flex flex-wrap items-center justify-between gap-4">
-          <div>
-            <span className="font-mono text-[10px] font-bold text-[#F59E0B]">
-              AUTO PERFORMANCE WORKSHOP &amp; OEM PARTS CENTER
-            </span>
-            <div className="font-bold text-xl tracking-tight text-white">
-              PITSTOP PRO MOTORSPORT
+        <header className="px-6 py-4 bg-[#161B24] border-b border-white/10 flex flex-wrap items-center justify-between gap-4">
+          <div className="flex items-center gap-3.5">
+            <div className="w-10 h-10 rounded-xl bg-[#F59E0B] text-slate-950 flex items-center justify-center font-bold">
+              <Wrench className="w-5 h-5" />
+            </div>
+            <div>
+              <span className="font-mono text-[10px] font-semibold uppercase tracking-wider text-[#F59E0B] block">
+                Auto Performance Workshop &amp; OEM Parts Center
+              </span>
+              <div className="font-bold text-xl tracking-tight text-white">
+                PitStop Pro Motorsport
+              </div>
             </div>
           </div>
 
-          <nav className="flex flex-wrap gap-1.5 font-mono text-xs font-bold">
+          <nav className="flex flex-wrap gap-1.5 bg-black/40 p-1.5 rounded-xl border border-white/10 text-xs font-semibold">
             <button
               type="button"
               onClick={() => setPage(1)}
-              className={`px-3.5 py-2 border transition ${
-                page === 1
-                  ? 'bg-[#F59E0B] text-black border-[#F59E0B]'
-                  : 'bg-[#14181F] text-slate-300 border-slate-700'
+              className={`px-3.5 py-2 rounded-lg transition ${
+                page === 1 ? 'bg-[#F59E0B] text-slate-950 font-bold' : 'text-slate-300 hover:text-white'
               }`}
             >
               01 · Katalog Part &amp; Paket Servis
@@ -2681,21 +3204,17 @@ export function PitStopBengkelPos({ activePage, onPageChange }: MultiPageDemoPro
             <button
               type="button"
               onClick={() => setPage(2)}
-              className={`px-3.5 py-2 border transition ${
-                page === 2
-                  ? 'bg-[#F59E0B] text-black border-[#F59E0B]'
-                  : 'bg-[#14181F] text-slate-300 border-slate-700'
+              className={`px-3.5 py-2 rounded-lg transition ${
+                page === 2 ? 'bg-[#F59E0B] text-slate-950 font-bold' : 'text-slate-300 hover:text-white'
               }`}
             >
-              02 · Kasir PKB &amp; 4-Bay Lift ({workItems.length})
+              02 · Kasir PKB &amp; Bay Lift ({workItems.reduce((s, w) => s + w.qty, 0)})
             </button>
             <button
               type="button"
               onClick={() => setPage(3)}
-              className={`px-3.5 py-2 border transition ${
-                page === 3
-                  ? 'bg-[#F59E0B] text-black border-[#F59E0B]'
-                  : 'bg-[#14181F] text-slate-300 border-slate-700'
+              className={`px-3.5 py-2 rounded-lg transition ${
+                page === 3 ? 'bg-[#F59E0B] text-slate-950 font-bold' : 'text-slate-300 hover:text-white'
               }`}
             >
               03 · Lacak Progres Mobil
@@ -2703,69 +3222,95 @@ export function PitStopBengkelPos({ activePage, onPageChange }: MultiPageDemoPro
           </nav>
         </header>
 
-        {/* HALAMAN 1: KATALOG SUKU CADANG OEM & PAKET SERVIS */}
+        {/* HALAMAN 1: SPAREPART OEM & SERVICE STOREFRONT */}
         {page === 1 && (
-          <div className="p-6 sm:p-8 space-y-6">
-            <div className="bg-[#1B222C] border border-slate-700 p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
-              <div className="lg:col-span-8 space-y-2">
-                <span className="font-mono text-xs font-bold text-[#F59E0B]">
-                  [ HALAMAN 1 · ETALASE SUKU CADANG OEM &amp; PAKET SERVIS BERKALA ]
+          <div className="p-6 sm:p-8 space-y-8">
+            <div className="rounded-3xl bg-[#181E29] border border-white/10 p-6 sm:p-8 grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+              <div className="lg:col-span-8 space-y-3">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#F59E0B]/15 text-[#F59E0B] border border-[#F59E0B]/30 text-xs font-semibold">
+                  Suku Cadang Bergaransi Resmi · Telemetri OBD-II
                 </span>
-                <h1 className="text-2xl sm:text-3xl font-extrabold text-white">
+                <h1 className="text-2xl sm:text-3xl font-extrabold text-white leading-tight">
                   Transparansi Kode Part OEM &amp; Estimasi Jam Kerja Mekanik.
                 </h1>
-                <p className="text-sm text-slate-300">
-                  Klik setiap item untuk mengecek <strong>Kompatibilitas Tipe Mobil &amp; Spesifikasi Teknis</strong>, lalu tambahkan ke Perintah Kerja Bengkel (PKB) kendaraan aktif.
+                <p className="text-sm text-slate-300 max-w-2xl leading-relaxed">
+                  Pilih paket servis berkala atau suku cadang asli untuk memeriksa kompatibilitas tipe mobil dan memasukkannya langsung ke Perintah Kerja Bengkel (PKB).
                 </p>
               </div>
-              <div className="lg:col-span-4 bg-[#14181F] border border-slate-700 p-4 space-y-2 font-mono text-xs">
-                <div className="text-[#F59E0B] font-bold">UNIT AKTIF: {bay.plate} ({bay.model})</div>
-                <div>Total Estimasi PKB: Rp {total.toLocaleString('id-ID')}</div>
+              <div className="lg:col-span-4 bg-[#11141A] rounded-2xl border border-white/10 p-5 space-y-3 text-xs">
+                <div className="font-mono text-[10px] text-[#F59E0B] font-semibold uppercase">
+                  Kendaraan Aktif di {bay.id}
+                </div>
+                <div className="font-bold text-base text-white">
+                  {bay.plate} · {bay.model}
+                </div>
+                <div className="text-slate-400">
+                  Total Estimasi PKB: Rp {total.toLocaleString('id-ID')}
+                </div>
                 <button
                   type="button"
                   onClick={() => setPage(2)}
-                  className="w-full py-2.5 bg-[#F59E0B] text-black font-bold"
+                  className="w-full py-2.5 rounded-xl bg-[#F59E0B] hover:bg-amber-400 text-slate-950 font-bold transition"
                 >
-                  BUKA LEMBAR KERJA PKB (HAL 2) →
+                  Buka Lembar Kerja PKB →
                 </button>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
               {WORKSHOP_CATALOG.map((item) => (
                 <div
                   key={item.id}
-                  className="bg-[#1B222C] border border-slate-700 flex flex-col justify-between"
+                  className="group bg-[#181E29] rounded-2xl border border-white/10 overflow-hidden flex flex-col justify-between hover:border-[#F59E0B]/50 transition"
                 >
                   <div>
-                    <div className="p-4 bg-[#0F1319] border-b border-slate-700 flex justify-between font-mono text-[11px]">
-                      <span className={item.section === 'JASA' ? 'text-[#F59E0B] font-bold' : 'text-sky-400 font-bold'}>
-                        {item.section === 'JASA' ? 'JASA MEKANIK' : 'SUKU CADANG OEM'}
+                    <div
+                      onClick={() => setPreviewPart(item)}
+                      className="relative aspect-[4/3] w-full overflow-hidden bg-slate-900 cursor-pointer"
+                    >
+                      <img
+                        src={item.image}
+                        alt={item.name}
+                        className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+                        loading="lazy"
+                      />
+                      <span
+                        className={`absolute top-3 left-3 px-2.5 py-1 rounded-full font-mono text-[10px] font-bold ${
+                          item.section === 'JASA'
+                            ? 'bg-[#F59E0B] text-slate-950'
+                            : 'bg-sky-500 text-slate-950'
+                        }`}
+                      >
+                        {item.section === 'JASA' ? 'Jasa Mekanik' : 'Suku Cadang OEM'}
                       </span>
-                      <span className="text-slate-400">{item.code}</span>
                     </div>
-                    <div className="p-5 space-y-2.5">
+
+                    <div className="p-5 space-y-2">
+                      <div className="font-mono text-[11px] text-slate-400">{item.code}</div>
                       <h2 className="font-bold text-base text-white">{item.name}</h2>
-                      <p className="text-xs text-slate-300 leading-relaxed">{item.spec}</p>
+                      <p className="text-xs text-slate-300 line-clamp-2 leading-relaxed">{item.spec}</p>
                       <div className="font-mono text-[11px] text-slate-400 pt-1">
-                        Cocok: {item.compat}
+                        Kompatibel: {item.compat}
                       </div>
                     </div>
                   </div>
-                  <div className="p-4 border-t border-slate-700 flex items-center justify-between font-mono text-xs">
-                    <span className="font-bold text-white">Rp {item.price.toLocaleString('id-ID')}</span>
-                    <div className="flex gap-1.5">
+
+                  <div className="p-5 pt-3 border-t border-white/10 flex items-center justify-between">
+                    <span className="font-mono font-bold text-sm text-white">
+                      Rp {item.price.toLocaleString('id-ID')}
+                    </span>
+                    <div className="flex gap-2">
                       <button
                         type="button"
                         onClick={() => setPreviewPart(item)}
-                        className="px-3 py-1.5 border border-slate-600 hover:border-white text-slate-200"
+                        className="px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-xs font-medium text-slate-200"
                       >
-                        Spesifikasi
+                        Detail
                       </button>
                       <button
                         type="button"
                         onClick={() => addLine(item, false)}
-                        className="px-3 py-1.5 bg-[#F59E0B] text-black font-bold"
+                        className="px-3.5 py-1.5 rounded-lg bg-[#F59E0B] hover:bg-amber-400 text-slate-950 text-xs font-bold"
                       >
                         + PKB
                       </button>
@@ -2776,39 +3321,46 @@ export function PitStopBengkelPos({ activePage, onPageChange }: MultiPageDemoPro
             </div>
 
             {previewPart && (
-              <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4">
-                <div className="bg-[#1B222C] border-2 border-[#F59E0B] max-w-lg w-full p-6 space-y-4">
-                  <div className="flex justify-between items-start border-b border-slate-700 pb-3">
-                    <div>
-                      <span className="font-mono text-xs font-bold text-[#F59E0B]">{previewPart.code}</span>
-                      <h3 className="font-bold text-xl text-white mt-1">{previewPart.name}</h3>
-                    </div>
+              <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+                <div className="bg-[#181E29] border border-white/15 rounded-3xl max-w-lg w-full overflow-hidden shadow-2xl">
+                  <div className="relative aspect-[16/9] bg-slate-900">
+                    <img
+                      src={previewPart.image}
+                      alt={previewPart.name}
+                      className="w-full h-full object-cover"
+                    />
                     <button
                       type="button"
                       onClick={() => setPreviewPart(null)}
-                      className="font-mono text-xs border border-slate-600 px-2.5 py-1"
+                      className="absolute top-4 right-4 w-9 h-9 rounded-full bg-black/70 text-white flex items-center justify-center"
                     >
-                      TUTUP ✕
+                      <X className="w-4 h-4" />
                     </button>
                   </div>
-                  <div className="space-y-3 text-xs">
-                    <p className="text-slate-200 leading-relaxed">{previewPart.spec}</p>
-                    <div className="p-3 bg-[#0F1319] border border-slate-700 font-mono space-y-1">
-                      <div className="text-[#F59E0B] font-bold">KOMPATIBILITAS KENDARAAN:</div>
-                      <div>{previewPart.compat}</div>
+                  <div className="p-6 space-y-4">
+                    <div>
+                      <span className="font-mono text-xs font-bold text-[#F59E0B]">
+                        {previewPart.code}
+                      </span>
+                      <h3 className="font-bold text-xl text-white mt-0.5">{previewPart.name}</h3>
                     </div>
-                  </div>
-                  <div className="flex justify-between items-center pt-3 border-t border-slate-700 font-mono">
-                    <span className="text-lg font-bold text-white">
-                      Rp {previewPart.price.toLocaleString('id-ID')}
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => addLine(previewPart, true)}
-                      className="px-4 py-2.5 bg-[#F59E0B] text-black text-xs font-bold"
-                    >
-                      MASUKKAN KE PKB {bay.plate} →
-                    </button>
+                    <p className="text-sm text-slate-300 leading-relaxed">{previewPart.spec}</p>
+                    <div className="p-4 rounded-2xl bg-black/40 border border-white/10 font-mono text-xs space-y-1">
+                      <div className="text-[#F59E0B] font-bold">Kompatibilitas Kendaraan:</div>
+                      <div className="text-slate-200">{previewPart.compat}</div>
+                    </div>
+                    <div className="flex justify-between items-center pt-2">
+                      <span className="font-mono text-lg font-bold text-white">
+                        Rp {previewPart.price.toLocaleString('id-ID')}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => addLine(previewPart, true)}
+                        className="px-5 py-2.5 rounded-xl bg-[#F59E0B] text-slate-950 text-xs font-bold"
+                      >
+                        Masukkan ke PKB {bay.plate} →
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -2816,130 +3368,182 @@ export function PitStopBengkelPos({ activePage, onPageChange }: MultiPageDemoPro
           </div>
         )}
 
-        {/* HALAMAN 2: KASIR PKB & 4-BAY LIFT */}
+        {/* HALAMAN 2: 3-ZONE PKB SERVICE POS & BAY SELECTOR */}
         {page === 2 && (
-          <div>
-            <div className="grid grid-cols-2 lg:grid-cols-4 border-b border-slate-700 bg-[#0F1319]">
-              {BAYS.map((b) => {
-                const active = bay.id === b.id;
-                return (
-                  <button
-                    key={b.id}
-                    type="button"
-                    onClick={() => setBay(b)}
-                    className={`p-4 text-left border-b lg:border-b-0 border-r border-slate-700 last:border-r-0 transition ${
-                      active ? 'bg-[#1F2733] ring-2 ring-inset ring-[#F59E0B]' : 'hover:bg-[#181E27]'
-                    }`}
-                  >
-                    <div className="flex justify-between font-mono text-[10px] mb-2">
-                      <span className="text-[#F59E0B] font-bold">{b.id}</span>
-                      <span className="text-slate-400">{b.state}</span>
-                    </div>
-                    <div className="inline-block bg-black border-2 border-white px-3 py-1 rounded-sm font-mono text-white text-center">
-                      <div className="text-sm font-bold tracking-widest leading-none">{b.plate}</div>
-                      <div className="text-[9px] text-slate-300 mt-0.5 tracking-widest">{b.exp}</div>
-                    </div>
-                    <div className="text-xs font-semibold text-slate-200 mt-2">{b.model}</div>
-                    <div className="font-mono text-[10px] text-slate-400">Teknisi: {b.tech}</div>
-                  </button>
-                );
-              })}
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-12">
-              <div className="lg:col-span-6 p-5 border-b lg:border-b-0 lg:border-r border-slate-700 space-y-4">
-                <h2 className="font-mono text-xs font-bold text-[#F59E0B] uppercase">
-                  Tambah Cepat Jasa &amp; Part ke PKB
-                </h2>
-                <div className="border border-slate-700 divide-y divide-slate-700 bg-[#1B222C]">
-                  {WORKSHOP_CATALOG.map((item) => (
-                    <div key={item.id} className="p-3 flex items-center justify-between gap-3 text-xs">
-                      <div>
-                        <div className="font-bold text-white">{item.name}</div>
-                        <div className="font-mono text-[11px] text-slate-400">{item.code} · {item.meta}</div>
-                      </div>
+          <div className="grid grid-cols-1 lg:grid-cols-12 min-h-[700px]">
+            {/* Zone 1: Left 4-Bay Lift Selector & Category Rail */}
+            <div className="lg:col-span-3 border-b lg:border-b-0 lg:border-r border-white/10 bg-[#141821] p-5 space-y-6">
+              <div>
+                <span className="font-mono text-[10px] uppercase tracking-wider text-slate-400 block mb-2.5">
+                  Pilih Bay Lift Aktif
+                </span>
+                <div className="space-y-2">
+                  {BAYS.map((b) => {
+                    const active = bay.id === b.id;
+                    return (
                       <button
+                        key={b.id}
                         type="button"
-                        onClick={() => addLine(item, false)}
-                        className={`px-3 py-1.5 font-mono font-bold text-[11px] text-black shrink-0 ${
-                          item.section === 'JASA' ? 'bg-[#F59E0B]' : 'bg-sky-400'
+                        onClick={() => setBay(b)}
+                        className={`w-full p-3 rounded-xl text-left border transition flex items-center gap-3 ${
+                          active
+                            ? 'bg-[#1E2636] border-[#F59E0B] shadow-sm'
+                            : 'bg-white/[0.03] border-white/10 hover:bg-white/[0.06]'
                         }`}
                       >
-                        + Rp {item.price.toLocaleString('id-ID')}
+                        <img
+                          src={b.image}
+                          alt={b.model}
+                          className="w-12 h-12 rounded-lg object-cover shrink-0"
+                        />
+                        <div className="min-w-0 flex-1">
+                          <div className="flex justify-between font-mono text-[10px]">
+                            <span className="text-[#F59E0B] font-bold">{b.id}</span>
+                            <span className="text-slate-400">{b.state}</span>
+                          </div>
+                          <div className="font-mono text-xs font-bold text-white">{b.plate}</div>
+                          <div className="text-[11px] text-slate-400 truncate">{b.model}</div>
+                        </div>
                       </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div className="pt-4 border-t border-white/10 space-y-1.5">
+                <span className="font-mono text-[10px] uppercase tracking-wider text-slate-400 block mb-2">
+                  Filter Katalog PKB
+                </span>
+                {(['ALL', 'JASA', 'PART'] as const).map((sec) => (
+                  <button
+                    key={sec}
+                    type="button"
+                    onClick={() => setSectionFilter(sec)}
+                    className={`w-full px-3.5 py-2 rounded-xl text-left text-xs font-semibold transition ${
+                      sectionFilter === sec
+                        ? 'bg-[#F59E0B] text-slate-950 font-bold'
+                        : 'bg-white/[0.03] text-slate-300 hover:text-white'
+                    }`}
+                  >
+                    {sec === 'ALL' ? 'Semua Jasa & Suku Cadang' : sec === 'JASA' ? 'Jasa Mekanik' : 'Suku Cadang OEM'}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Zone 2: Center Visual Service & Parts Grid */}
+            <div className="lg:col-span-5 p-5 sm:p-6 border-b lg:border-b-0 lg:border-r border-white/10">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                {filteredCatalog.map((item) => (
+                  <button
+                    key={item.id}
+                    type="button"
+                    onClick={() => addLine(item, false)}
+                    className="group text-left rounded-2xl bg-[#181E29] border border-white/10 hover:border-[#F59E0B] overflow-hidden transition active:scale-[0.99]"
+                  >
+                    <div className="aspect-[16/10] w-full overflow-hidden bg-slate-900">
+                      <img
+                        src={item.image}
+                        alt={item.name}
+                        className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+                        loading="lazy"
+                      />
+                    </div>
+                    <div className="p-3.5 space-y-1">
+                      <div className="font-mono text-[10px] text-[#F59E0B] font-semibold">
+                        {item.code}
+                      </div>
+                      <div className="font-bold text-xs text-white line-clamp-1">{item.name}</div>
+                      <div className="pt-1 flex items-center justify-between">
+                        <span className="font-mono text-xs font-bold text-white">
+                          Rp {item.price.toLocaleString('id-ID')}
+                        </span>
+                        <span className="text-[11px] font-bold text-[#F59E0B]">+ PKB</span>
+                      </div>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Zone 3: Right Floating PKB Work Order Cart */}
+            <div className="lg:col-span-4 bg-[#141821] p-5 sm:p-6 flex flex-col justify-between gap-6">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between border-b border-white/10 pb-3">
+                  <div>
+                    <span className="font-mono text-[10px] uppercase text-[#F59E0B] block">
+                      Perintah Kerja Bengkel (PKB)
+                    </span>
+                    <h2 className="font-bold text-base text-white">
+                      {bay.plate} · {bay.model}
+                    </h2>
+                  </div>
+                  <div className="font-mono text-xs text-slate-300">
+                    KM:{' '}
+                    <input
+                      type="text"
+                      value={odometer}
+                      onChange={(e) => setOdometer(e.target.value)}
+                      className="w-16 bg-black/40 border border-white/15 rounded px-1.5 py-0.5 text-right text-white font-bold"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2.5 max-h-[340px] overflow-y-auto">
+                  {workItems.map((w) => (
+                    <div
+                      key={w.id}
+                      className="p-3 rounded-xl bg-[#181E29] border border-white/10 flex items-center justify-between gap-3"
+                    >
+                      <img
+                        src={w.image}
+                        alt={w.label}
+                        className="w-11 h-11 rounded-lg object-cover shrink-0"
+                      />
+                      <div className="min-w-0 flex-1">
+                        <div className="font-semibold text-xs text-white truncate">{w.label}</div>
+                        <div className="font-mono text-[10px] text-slate-400">
+                          {w.section} · {w.meta}
+                        </div>
+                        <div className="font-mono text-xs font-bold text-[#F59E0B] mt-0.5">
+                          Rp {(w.price * w.qty).toLocaleString('id-ID')}
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-1 bg-black/40 p-1 rounded-lg border border-white/10">
+                        <button
+                          type="button"
+                          onClick={() => adjustWorkQty(w.id, -1)}
+                          className="w-6 h-6 rounded hover:bg-white/10 flex items-center justify-center"
+                        >
+                          <Minus className="w-3 h-3" />
+                        </button>
+                        <span className="font-mono text-xs font-bold w-5 text-center">{w.qty}</span>
+                        <button
+                          type="button"
+                          onClick={() => adjustWorkQty(w.id, 1)}
+                          className="w-6 h-6 rounded hover:bg-white/10 flex items-center justify-center"
+                        >
+                          <Plus className="w-3 h-3" />
+                        </button>
+                      </div>
                     </div>
                   ))}
                 </div>
               </div>
 
-              <div className="lg:col-span-6 p-5 bg-[#0F1319] flex flex-col justify-between gap-4">
-                <div className="bg-white text-slate-900 p-5 border-t-4 border-[#F59E0B] space-y-4">
-                  <div className="flex flex-wrap items-start justify-between gap-2 border-b border-slate-300 pb-3">
-                    <div>
-                      <div className="font-mono text-[10px] font-bold text-slate-500">
-                        FORMULIR PERINTAH KERJA BENGKEL (PKB)
-                      </div>
-                      <div className="font-bold text-lg">
-                        {bay.plate} · {bay.model}
-                      </div>
-                    </div>
-                    <div className="font-mono text-xs">
-                      <span>KM: </span>
-                      <input
-                        type="text"
-                        value={odometer}
-                        onChange={(e) => setOdometer(e.target.value)}
-                        className="w-20 border-b border-slate-400 font-bold text-right focus:outline-none"
-                      />
-                    </div>
-                  </div>
-
-                  <table className="w-full text-xs text-left border-collapse">
-                    <thead className="bg-slate-100 font-mono text-[10px] border-y border-slate-300">
-                      <tr>
-                        <th className="py-1.5 px-2">TIPE</th>
-                        <th className="py-1.5 px-2">DESKRIPSI PEKERJAAN / PART</th>
-                        <th className="py-1.5 px-2 text-right">BIAYA</th>
-                        <th className="py-1.5 px-2" />
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-200">
-                      {workItems.map((w) => (
-                        <tr key={w.id}>
-                          <td className="py-2 px-2 font-mono text-[10px] font-bold">{w.section}</td>
-                          <td className="py-2 px-2">
-                            <div className="font-semibold">{w.label}</div>
-                            <div className="font-mono text-[10px] text-slate-500">{w.meta}</div>
-                          </td>
-                          <td className="py-2 px-2 font-mono text-right">
-                            Rp {w.price.toLocaleString('id-ID')}
-                          </td>
-                          <td className="py-2 px-2 text-right">
-                            <button
-                              type="button"
-                              onClick={() => setWorkItems((p) => p.filter((x) => x.id !== w.id))}
-                              className="text-rose-600 underline font-mono text-[10px]"
-                            >
-                              X
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-
-                  <div className="border-t-2 border-slate-900 pt-3 flex justify-between items-baseline font-mono">
-                    <span className="text-xs font-bold">TOTAL ESTIMASI PKB</span>
-                    <span className="text-lg font-extrabold">Rp {total.toLocaleString('id-ID')}</span>
-                  </div>
+              <div className="space-y-4 pt-4 border-t border-white/10">
+                <div className="flex justify-between items-baseline">
+                  <span className="text-xs text-slate-400">Total Estimasi PKB</span>
+                  <span className="font-mono text-xl font-bold text-white">
+                    Rp {total.toLocaleString('id-ID')}
+                  </span>
                 </div>
-
                 <button
                   type="button"
                   onClick={() => setPage(3)}
-                  className="w-full py-3.5 bg-[#F59E0B] hover:bg-amber-400 text-black font-mono text-xs font-bold tracking-wider"
+                  className="w-full py-3.5 rounded-xl bg-[#F59E0B] hover:bg-amber-400 text-slate-950 font-bold text-xs transition"
                 >
-                  TERBITKAN PKB &amp; PANTAU PROGRES MOBIL (HAL 3) →
+                  Terbitkan PKB &amp; Pantau Progres Mobil →
                 </button>
               </div>
             </div>
@@ -2950,40 +3554,50 @@ export function PitStopBengkelPos({ activePage, onPageChange }: MultiPageDemoPro
         {page === 3 && (
           <div className="p-6 sm:p-8 space-y-6">
             <div>
-              <span className="font-mono text-xs font-bold text-[#F59E0B]">
-                [ HALAMAN 3 · PORTAL PELACAKAN PROGRES KENDARAAN PELANGGAN ]
+              <span className="font-mono text-xs font-bold text-[#F59E0B] uppercase">
+                Live Workshop Telemetry · 4-Bay Tracker
               </span>
-              <h2 className="text-2xl font-bold text-white mt-1">
-                Status Pengerjaan Real-Time per Pelat Nomor
+              <h2 className="text-2xl font-bold text-white mt-0.5">
+                Status Pengerjaan Kendaraan Real-Time per Pelat Nomor
               </h2>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               {BAYS.map((b) => (
-                <div key={b.id} className="bg-[#1B222C] border border-slate-700 p-5 space-y-4">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <div className="inline-block bg-black border border-white px-2.5 py-1 font-mono text-xs font-bold">
-                        {b.plate}
-                      </div>
-                      <div className="font-bold text-lg text-white mt-2">{b.model}</div>
-                      <div className="font-mono text-xs text-slate-400">
-                        {b.id} · Mekanik: {b.tech}
+                <div
+                  key={b.id}
+                  className="rounded-2xl bg-[#181E29] border border-white/10 p-5 space-y-4"
+                >
+                  <div className="flex items-center justify-between gap-4">
+                    <div className="flex items-center gap-3.5">
+                      <img
+                        src={b.image}
+                        alt={b.model}
+                        className="w-16 h-16 rounded-xl object-cover shrink-0"
+                      />
+                      <div>
+                        <span className="inline-block px-2.5 py-0.5 rounded bg-black border border-white/30 font-mono text-xs font-bold text-white">
+                          {b.plate}
+                        </span>
+                        <div className="font-bold text-base text-white mt-1">{b.model}</div>
+                        <div className="font-mono text-xs text-slate-400">
+                          {b.id} · Mekanik: {b.tech}
+                        </div>
                       </div>
                     </div>
-                    <span className="px-2.5 py-1 bg-[#F59E0B]/20 text-[#F59E0B] border border-[#F59E0B]/40 font-mono text-xs font-bold">
+                    <span className="px-3 py-1 rounded-full bg-[#F59E0B]/20 text-[#F59E0B] border border-[#F59E0B]/40 font-mono text-xs font-bold">
                       {b.state}
                     </span>
                   </div>
 
-                  <div className="grid grid-cols-5 gap-1 font-mono text-[10px]">
+                  <div className="grid grid-cols-5 gap-1.5 font-mono text-[10px]">
                     {['Inspeksi', 'Bongkar', 'Part OEM', 'Final QC', 'Selesai'].map((st, idx) => (
                       <div
                         key={st}
-                        className={`p-2 text-center border ${
+                        className={`py-2 px-1 rounded-lg text-center border ${
                           idx + 1 <= b.step
-                            ? 'bg-[#F59E0B] text-black border-[#F59E0B] font-bold'
-                            : 'bg-[#0F1319] text-slate-500 border-slate-800'
+                            ? 'bg-[#F59E0B] text-slate-950 border-[#F59E0B] font-bold'
+                            : 'bg-black/30 text-slate-500 border-white/5'
                         }`}
                       >
                         {idx + 1}. {st}
@@ -2997,12 +3611,12 @@ export function PitStopBengkelPos({ activePage, onPageChange }: MultiPageDemoPro
         )}
       </div>
 
-      <footer className="border-t border-slate-800 bg-[#0F1319] px-6 py-4 flex flex-wrap justify-between gap-4 font-mono text-[11px] text-slate-400">
-        <span>PITSTOP PRO WORKSHOP · GARANSI SERVIS 30 HARI / 1.000 KM</span>
-        <div className="flex gap-4 text-[#F59E0B] font-bold">
-          <button type="button" onClick={() => setPage(1)}>Hal 1: Katalog Part</button>
-          <button type="button" onClick={() => setPage(2)}>Hal 2: Kasir PKB</button>
-          <button type="button" onClick={() => setPage(3)}>Hal 3: Lacak Mobil</button>
+      <footer className="border-t border-white/10 bg-[#0D1015] px-6 py-4 flex flex-wrap justify-between gap-4 text-xs text-slate-400">
+        <span>PitStop Pro Workshop · Garansi Servis 30 Hari / 1.000 KM</span>
+        <div className="flex gap-4 text-[#F59E0B] font-semibold">
+          <button type="button" onClick={() => setPage(1)}>01 Katalog Part</button>
+          <button type="button" onClick={() => setPage(2)}>02 Kasir PKB</button>
+          <button type="button" onClick={() => setPage(3)}>03 Lacak Mobil</button>
         </div>
       </footer>
     </div>

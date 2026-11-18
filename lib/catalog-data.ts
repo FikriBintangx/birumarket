@@ -67,8 +67,8 @@ export function buildWhatsAppOrderUrl(
   const packageLabel = product.is_portfolio
     ? 'Diskusi Proyek Custom Serupa'
     : licenseType === 'turnkey'
-      ? 'Full Source Code (3 Halaman Utuh) + Turnkey Deploy & Domain Setup'
-      : 'Full Source Code (3 Halaman Utuh) + Database Schema';
+      ? 'Full Source Code (Arsitektur 3 Halaman) + Turnkey Deploy & Domain Setup'
+      : 'Full Source Code (Arsitektur 3 Halaman) + Database Schema';
 
   const priceText = product.is_portfolio
     ? 'Custom Quote'
@@ -96,11 +96,12 @@ export const DEFAULT_PRODUCTS: ProductItem[] = [
   {
     id: 'pos-kuro',
     sku: 'BM-POS-01',
-    title: 'KuroBento · Website E-Menu Ramen, Shokuken POS & Dapur KDS (3 Halaman)',
+    title: 'KuroBento · Izakaya Storefront, Shokuken POS & Kitchen KDS',
     slug: 'pos-kuro',
-    tagline: 'Website restoran Jepang 3 halaman utuh: Katalog & Preview Menu Ramen, Terminal Kasir Shokuken, serta Monitor Dapur KDS',
+    tagline:
+      'Sistem operasional ramen bar & izakaya terpadu: etalase E-Menu visual, register kasir Shokuken per booth, dan monitor Kitchen Display System real-time.',
     category: 'POS DASHBOARD',
-    tech_stack: ['Next.js 16', 'TypeScript', 'Tailwind CSS', 'Supabase', '3-Page Full Web'],
+    tech_stack: ['Next.js 16', 'TypeScript', 'Tailwind CSS', 'Supabase', 'Touch POS UI'],
     price: 950000,
     is_portfolio: false,
     thumbnail_url: '/products/shot-pos-kuro.png',
@@ -108,35 +109,38 @@ export const DEFAULT_PRODUCTS: ProductItem[] = [
     demo_url: '/demo/pos-kuro',
     github_url: 'https://github.com/FikriBintangx/birumarket',
     description:
-      'Website operasional restoran Jepang 3 halaman lengkap. Halaman 1 menampilkan E-Menu storefront visual dengan foto mangkok ramen, komposisi kaldu, dan modal preview detail menu. Halaman 2 adalah terminal kasir Shokuken dengan kustomisasi tekstur mie & struk kertas Jepang. Halaman 3 adalah monitor Kitchen Display System (KDS) real-time dan kontrol stok bahan dapur.',
+      'Platform web operasional untuk restoran ramen dan izakaya modern yang menyatukan tiga alur layanan dalam satu state sinkron. Halaman pertama menyajikan katalog visual hidangan dengan rincian kaldu, profil bahan, dan pratinjau komposisi mangkok. Halaman kedua berfungsi sebagai terminal kasir sentuh bergaya Shokuken dengan pemetaan booth meja dan kustomisasi tekstur mie. Halaman ketiga menampilkan antrean tiket masak dapur (KDS) beserta pemantauan porsi bahan baku.',
     problem:
-      'Restoran ramen membutuhkan website terpadu yang menggabungkan katalog visual untuk pelanggan melihat detail komposisi menu, mesin kasir cepat per meja, dan layar antrean masak untuk koki.',
+      'Operasional restoran Jepang kerap terfragmentasi antara buku menu statis, mesin kasir yang lambat menangani kustomisasi mie/kuah, serta komunikasi tiket dapur yang rawan selisih.',
     solution:
-      'Arsitektur web 3 halaman terhubung: pelanggan atau staf dapat melakukan preview produk di Katalog E-Menu, meneruskan pesanan ke Booth POS, lalu memantau tiket masak di layar KDS.',
+      'Arsitektur web tiga halaman yang menghubungkan pilihan menu pelanggan langsung ke keranjang meja kasir dan meneruskan instruksi masak presisi ke layar koki tanpa jeda.',
     features: [
-      'Halaman 1 (Storefront & Preview Produk): Katalog foto ramen & yakitori dengan modal anatomi komposisi kaldu, topping, kalori, dan tombol pesan langsung',
-      'Halaman 2 (Terminal Kasir Shokuken): Peta 8 booth meja, kustomisasi tekstur mie (Katame/Futsu/Yawame), dan struk perforasi berstempel Hanko',
-      'Halaman 3 (Monitor KDS & Gudang Dapur): Antrean tiket masak real-time (Cooking, Plating, Ready) serta pantauan liter kaldu & porsi chashu',
-      'State sinkron lintas halaman: item yang dipilih dari Katalog Produk otomatis masuk ke struk POS dan diteruskan ke KDS Dapur',
+      'Halaman 1 (Izakaya E-Menu Storefront): Katalog visual ramen & yakitori dengan modal anatomi kaldu 18 jam, rincian topping, informasi alergen, dan aksi kirim ke meja',
+      'Halaman 2 (Shokuken Touch Register): Denah 8 booth meja, matriks modifier tekstur mie (Katame, Futsu, Yawame), takaran tare/garlic oil, dan struk kertas Jepang',
+      'Halaman 3 (Live Kitchen KDS & Stock): Papan antrean masak per tiket (Cooking, Plating, Ready) dengan pelacakan stok liter kaldu dan porsi chashu harian',
+      'Sinkronisasi state lintas halaman: pesanan yang dirakit dari etalase menu langsung terisi di terminal POS dan diteruskan ke monitor dapur',
     ],
     pages: [
       {
         pageNumber: 1,
         label: 'Halaman 1 · Storefront',
-        title: 'E-Menu Visual & Preview Komposisi Ramen',
-        summary: 'Etalase menu restoran dengan foto hidangan, filter kategori, modal detail komposisi kuah 18 jam, dan tombol pilih ke meja.',
+        title: 'E-Menu Visual & Anatomi Komposisi Ramen',
+        summary:
+          'Etalase hidangan izakaya dengan fotografi menu, filter kategori, modal komposisi kuah, dan pemilihan langsung ke nomor booth.',
       },
       {
         pageNumber: 2,
         label: 'Halaman 2 · Kasir POS',
-        title: 'Terminal Shokuken & Struk Kertas Jepang',
-        summary: 'Mesin kasir booth 01-08 dengan pengatur tingkat kematangan mie, takaran garlic oil, pajak layanan, dan cetak slip.',
+        title: 'Terminal Shokuken & Kustomisasi Tekstur Mie',
+        summary:
+          'Register kasir sentuh untuk booth 01-08 dengan pengatur kematangan mie, tambahan topping, kalkulasi pajak layanan, dan cetak struk.',
       },
       {
         pageNumber: 3,
         label: 'Halaman 3 · Dapur KDS',
-        title: 'Kitchen Display System & Stok Bahan Baku',
-        summary: 'Layar monitor dapur untuk memajukan status masak tiap meja serta melacak sisa stok kaldu, mie, dan chashu.',
+        title: 'Kitchen Display System & Kontrol Bahan Baku',
+        summary:
+          'Layar monitor dapur untuk memperbarui tahapan masak tiap meja sekaligus memantau sisa porsi kaldu, mie segar, dan chashu.',
       },
     ],
     status: 'ACTIVE',
@@ -144,11 +148,12 @@ export const DEFAULT_PRODUCTS: ProductItem[] = [
   {
     id: 'pos-brew',
     sku: 'BM-POS-02',
-    title: 'BrewLab · Website Roastery Storefront, Barista POS & Pickup Board (3 Halaman)',
+    title: 'BrewLab · Roastery Storefront, Speed-Bar POS & Pickup Board',
     slug: 'pos-brew',
-    tagline: 'Website specialty coffee shop 3 halaman utuh: Katalog Minuman & Biji Kopi, Kasir Barista, serta Layar Pickup & Laporan',
+    tagline:
+      'Ekosistem web specialty coffee & micro-roastery: katalog minuman & biji single origin, kasir barista berkecepatan tinggi, serta papan antrean pickup.',
     category: 'POS DASHBOARD',
-    tech_stack: ['Next.js 16', 'React 19', 'Tailwind CSS', 'Roastery Storefront', '3-Page Full Web'],
+    tech_stack: ['Next.js 16', 'React 19', 'Tailwind CSS', 'Roastery Commerce', 'Speed-Bar POS'],
     price: 850000,
     is_portfolio: false,
     thumbnail_url: '/products/shot-pos-brew.png',
@@ -156,35 +161,38 @@ export const DEFAULT_PRODUCTS: ProductItem[] = [
     demo_url: '/demo/pos-brew',
     github_url: 'https://github.com/FikriBintangx/birumarket',
     description:
-      'Website coffee shop & micro-roastery 3 halaman bernuansa Warm Oat & Espresso. Halaman 1 menyajikan etalase visual minuman signature, manual brew V60, pastry, dan kemasan biji kopi Single Origin lengkap dengan preview profil sangrai & resep seduh. Halaman 2 adalah Speed-Bar POS barista dengan matriks modifier susu/gula/shot. Halaman 3 memuat layar antrean pickup pelanggan dan laporan penjualan harian.',
+      'Aplikasi web terpadu untuk kedai kopi spesialti dan micro-roastery dengan palet visual hangat dan tipografi bersih. Halaman pertama menampilkan etalase minuman espresso, manual brew V60, artisan pastry, dan kemasan biji kopi 250g lengkap dengan catatan sangrai serta parameter ekstraksi. Halaman kedua adalah terminal Speed-Bar POS untuk barista meracik modifier susu, es, dan shot dalam hitungan detik. Halaman ketiga menyediakan layar panggilan cup pelanggan dan ringkasan penjualan harian.',
     problem:
-      'Kedai kopi modern memerlukan etalase digital untuk memamerkan koleksi minuman dan biji kopi roastery sekaligus kasir cepat yang terhubung ke layar panggilan nama cup pelanggan.',
+      'Kedai kopi dengan antrean padat membutuhkan kasir yang sangat responsif terhadap modifier minuman, sekaligus etalase digital untuk mengedukasi pelanggan mengenai profil biji kopi roastery.',
     solution:
-      'Website 3 halaman terintegrasi mulai dari katalog preview produk kopi, register kasir barista dengan modifier instan, hingga layar antrean Bar Pickup.',
+      'Sistem web tiga halaman yang menggabungkan lookbook produk kopi & parameter seduh, register kasir sentuh ergonomis, serta layar status pesanan bar secara real-time.',
     features: [
-      'Halaman 1 (Roastery Storefront & Preview): Katalog visual minuman & biji kopi 250g dengan modal profil rasa (Acidity, Body, Sweetness) dan parameter ekstraksi',
-      'Halaman 2 (Barista Speed-Bar POS): Register kasir sentuh dengan pilihan susu Oat/Soy/Dairy, kadar gula, shot espresso, dan input nama di cup',
-      'Halaman 3 (Layar Pickup & Analitik): Papan status pesanan (Sedang Diseduh vs Siap Diambil di Bar) beserta ringkasan omzet & konsumsi gramasi kopi',
-      'Navigasi website utuh lengkap dengan header roastery, indikator keranjang aktif, dan footer jam operasional kedai',
+      'Halaman 1 (Roastery Storefront & Tasting Notes): Katalog minuman signature dan biji Single Origin dengan modal indikator Acidity, Body, Sweetness, serta panduan rasio seduh',
+      'Halaman 2 (Barista Speed-Bar Register): Antarmuka kasir 3-zona dengan modifier susu Oat/Soy/Dairy, kadar gula, extra shot espresso, dan label nama pada cup',
+      'Halaman 3 (Bar Pickup Monitor & Daily Digest): Layar antrean status pesanan (In-Bar Brewing vs Ready for Pickup) disertai metrik omzet dan pemakaian gramasi kopi',
+      'Alur transaksi mulus dari eksplorasi katalog biji/minuman ke antrean produksi barista dengan kalkulasi QRIS instan',
     ],
     pages: [
       {
         pageNumber: 1,
         label: 'Halaman 1 · Katalog Kopi',
-        title: 'Storefront Minuman, Pastry & Single Origin Beans',
-        summary: 'Galeri produk kopi dan kemasan house blend dengan modal resep ekstraksi espresso/V60 serta tasting notes.',
+        title: 'Roastery Storefront & Profil Ekstraksi Single Origin',
+        summary:
+          'Galeri minuman kopi, pastry, dan kemasan biji sangrai dengan modal catatan rasa serta resep seduh V60/espresso.',
       },
       {
         pageNumber: 2,
         label: 'Halaman 2 · Barista POS',
         title: 'Speed-Bar Touch Register & Cup Callout',
-        summary: 'Kasir cepat untuk mengatur modifier susu, gula, es, extra shot, nama gelas, dan pembayaran QRIS.',
+        summary:
+          'Kasir sentuh cepat untuk memilih modifier susu, tingkat kemanisan, jumlah shot, nama pelanggan di cup, dan penyelesaian bayar.',
       },
       {
         pageNumber: 3,
         label: 'Halaman 3 · Pickup & Laporan',
-        title: 'Layar Antrean Barista & Rekap Penjualan Harian',
-        summary: 'Monitor panggilan cup pelanggan yang sudah selesai diseduh serta statistik penjualan harian per kategori.',
+        title: 'Layar Panggilan Bar & Analitik Penjualan Harian',
+        summary:
+          'Monitor status minuman yang sedang diseduh maupun siap diambil pelanggan, lengkap dengan rekapitulasi transaksi harian.',
       },
     ],
     status: 'ACTIVE',
@@ -192,11 +200,12 @@ export const DEFAULT_PRODUCTS: ProductItem[] = [
   {
     id: 'pos-medika',
     sku: 'BM-POS-03',
-    title: 'ApotekMedika · Website Katalog Obat, Kasir SIMRS FEFO & Gudang Batch (3 Halaman)',
+    title: 'ApotekMedika · Clinical Pharmacy Storefront, FEFO POS & Batch Vault',
     slug: 'pos-medika',
-    tagline: 'Website apotek & telefarmasi 3 halaman utuh: Katalog Obat/Alkes, Kasir Dispensing FEFO + Etiket, serta Kontrol Batch Expired',
+    tagline:
+      'Sistem informasi apotek & farmasi klinis: direktori monografi obat BPOM, terminal kasir dispensing FEFO dengan generator etiket, dan audit batch kadaluarsa.',
     category: 'POS DASHBOARD',
-    tech_stack: ['Next.js 16', 'TypeScript', 'Tailwind CSS', 'PostgreSQL', '3-Page Full Web'],
+    tech_stack: ['Next.js 16', 'TypeScript', 'Tailwind CSS', 'PostgreSQL', 'Clinical POS'],
     price: 1250000,
     is_portfolio: false,
     thumbnail_url: '/products/shot-pos-medika.png',
@@ -204,35 +213,38 @@ export const DEFAULT_PRODUCTS: ProductItem[] = [
     demo_url: '/demo/pos-medika',
     github_url: 'https://github.com/FikriBintangx/birumarket',
     description:
-      'Website sistem informasi apotek dan klinik farmasi 3 halaman lengkap. Halaman 1 menampilkan katalog visual obat, vitamin, dan alat kesehatan beserta modal monografi obat (indikasi, zat aktif, dosis, nomor BPOM, & golongan obat). Halaman 2 adalah terminal kasir SIMRS FEFO dengan generator stiker Etiket Obat biru/putih. Halaman 3 adalah dashboard inventaris batch kadaluarsa dan buku defekta.',
+      'Platform web operasional apotek modern dan klinik farmasi yang dirancang dengan presisi informasi medis. Halaman pertama menyajikan katalog obat, suplemen, dan alat kesehatan dengan modal monografi lengkap (komposisi zat aktif, indikasi, kontraindikasi, dosis, nomor izin edar BPOM, dan klasifikasi golongan). Halaman kedua adalah terminal kasir SIMRS yang mengurutkan stok secara First-Expired-First-Out (FEFO) serta mencetak stiker etiket aturan pakai. Halaman ketiga memfasilitasi pengawasan tanggal kadaluarsa per nomor batch dan buku defekta.',
     problem:
-      'Apotek membutuhkan katalog produk kesehatan yang informatif bagi pasien/asisten apoteker sekaligus sistem kasir yang menjamin pengeluaran stok mengikuti aturan First-Expired-First-Out (FEFO).',
+      'Apotek memerlukan sistem yang tidak hanya akurat dalam pencatatan harga dan tuslah resep, tetapi juga disiplin dalam mengeluarkan stok batch yang lebih cepat kadaluarsa (FEFO) serta mencetak etiket dosis yang jelas.',
     solution:
-      'Website farmasi 3 halaman dengan preview detail monografi tiap produk obat, kasir resep berfitur cetak etiket dosis, dan pengawasan stok per nomor batch.',
+      'Arsitektur farmasi tiga halaman yang menyatukan referensi monografi produk kesehatan, meja kasir penebusan resep berfitur etiket otomatis, dan radar pengawasan inventaris batch.',
     features: [
-      'Halaman 1 (Katalog Obat & Alkes): Kartu produk visual dengan penanda golongan (Obat Keras/Bebas/Alkes), harga HET, dan modal detail indikasi & dosis',
-      'Halaman 2 (Kasir SIMRS & Etiket Obat): Tabel dispensing FEFO, toggle jasa racik apoteker, dan pratinjau stiker Etiket Obat standar Indonesia',
-      'Halaman 3 (Gudang Batch & Buku Defekta): Pelacakan tanggal kadaluarsa per batch, peringatan stok menipis, dan log penyerahan resep harian',
-      'Alur terintegrasi dari pemilihan produk di katalog langsung masuk ke daftar penebusan resep di kasir',
+      'Halaman 1 (Clinical Catalog & Drug Monograph): Katalog sediaan farmasi dengan penanda golongan obat, harga eceran tertinggi (HET), dan modal detail farmakologi',
+      'Halaman 2 (FEFO Dispensing POS & Etiket): Register kasir resep & non-resep dengan alokasi batch terdekat otomatis, biaya jasa racik apoteker, dan pratinjau stiker etiket obat',
+      'Halaman 3 (Batch Expiry Vault & Defekta): Dashboard audit nomor batch, indikator peringatan mendekati kadaluarsa, serta daftar prioritas pemesanan ulang (defekta)',
+      'Integrasi penuh dari pencarian obat di katalog klinis langsung menuju keranjang dispensing dan pengurangan stok batch terkait',
     ],
     pages: [
       {
         pageNumber: 1,
         label: 'Halaman 1 · Katalog Obat',
-        title: 'Etalase Obat, Suplemen & Alat Kesehatan',
-        summary: 'Katalog visual sediaan farmasi dengan filter golongan obat serta modal informasi zat aktif, dosis, dan nomor izin edar BPOM.',
+        title: 'Direktori Sediaan Farmasi, Alkes & Monografi BPOM',
+        summary:
+          'Etalase obat dan alat kesehatan dengan filter golongan medis serta modal rincian zat aktif, dosis anjuran, dan nomor registrasi.',
       },
       {
         pageNumber: 2,
         label: 'Halaman 2 · Kasir FEFO',
-        title: 'Terminal Dispensing Resep & Generator Etiket',
-        summary: 'Kasir apotek berdensitas tinggi dengan prioritas batch kadaluarsa terdekat dan pencetak label aturan minum.',
+        title: 'Terminal Dispensing Resep & Generator Etiket Dosis',
+        summary:
+          'Kasir farmasi dengan pengurutan batch kadaluarsa terdekat, kalkulasi tuslah/embalase racikan, dan pencetakan label aturan minum.',
       },
       {
         pageNumber: 3,
         label: 'Halaman 3 · Gudang Batch',
-        title: 'Monitor Kadaluarsa Batch & Buku Defekta',
-        summary: 'Halaman audit stok gudang farmasi, status keaktifan batch, daftar restock prioritas, dan arsip resep.',
+        title: 'Kontrol Kadaluarsa Batch & Buku Defekta Apotek',
+        summary:
+          'Manajemen inventaris gudang farmasi untuk memantau masa berlaku tiap lot produksi dan menyusun daftar restock distributor.',
       },
     ],
     status: 'ACTIVE',
@@ -240,11 +252,12 @@ export const DEFAULT_PRODUCTS: ProductItem[] = [
   {
     id: 'pos-atelier',
     sku: 'BM-POS-04',
-    title: 'AtelierLuxe · Website Fashion Lookbook, VIP Boutique POS & Client CRM (3 Halaman)',
+    title: 'AtelierLuxe · Editorial Lookbook, Clienteling POS & Boutique CRM',
     slug: 'pos-atelier',
-    tagline: 'Website butik fashion & footwear 3 halaman utuh: Lookbook Koleksi & Preview Material, Kasir VIP, serta CRM Stok Antar Cabang',
+    tagline:
+      'Platform flagship retail & butik fashion: lookbook koleksi dengan spesifikasi material, terminal kasir VIP clienteling, dan matriks stok lintas butik.',
     category: 'POS DASHBOARD',
-    tech_stack: ['Next.js 16', 'TypeScript', 'Tailwind CSS', 'Luxury Storefront', '3-Page Full Web'],
+    tech_stack: ['Next.js 16', 'TypeScript', 'Tailwind CSS', 'Luxury Retail UI', 'Multi-Store CRM'],
     price: 1100000,
     is_portfolio: false,
     thumbnail_url: '/products/shot-pos-atelier.png',
@@ -252,35 +265,38 @@ export const DEFAULT_PRODUCTS: ProductItem[] = [
     demo_url: '/demo/pos-atelier',
     github_url: 'https://github.com/FikriBintangx/birumarket',
     description:
-      'Website e-commerce dan flagship boutique 3 halaman bertema Editorial Monochrome & Champagne Gold. Halaman 1 menyajikan Lookbook koleksi pakaian, tas kulit, dan sepatu dengan foto produk, panduan ukuran (Size Matrix), serta modal detail material. Halaman 2 adalah terminal Clienteling POS dengan kalkulasi privilege member VIP. Halaman 3 memuat buku database klien VIP dan matriks ketersediaan stok lintas butik.',
+      'Sistem web retail untuk rumah mode, label pakaian independen, dan butik barang kulit dengan pendekatan visual editorial. Halaman pertama menampilkan lookbook musiman berformat galeri, lengkap dengan modal spesifikasi konstruksi bahan, instruksi perawatan, dan matriks ukuran. Halaman kedua adalah terminal Clienteling POS yang mendukung pemilihan ukuran per artikel, kalkulasi privilese member VIP, dan opsi kemasan eksklusif. Halaman ketiga memuat direktori klien pribadi (Private Client Book) serta ketersediaan ukuran di berbagai lokasi cabang.',
     problem:
-      'Brand fashion premium membutuhkan pengalaman website lookbook yang berkelas untuk menampilkan detail potongan produk, bukan sekadar layar kasir tabel biasa.',
+      'Butik fashion kelas atas membutuhkan antarmuka kasir dan katalog yang selaras dengan estetika brand di ruang pamer, sekaligus mampu melacak ukuran produk antar cabang dan histori belanja klien VIP.',
     solution:
-      'Website butik 3 halaman yang memadukan galeri produk editorial dengan preview ukuran/material, kasir VIP clienteling, serta manajemen stok cabang.',
+      'Pengalaman web tiga halaman yang menggabungkan galeri lookbook beresolusi tinggi, terminal transaksi clienteling yang elegan, dan sistem CRM inventaris multi-butik.',
     features: [
-      'Halaman 1 (Editorial Lookbook & Preview Produk): Galeri koleksi AW26 dengan foto visual, spesifikasi bahan (Cashmere, Box Calfskin, Silk), dan panduan ukuran',
-      'Halaman 2 (Boutique Clienteling POS): Pemilihan ukuran S/M/L/EU, diskon tier VIP (Silver 5%, Gold 10%, Black 15%), dan opsi luxury gift packaging',
-      'Halaman 3 (VIP Client Dossier & Multi-Boutique Stock): Direktori pelanggan prioritas beserta matriks stok real-time di cabang Senayan, Plaza Indonesia, dan Bali',
-      'Desain tipografi serif editorial dengan kontras tinggi tanpa elemen generik',
+      'Halaman 1 (Seasonal Lookbook & Material Spec): Galeri koleksi pakaian, tas kulit, dan alas kaki dengan modal komposisi kain, detail pengerjaan, dan panduan ukuran (cm/EU)',
+      'Halaman 2 (Boutique Clienteling Register): Kasir butik dengan pemilih ukuran per SKU, diskon otomatis berdasarkan tier keanggotaan (Silver, Gold, Black), dan catatan gift wrapping',
+      'Halaman 3 (Private Client Dossier & Stock Matrix): Buku profil kolektor/pelanggan prioritas beserta tabel ketersediaan stok real-time di cabang Senayan, Plaza Indonesia, dan Seminyak',
+      'Tipografi editorial dan tata letak bersih yang dirancang untuk penggunaan di tablet pramuniaga maupun layar kasir flagship store',
     ],
     pages: [
       {
         pageNumber: 1,
         label: 'Halaman 1 · Lookbook',
-        title: 'Editorial Collection & Garment Detail Preview',
-        summary: 'Etalase fashion dan leather goods dengan foto produk, detail jahitan/material, tabel ukuran cm, dan cek stok cabang.',
+        title: 'Editorial Collection & Spesifikasi Material Garment',
+        summary:
+          'Galeri koleksi fashion dan leather goods dengan fotografi produk, rincian tekstil, tabel ukuran presisi, dan status ketersediaan.',
       },
       {
         pageNumber: 2,
         label: 'Halaman 2 · Boutique POS',
-        title: 'Clienteling Register & VIP Tier Privilege',
-        summary: 'Kasir butik dengan selector ukuran per artikel, potongan harga member VIP otomatis, dan catatan gift box.',
+        title: 'Clienteling Register & Privilese Member VIP',
+        summary:
+          'Terminal kasir butik untuk memilih ukuran artikel, menerapkan diskon tier klien prioritas, dan mencetak tanda terima pembelian.',
       },
       {
         pageNumber: 3,
         label: 'Halaman 3 · VIP & Cabang',
-        title: 'Private Client Book & Multi-Store Stock Matrix',
-        summary: 'Manajemen profil pelanggan VIP, histori transaksi, dan transfer stok ukuran antar lokasi flagship store.',
+        title: 'Private Client Book & Matriks Stok Lintas Butik',
+        summary:
+          'Direktori preferensi pelanggan VIP dan pemantauan alokasi ukuran di seluruh jaringan toko fisik.',
       },
     ],
     status: 'ACTIVE',
@@ -288,11 +304,12 @@ export const DEFAULT_PRODUCTS: ProductItem[] = [
   {
     id: 'pos-bengkel',
     sku: 'BM-POS-05',
-    title: 'PitStop Pro · Website Katalog Sparepart, Kasir PKB Bengkel & Lacak Mobil (3 Halaman)',
+    title: 'PitStop Pro · OEM Parts Storefront, Work-Order POS & Bay Tracker',
     slug: 'pos-bengkel',
-    tagline: 'Website bengkel otomotif 3 halaman utuh: Katalog Suku Cadang OEM & Paket Servis, Kasir PKB 4-Bay, serta Live Tracker Mobil',
+    tagline:
+      'Sistem manajemen bengkel modern & suku cadang: katalog komponen OEM dengan matriks kecocokan sasis, kasir PKB 4-bay, dan pelacak pengerjaan kendaraan.',
     category: 'POS DASHBOARD',
-    tech_stack: ['Next.js 16', 'TypeScript', 'Tailwind CSS', 'Supabase', '3-Page Full Web'],
+    tech_stack: ['Next.js 16', 'TypeScript', 'Tailwind CSS', 'Supabase', 'Workshop ERP'],
     price: 1350000,
     is_portfolio: false,
     thumbnail_url: '/products/shot-pos-bengkel.png',
@@ -300,35 +317,38 @@ export const DEFAULT_PRODUCTS: ProductItem[] = [
     demo_url: '/demo/pos-bengkel',
     github_url: 'https://github.com/FikriBintangx/birumarket',
     description:
-      'Website manajemen bengkel modern dan toko suku cadang 3 halaman utuh. Halaman 1 menampilkan katalog visual suku cadang OEM (oli sintetik, kampas rem keramik, filter, busi iridium) dan paket tune-up lengkap dengan modal kecocokan tipe mobil. Halaman 2 adalah terminal kasir Perintah Kerja Bengkel (PKB) dengan pantauan 4 hydraulic lift. Halaman 3 adalah portal pelacakan progres pengerjaan mobil berdasarkan pelat nomor.',
+      'Platform web operasional untuk bengkel perawatan mobil modern dan distributor suku cadang resmi. Halaman pertama menampilkan etalase komponen OEM (oli sintetik, sistem pengereman keramik, filter udara, busi iridium) dan paket servis berkala dengan modal kompatibilitas tipe sasis/mesin. Halaman kedua merupakan terminal Perintah Kerja Bengkel (PKB) yang mengelola 4 stall hydraulic lift aktif serta memisahkan rincian biaya jasa mekanik dari harga komponen. Halaman ketiga adalah layar pelacakan progres servis berbasis pelat nomor untuk ruang tunggu pelanggan.',
     problem:
-      'Pelanggan bengkel ingin melihat transparansi harga suku cadang asli (OEM) beserta rincian paket servis di awal, serta memantau kapan mobil mereka selesai dikerjakan.',
+      'Pemilik kendaraan membutuhkan transparansi nomor part OEM, estimasi biaya servis di muka, dan kepastian waktu pengerjaan tanpa harus bolak-balik bertanya ke service advisor.',
     solution:
-      'Website bengkel 3 halaman yang menyatukan katalog preview sparepart & paket servis, kasir SPK/PKB 4-stall lift, dan layar pelacak progres pengerjaan kendaraan.',
+      'Website operasional tiga halaman yang mengintegrasikan katalog suku cadang terverifikasi, register kasir Work-Order (PKB) per stall lift, dan telemetri progres servis kendaraan.',
     features: [
-      'Halaman 1 (Katalog Sparepart OEM & Paket Servis): Kartu visual produk oli, rem, filter, dan paket servis dengan nomor part OEM dan modal kompatibilitas mobil',
-      'Halaman 2 (Kasir PKB & 4-Bay Lift Board): Papan pelat nomor 4 stall lift aktif, pemisahan tabel Jasa Mekanik vs Suku Cadang, dan cetak dokumen PKB',
-      'Halaman 3 (Live Vehicle Tracker & Buku Servis): Pelacakan 5 tahap pengerjaan mobil (Inspeksi, Lift Up, Pasang Part, Final QC, Selesai) dan riwayat kilometer',
-      'Sinkronisasi langsung dari pemilihan sparepart di katalog ke dalam dokumen kerja kendaraan aktif',
+      'Halaman 1 (OEM Parts & Service Catalog): Kartu produk suku cadang dan paket tune-up dengan kode part pabrikan, spesifikasi teknis, dan modal daftar mobil yang kompatibel',
+      'Halaman 2 (PKB Work-Order & 4-Bay Register): Manajemen 4 bay lift aktif, penggabungan item suku cadang dan tarif jasa teknisi, serta penerbitan lembar Perintah Kerja Bengkel',
+      'Halaman 3 (Live Vehicle Bay Tracker): Pemantauan 5 tahap pengerjaan mobil (Inspeksi Awal, Lift Up, Penggantian Part, Final QC, Siap Serah Terima) beserta catatan riwayat kilometer',
+      'Alur kerja terhubung: komponen yang dipilih dari katalog langsung masuk ke dokumen PKB kendaraan yang sedang ditangani di bay aktif',
     ],
     pages: [
       {
         pageNumber: 1,
         label: 'Halaman 1 · Katalog Part',
-        title: 'Etalase Suku Cadang OEM & Paket Tune-Up',
-        summary: 'Katalog produk otomotif lengkap dengan foto komponen, kode part pabrikan, daftar mobil yang kompatibel, dan estimasi durasi.',
+        title: 'Etalase Suku Cadang OEM & Paket Servis Berkala',
+        summary:
+          'Katalog komponen otomotif dengan foto produk, nomor seri pabrikan, daftar kompatibilitas kendaraan, dan estimasi durasi pasang.',
       },
       {
         pageNumber: 2,
         label: 'Halaman 2 · Kasir PKB',
-        title: 'Work-Order Register & 4-Bay Lift Control',
-        summary: 'Terminal kasir bengkel untuk mengelola 4 bay aktif, menggabungkan biaya jasa teknisi dan sparepart ke lembar PKB.',
+        title: 'Work-Order Register & Kontrol 4-Bay Lift',
+        summary:
+          'Terminal service advisor untuk mengelola antrean bay bengkel, menghitung rincian suku cadang plus jasa kerja, dan mencetak PKB.',
       },
       {
         pageNumber: 3,
         label: 'Halaman 3 · Lacak Servis',
-        title: 'Portal Progres Kendaraan & Buku Riwayat KM',
-        summary: 'Halaman pemantau tahapan pengerjaan mobil secara langsung berdasarkan pelat nomor serta catatan garansi 30 hari.',
+        title: 'Live Bay Progress Tracker & Riwayat Kilometer',
+        summary:
+          'Portal pemantau tahapan pengerjaan mobil berdasarkan pelat nomor kendaraan lengkap dengan informasi garansi servis.',
       },
     ],
     status: 'ACTIVE',
@@ -338,11 +358,12 @@ export const DEFAULT_PRODUCTS: ProductItem[] = [
   {
     id: 'app-pulseops',
     sku: 'BM-WEB-06',
-    title: 'PulseOps · Website Public Status Page, NOC Telemetry & Incident SaaS (3 Halaman)',
+    title: 'PulseOps · Public Status Page, NOC Telemetry & Incident Response',
     slug: 'app-pulseops',
-    tagline: 'Website monitoring infrastruktur 3 halaman utuh: Portal Status Publik, Konsol Ping Telemetry NOC, serta Manajemen Insiden & Webhook',
+    tagline:
+      'Platform observabilitas infrastruktur & komunikasi reliabilitas: portal status publik SLA 30-hari, konsol telemetri RTT real-time, dan manajemen postmortem insiden.',
     category: 'SAAS WEB',
-    tech_stack: ['Next.js 16', 'TypeScript', 'Tailwind CSS', 'Telemetry UI', '3-Page Full Web'],
+    tech_stack: ['Next.js 16', 'TypeScript', 'Tailwind CSS', 'SVG Telemetry', 'DevOps SaaS'],
     price: 900000,
     is_portfolio: false,
     thumbnail_url: '/products/shot-app-pulseops.png',
@@ -350,35 +371,38 @@ export const DEFAULT_PRODUCTS: ProductItem[] = [
     demo_url: '/demo/app-pulseops',
     github_url: 'https://github.com/FikriBintangx/birumarket',
     description:
-      'Website SaaS pemantau uptime dan halaman status publik 3 halaman lengkap. Halaman 1 adalah Public Status Page untuk pelanggan dengan bar uptime 30 hari per region dan modal detail arsitektur tiap node. Halaman 2 adalah konsol internal NOC dengan grafik gelombang latensi RTT dan live stream HTTP health check. Halaman 3 adalah pusat manajemen postmortem insiden dan konfigurasi webhook notifikasi.',
+      'Aplikasi web SaaS untuk pemantauan ketersediaan layanan (uptime) dan manajemen komunikasi insiden teknis. Halaman pertama berfungsi sebagai Public Status Page yang bersih bagi pelanggan untuk memeriksa kesehatan klaster API, database, payment gateway, dan CDN beserta histori SLA 30 hari. Halaman kedua adalah konsol Network Operations Center (NOC) internal dengan kurva latensi RTT berbasis SVG dan simulator health-check probe. Halaman ketiga menyediakan ruang penulisan postmortem insiden dan pengaturan routing notifikasi webhook.',
     problem:
-      'Perusahaan SaaS memerlukan halaman status publik yang meyakinkan bagi klien sekaligus dashboard teknis internal untuk menguji latensi endpoint dan mengirim peringatan gangguan.',
+      'Tim engineering memerlukan halaman status publik yang membangun kepercayaan klien saat terjadi gangguan, sekaligus dashboard diagnostik internal untuk memverifikasi latensi endpoint secara cepat.',
     solution:
-      'Website 3 halaman siap pakai yang memisahkan tampilan Public Status Page, NOC Telemetry Console, dan Incident Postmortem Manager.',
+      'Arsitektur SaaS tiga halaman yang memadukan portal status berdesain tenang di sisi publik dengan konsol telemetri presisi dan buku log insiden di sisi operasional.',
     features: [
-      'Halaman 1 (Public Status Portal): Tampilan status operasional per cluster (API, Database, Payment, CDN) dengan visualisasi uptime 30 bar dan modal detail spesifikasi node',
-      'Halaman 2 (NOC Telemetry Console): Tabel latensi real-time dengan grafik gelombang SVG, filter status HTTP, dan simulator Run Probe',
-      'Halaman 3 (Incident Postmortem & Alert Routing): Riwayat kronologi insiden, form publikasi status baru, dan pengaturan kanal webhook Slack/Telegram',
-      'Navigasi terpadu yang memudahkan tim DevOps berpindah dari halaman publik ke ruang kendali internal',
+      'Halaman 1 (Customer-Facing Status Portal): Indikator kesehatan layanan per region, bar ketersediaan 30 hari, persentase SLA, dan modal arsitektur teknis tiap node',
+      'Halaman 2 (NOC Latency & Probe Console): Visualisasi gelombang RTT (ms), pemantauan status HTTP 200/503, dan pemicu eksekusi health check interaktif',
+      'Halaman 3 (Incident Timeline & Alert Routing): Publikasi kronologi insiden (Investigating, Identified, Monitoring, Resolved) serta manajemen kanal webhook Slack/Telegram/Email',
+      'Desain kontras tinggi dengan hierarki tipografi monospasi yang memudahkan pembacaan metrik di ruang kendali maupun perangkat mobile',
     ],
     pages: [
       {
         pageNumber: 1,
         label: 'Halaman 1 · Status Publik',
-        title: 'Customer-Facing Uptime Portal & Node Specs',
-        summary: 'Halaman status layanan publik dengan grafik bar ketersediaan 30 hari, SLA wilayah, dan modal inspeksi kesehatan tiap server.',
+        title: 'Public Uptime Portal & Inspeksi Klaster Regional',
+        summary:
+          'Halaman status operasional untuk pelanggan dengan histori uptime 30 hari, metrik SLA, dan modal spesifikasi infrastruktur node.',
       },
       {
         pageNumber: 2,
         label: 'Halaman 2 · Konsol NOC',
-        title: 'Live RTT Waveforms & HTTP Health Stream',
-        summary: 'Dashboard operasi jaringan untuk memicu ping probe serentak, membaca kurva latensi ms, dan memantau log trafik.',
+        title: 'Real-Time RTT Telemetry & HTTP Probe Runner',
+        summary:
+          'Ruang kendali teknis untuk menjalankan uji ping endpoint, menganalisis grafik latensi milidetik, dan menyaring log respons.',
       },
       {
         pageNumber: 3,
         label: 'Halaman 3 · Insiden & Alert',
-        title: 'Incident Postmortem Ledger & Webhook Config',
-        summary: 'Halaman publikasi laporan gangguan (Investigating, Identified, Resolved) serta integrasi notifikasi bot.',
+        title: 'Incident Postmortem Ledger & Konfigurasi Webhook',
+        summary:
+          'Manajemen laporan gangguan berurutan waktu beserta pengaturan distribusi peringatan ke kanal komunikasi tim.',
       },
     ],
     status: 'ACTIVE',
@@ -386,11 +410,12 @@ export const DEFAULT_PRODUCTS: ProductItem[] = [
   {
     id: 'app-splitbill',
     sku: 'BM-WEB-07',
-    title: 'BagiRata · Website Katalog Struk Resto, Studio Split Bill & Settlement QRIS (3 Halaman)',
+    title: 'BagiRata · Dining Preset Catalog, Receipt Splitter & QRIS Settlement',
     slug: 'app-splitbill',
-    tagline: 'Website patungan tagihan 3 halaman utuh: Galeri Template Menu Resto, Studio Stabilo Split Bill, serta Kartu Tagihan QRIS',
+    tagline:
+      'Aplikasi web pembagi tagihan kuliner: galeri paket menu restoran populer, studio alokasi struk dengan kalkulasi pajak proporsional, dan kartu pelunasan QRIS.',
     category: 'SAAS WEB',
-    tech_stack: ['Next.js 16', 'React 19', 'Tailwind CSS', 'WhatsApp Share', '3-Page Full Web'],
+    tech_stack: ['Next.js 16', 'React 19', 'Tailwind CSS', 'WhatsApp Share', 'Consumer FinTech'],
     price: 550000,
     is_portfolio: false,
     thumbnail_url: '/products/shot-app-splitbill.png',
@@ -398,35 +423,38 @@ export const DEFAULT_PRODUCTS: ProductItem[] = [
     demo_url: '/demo/app-splitbill',
     github_url: 'https://github.com/FikriBintangx/birumarket',
     description:
-      'Website aplikasi split bill 3 halaman bergaya Neo-Brutalist & Kertas Termal. Halaman 1 menyajikan galeri paket struk restoran populer (Izakaya Dinner, Coffee Hangout, Korean Grill, Artisan Pizza) lengkap dengan preview foto menu untuk dimuat instan. Halaman 2 adalah studio interaktif penandaan item per orang dengan stabilo warna dan kalkulasi PPN 11% + Service 5%. Halaman 3 menampilkan kartu tagihan per peserta lengkap dengan status lunas/belum dan tombol salin ke WhatsApp.',
+      'Aplikasi web consumer fintech untuk menghitung pembagian tagihan makan bersama secara transparan dan bebas selisih. Halaman pertama menyajikan katalog preset paket restoran populer (Izakaya Dinner, Specialty Coffee Hangout, Korean BBQ, Artisan Pizzeria) lengkap dengan foto hidangan untuk simulasi instan. Halaman kedua adalah studio interaktif tempat pengguna menandai pemesan tiap item pada struk dan menghitung PPN 11% serta biaya layanan secara proporsional. Halaman ketiga menghasilkan kartu tagihan per peserta lengkap dengan pelacak status lunas dan format pesan WhatsApp siap kirim.',
     problem:
-      'Menghitung patungan makan bersama sering merepotkan saat harus memasukkan menu satu per satu dan menagih teman yang belum transfer.',
+      'Membagi tagihan restoran yang memiliki pajak dan service charge berlapis secara manual sering memakan waktu, memicu salah hitung, dan menyulitkan pelacakan siapa yang sudah mentransfer.',
     solution:
-      'Website 3 halaman dengan galeri preset menu restoran populer, studio stabilo struk interaktif, dan papan pelacakan status bayar per teman.',
+      'Alur aplikasi tiga halaman yang mengotomatiskan pemuatan item menu, pembagian pajak proporsional per individu, hingga rekapitulasi pelunasan via QRIS dan WhatsApp.',
     features: [
-      'Halaman 1 (Galeri Preset Resto & Preview Menu): Pilihan paket struk tempat nongkrong populer dan katalog menu tambahan lengkap dengan foto & detail porsi',
-      'Halaman 2 (Studio Stabilo Split Bill): Kertas struk termal interaktif untuk menandai pemesan tiap menu dan menghitung pajak/servis secara proporsional',
-      'Halaman 3 (Kartu Settlement & Pelacakan Lunas): Rincian nominal per orang dengan toggle status Sudah Bayar / Belum Bayar, info rekening/QRIS, dan salin teks WA',
-      'Alur 3 langkah mulus dari pilih template menu, bagi porsi di struk, hingga pantau pelunasan teman',
+      'Halaman 1 (Dining Preset & Dish Catalog): Galeri template struk tempat makan populer dan daftar menu tambahan dengan foto visual serta informasi porsi berbagi',
+      'Halaman 2 (Interactive Receipt Studio): Editor struk taktil dengan chip penanda peserta berwarna, penambahan item kustom, dan distribusi otomatis PPN 11% + Service 5%',
+      'Halaman 3 (QRIS Settlement & Payment Tracker): Kartu rincian nominal per peserta, toggle status Lunas/Belum Bayar, informasi rekening/QRIS, dan salin ringkasan tagihan ke WhatsApp',
+      'Antarmuka bersih dan ramah seluler yang dirancang untuk digunakan langsung di meja makan bersama teman atau rekan kerja',
     ],
     pages: [
       {
         pageNumber: 1,
         label: 'Halaman 1 · Galeri Menu',
-        title: 'Katalog Paket Struk Resto & Preview Hidangan',
-        summary: 'Etalase template struk restoran populer dan daftar menu shareable yang dapat langsung dimuat ke meja hitung.',
+        title: 'Katalog Preset Restoran & Pilihan Hidangan Komunal',
+        summary:
+          'Etalase paket menu tempat makan populer yang dapat langsung dimuat ke ruang hitung maupun ditambah item satuannya.',
       },
       {
         pageNumber: 2,
         label: 'Halaman 2 · Studio Struk',
-        title: 'Thermal Receipt Highlighter & Tax Calculator',
-        summary: 'Ruang hitung interaktif dengan stabilo warna per peserta, tambah baris menu baru, dan kalkulasi PPN 11% + Service 5%.',
+        title: 'Interactive Receipt Splitter & Kalkulator Pajak Proporsional',
+        summary:
+          'Meja hitung struk untuk menandai porsi tiap teman, menambah anggota baru, dan membagi pajak/servis secara akurat.',
       },
       {
         pageNumber: 3,
         label: 'Halaman 3 · Tagihan & QRIS',
-        title: 'Kartu Settlement Peserta & Tracker Pelunasan',
-        summary: 'Daftar kartu tagihan tiap teman dengan penanda Lunas/Belum Lunas serta format pesan otomatis untuk grup WhatsApp.',
+        title: 'Kartu Settlement Peserta & Generator Pesan WhatsApp',
+        summary:
+          'Papan pemantau status pembayaran tiap peserta lengkap dengan detail tujuan transfer QRIS dan tombol salin rekap grup.',
       },
     ],
     status: 'ACTIVE',
@@ -434,11 +462,12 @@ export const DEFAULT_PRODUCTS: ProductItem[] = [
   {
     id: 'app-kursus',
     sku: 'BM-WEB-08',
-    title: 'KelasKilat · Website Katalog Bootcamp, Classroom Koding & Sertifikat LMS (3 Halaman)',
+    title: 'KelasKilat · Engineering Bootcamp Storefront, Code Classroom & Credential Vault',
     slug: 'app-kursus',
-    tagline: 'Website Learning Management System 3 halaman utuh: Katalog Kelas & Preview Silabus, Ruang Belajar Koding, serta Sertifikat Kelulusan',
+    tagline:
+      'Platform Learning Management System (LMS) mandiri: katalog silabus rekayasa perangkat lunak, studio belajar split-pane interaktif, dan penerbitan sertifikat terverifikasi.',
     category: 'SAAS WEB',
-    tech_stack: ['Next.js 16', 'TypeScript', 'Tailwind CSS', 'LMS Platform', '3-Page Full Web'],
+    tech_stack: ['Next.js 16', 'TypeScript', 'Tailwind CSS', 'EdTech LMS', 'Code Workbook'],
     price: 1150000,
     is_portfolio: false,
     thumbnail_url: '/products/shot-app-kursus.png',
@@ -446,35 +475,38 @@ export const DEFAULT_PRODUCTS: ProductItem[] = [
     demo_url: '/demo/app-kursus',
     github_url: 'https://github.com/FikriBintangx/birumarket',
     description:
-      'Website platform kursus teknologi (LMS) 3 halaman utuh. Halaman 1 adalah etalase Katalog Bootcamp (Next.js Security, AI RAG Engineering, PostgreSQL Architecture, Flutter Production) lengkap dengan modal preview kurikulum, profil mentor, dan proyek akhir. Halaman 2 adalah ruang belajar interaktif (Classroom) berisi materi bacaan, cuplikan kode bernomor baris, dan checkpoint kuis. Halaman 3 adalah rapor pencapaian siswa dan generator Sertifikat Kelulusan siap cetak.',
+      'Platform web edukasi teknologi dan akademi koding independen yang merangkum seluruh perjalanan siswa dalam tiga halaman terstruktur. Halaman pertama menampilkan storefront program bootcamp (Next.js App Router Security, Production RAG Engineering, High-Concurrency PostgreSQL, Flutter Clean Architecture) dengan modal silabus per bab dan profil instruktur. Halaman kedua adalah ruang belajar split-pane yang menyandingkan materi arsitektur, blok kode produksi, dan evaluasi kuis interaktif. Halaman ketiga menampilkan transkrip capaian modul serta generator sertifikat kelulusan bernomor seri.',
     problem:
-      'Akademi koding dan kreator edukasi membutuhkan website utuh yang menampilkan halaman penjualan katalog kursus sekaligus ruang belajar dan halaman sertifikat resmi.',
+      'Kreator edukasi teknis dan penyelenggara bootcamp membutuhkan platform mandiri yang menyatukan halaman penjualan kurikulum, ruang baca kode yang nyaman, serta sistem sertifikasi tanpa potongan komisi marketplace pihak ketiga.',
     solution:
-      'Website LMS 3 halaman yang mengintegrasikan Katalog Kursus & Preview Silabus, Interactive Code Classroom, dan halaman Verifikasi Sertifikat.',
+      'Arsitektur LMS tiga halaman yang menggabungkan etalase kurikulum berkonversi tinggi, ruang belajar interaktif bebas distraksi, dan halaman kredensial kelulusan resmi.',
     features: [
-      'Halaman 1 (Katalog Bootcamp & Preview Silabus): Kartu program belajar dengan tingkat kesulitan, durasi, harga, dan modal rincian bab kurikulum',
-      'Halaman 2 (Interactive Classroom & Quiz): Pembaca modul berdampingan dengan blok kode arsitektur dan evaluasi kuis interaktif berumpan balik instan',
-      'Halaman 3 (Rapor & Generator Sertifikat): Ringkasan skor modul, input nama peserta, dan pratinjau Sertifikat Kelulusan ber-ID verifikasi',
-      'Dapat langsung digunakan untuk menjual kelas mandiri tanpa bagi hasil platform pihak ketiga',
+      'Halaman 1 (Curriculum Storefront & Syllabus Preview): Katalog jalur belajar engineering dengan indikator level, estimasi jam belajar, proyek capstone, dan modal rincian kurikulum',
+      'Halaman 2 (Split-Pane Code Classroom): Ruang baca modul teknis berdampingan dengan implementasi kode bernomor baris serta checkpoint ujian pemahaman berumpan balik langsung',
+      'Halaman 3 (Academic Transcript & Certificate Studio): Rekapitulasi skor penyelesaian modul, kustomisasi nama lulusan, dan pratinjau sertifikat digital siap cetak',
+      'Tata letak editorial bersih yang mengutamakan keterbacaan dokumentasi teknis dan cuplikan kode sumber',
     ],
     pages: [
       {
         pageNumber: 1,
         label: 'Halaman 1 · Katalog Kelas',
-        title: 'Storefront Bootcamp & Preview Kurikulum',
-        summary: 'Etalase kelas rekayasa perangkat lunak dengan filter topik, modal daftar modul lengkap, dan tombol Mulai Belajar.',
+        title: 'Bootcamp Storefront & Pratinjau Silabus Engineering',
+        summary:
+          'Etalase program kursus perangkat lunak dengan filter spesialisasi, modal daftar modul lengkap, dan pintasan masuk kelas.',
       },
       {
         pageNumber: 2,
         label: 'Halaman 2 · Ruang Belajar',
-        title: 'Split-Pane Code Workbook & Architecture Quiz',
-        summary: 'Halaman materi teknis dengan contoh implementasi kode dan checkpoint pertanyaan ujian per modul.',
+        title: 'Split-Pane Technical Workbook & Evaluasi Arsitektur',
+        summary:
+          'Lingkungan belajar interaktif yang memadukan penjelasan konsep, referensi kode produksi, dan kuis validasi materi.',
       },
       {
         pageNumber: 3,
         label: 'Halaman 3 · Sertifikat',
-        title: 'Transkrip Nilai Cohort & Sertifikat Digital',
-        summary: 'Halaman rekapitulasi kelulusan modul beserta sertifikat resmi yang dapat disesuaikan nama pesertanya.',
+        title: 'Transkrip Kompetensi & Generator Sertifikat Digital',
+        summary:
+          'Halaman rekap nilai per modul dan penerbitan sertifikat kelulusan resmi lengkap dengan kode verifikasi unik.',
       },
     ],
     status: 'ACTIVE',
@@ -482,11 +514,12 @@ export const DEFAULT_PRODUCTS: ProductItem[] = [
   {
     id: 'app-klinik',
     sku: 'BM-WEB-09',
-    title: 'AntreMed · Website Layanan Klinik, Booking Tiket Pasien & Monitor TV Poli (3 Halaman)',
+    title: 'AntreMed · Outpatient Clinic Portal, Slot Booking & Polyclinic TV Board',
     slug: 'app-klinik',
-    tagline: 'Website klinik kesehatan 3 halaman utuh: Katalog Layanan MCU & Profil Dokter, Kiosk Booking Tiket, serta Layar TV Antrean Poli',
+    tagline:
+      'Portal digital klinik pratama & poliklinik spesialis: direktori layanan medis & jadwal dokter, reservasi slot tiket ber-QR, serta layar panggil ruang tunggu.',
     category: 'E-COMMERCE',
-    tech_stack: ['Next.js 16', 'TypeScript', 'Tailwind CSS', 'Clinic Portal', '3-Page Full Web'],
+    tech_stack: ['Next.js 16', 'TypeScript', 'Tailwind CSS', 'HealthTech UI', 'Queue Display'],
     price: 800000,
     is_portfolio: false,
     thumbnail_url: '/products/shot-app-klinik.png',
@@ -494,35 +527,38 @@ export const DEFAULT_PRODUCTS: ProductItem[] = [
     demo_url: '/demo/app-klinik',
     github_url: 'https://github.com/FikriBintangx/birumarket',
     description:
-      'Website portal klinik pratama dan reservasi dokter 3 halaman bernuansa Botanical Mint & Teal. Halaman 1 menyajikan katalog paket Medical Check-Up (MCU), tindakan gigi, vaksinasi, serta profil dokter spesialis lengkap dengan modal detail prosedur & persiapan pasien. Halaman 2 adalah formulir pendaftaran mandiri untuk memilih jam praktik dan mencetak tiket antrean digital. Halaman 3 adalah layar TV monitor antrean poliklinik real-time.',
+      'Sistem web pelayanan pasien rawat jalan dan reservasi poliklinik dengan estetika medis yang tenang dan informatif. Halaman pertama menyajikan katalog paket Medical Check-Up (MCU), layanan poli gigi, anak, dan penyakit dalam beserta profil dokter spesialis, rincian tahapan tindakan, serta tarif transparan. Halaman kedua adalah modul pendaftaran mandiri untuk memilih slot jam praktik dan menerbitkan tiket antrean digital ber-QR. Halaman ketiga merupakan tampilan layar TV ruang tunggu yang menampilkan nomor panggilan aktif per ruang poliklinik.',
     problem:
-      'Klinik modern membutuhkan website profil layanan dan jadwal dokter untuk pasien di rumah, sekaligus sistem tiket pendaftaran dan layar monitor ruang tunggu.',
+      'Pasien sering kesulitan mengetahui rincian biaya pemeriksaan dan jadwal praktik dokter sebelum datang ke klinik, sementara ruang tunggu fisik kerap padat akibat belum adanya sistem tiket terjadwal.',
     solution:
-      'Website klinik 3 halaman terpadu: Katalog Paket Medis & Dokter, Kiosk Reservasi Tiket Antrean, dan Layar Monitor TV Poliklinik.',
+      'Portal kesehatan tiga halaman yang menyelaraskan informasi paket medis di rumah, pendaftaran slot kedatangan mandiri, dan papan panggil antrean poliklinik secara langsung.',
     features: [
-      'Halaman 1 (Katalog Layanan & Dokter): Etalase paket pemeriksaan kesehatan & profil dokter lengkap dengan modal rincian tindakan medis dan tarif transparan',
-      'Halaman 2 (Booking Jadwal & Tiket Pasien): Pemilihan poli, slot jam praktik tersedia, input data pasien, dan penerbitan struk tiket antrean ber-QR',
-      'Halaman 3 (Monitor TV Ruang Tunggu): Layar antrean kontras tinggi untuk menampilkan nomor panggil aktif tiap ruang poli dan tombol panggil berikutnya',
-      'Layanan atau dokter yang dipilih pada Halaman 1 langsung terisi otomatis pada form pendaftaran di Halaman 2',
+      'Halaman 1 (Medical Services & Doctor Directory): Etalase paket pemeriksaan kesehatan dan profil tenaga medis lengkap dengan modal persiapan pasien serta transparansi biaya',
+      'Halaman 2 (Appointment Slot & QR Ticket Kiosk): Formulir pemilihan poliklinik, ketersediaan jam praktik dokter, input identitas pasien, dan pencetakan slip antrean digital',
+      'Halaman 3 (Polyclinic Waiting Room TV): Layar monitor bervisibilitas tinggi yang menampilkan nomor antrean aktif tiap poli beserta kontrol pemanggilan pasien berikutnya',
+      'Penerusan konteks otomatis: layanan atau dokter yang dipilih di katalog halaman pertama langsung mengisi formulir reservasi di halaman kedua',
     ],
     pages: [
       {
         pageNumber: 1,
         label: 'Halaman 1 · Layanan & Dokter',
-        title: 'Katalog Paket Medis, Tindakan & Jadwal Dokter',
-        summary: 'Halaman depan klinik berisi daftar paket MCU, poli gigi/anak, modal prosedur pemeriksaan, dan profil tenaga medis.',
+        title: 'Katalog Paket MCU, Tindakan Poliklinik & Jadwal Dokter',
+        summary:
+          'Direktori layanan kesehatan klinik dengan rincian prosedur medis, profil dokter spesialis, dan informasi tarif resmi.',
       },
       {
         pageNumber: 2,
         label: 'Halaman 2 · Booking Tiket',
-        title: 'Reservasi Slot Praktik & Cetak Slip Antrean',
-        summary: 'Formulir pengambilan nomor antrean pasien berdasarkan jam praktik dokter dan pencetakan tiket digital.',
+        title: 'Reservasi Slot Jam Praktik & Penerbitan Tiket Antrean QR',
+        summary:
+          'Modul pendaftaran pasien untuk mengamankan jadwal konsultasi dan mengunduh slip nomor antrean poliklinik.',
       },
       {
         pageNumber: 3,
         label: 'Halaman 3 · Monitor TV Poli',
-        title: 'Layar Panggilan Antrean Poliklinik Real-Time',
-        summary: 'Tampilan layar TV rumah sakit/klinik yang memuat nomor antrean aktif per ruangan beserta riwayat tiket.',
+        title: 'Layar Panggilan Antrean Poliklinik Ruang Tunggu',
+        summary:
+          'Tampilan monitor ruang tunggu klinik yang memuat nomor panggilan aktif per ruangan serta antrean berikutnya.',
       },
     ],
     status: 'ACTIVE',
@@ -530,11 +566,12 @@ export const DEFAULT_PRODUCTS: ProductItem[] = [
   {
     id: 'app-kontrak',
     sku: 'BM-WEB-10',
-    title: 'LegalDraft ID · Website Katalog Dokumen Hukum, Studio SPK/NDA & Arsip Kontrak (3 Halaman)',
+    title: 'LegalDraft ID · IT Contract Library, Live A4 Drafting Studio & Escrow Ledger',
     slug: 'app-kontrak',
-    tagline: 'Website legal-tech 3 halaman utuh: Katalog Template Kontrak IT, Studio Generator SPK/NDA A4, serta Brankas Arsip & Termin',
+    tagline:
+      'Platform dokumen hukum bisnis teknologi: katalog template perjanjian IT standar Indonesia, studio penyusunan kontrak A4 interaktif, dan brankas pelacak termin.',
     category: 'SCRIPTS & BOTS',
-    tech_stack: ['Next.js 16', 'TypeScript', 'Tailwind CSS', 'Print CSS A4', '3-Page Full Web'],
+    tech_stack: ['Next.js 16', 'TypeScript', 'Tailwind CSS', 'Print CSS A4', 'LegalTech App'],
     price: 650000,
     is_portfolio: false,
     thumbnail_url: '/products/shot-app-kontrak.png',
@@ -542,35 +579,38 @@ export const DEFAULT_PRODUCTS: ProductItem[] = [
     demo_url: '/demo/app-kontrak',
     github_url: 'https://github.com/FikriBintangx/birumarket',
     description:
-      'Website legal-tech dan generator dokumen proyek IT 3 halaman lengkap. Halaman 1 menampilkan katalog produk template kontrak (SPK Pengembangan Software, NDA Kerahasiaan, Kontrak Maintenance Server, Perjanjian Lisensi Source Code) dengan modal preview daftar pasal. Halaman 2 adalah studio split-pane untuk mengisi nama klien, nilai proyek, dan persentase termin dengan pratinjau kertas A4 langsung. Halaman 3 adalah brankas arsip kontrak dan pemantau pembayaran termin.',
+      'Aplikasi web legal-tech yang dirancang khusus untuk software house, konsultan IT, dan studio desain digital di Indonesia. Halaman pertama menyajikan perpustakaan template perjanjian komersial (Surat Perintah Kerja Pengembangan Software, Mutual NDA, Kontrak Retainer Pemeliharaan Sistem, dan Perjanjian Lisensi HAKI Source Code) dengan modal pratinjau pasal krusial. Halaman kedua adalah studio penyusunan kontrak berformat split-pane yang menghitung nilai termin pembayaran secara otomatis di atas kanvas kertas A4 siap cetak. Halaman ketiga berfungsi sebagai brankas arsip dokumen klien dan pemantau status pencairan termin.',
     problem:
-      'Software house dan agensi digital membutuhkan katalog standar perjanjian hukum Indonesia yang rapi, mudah diedit sesuai nilai termin proyek, dan tercatat status penandatanganannya.',
+      'Agensi digital dan developer independen sering menyusun kontrak proyek secara manual dari file dokumen lama yang tidak seragam, rawan salah hitung persentase termin, dan sulit dilacak status penandatanganannya.',
     solution:
-      'Website 3 halaman yang menggabungkan Katalog Template Hukum, Live A4 Contract Studio, dan Brankas Pelacakan Termin Kontrak.',
+      'Sistem manajemen dokumen tiga halaman yang menggabungkan pustaka pasal hukum terstandar, generator naskah A4 real-time, dan buku besar pemantauan termin kontrak.',
     features: [
-      'Halaman 1 (Katalog Template Hukum IT): Kartu produk dokumen SPK, NDA, Retainer, dan Lisensi HAKI lengkap dengan modal ringkasan pasal perlindungan',
-      'Halaman 2 (Studio Editor Kontrak A4): Editor parameter klien, ruang lingkup, kalkulator otomatis nominal DP vs Pelunasan, dan tombol cetak PDF A4',
-      'Halaman 3 (Brankas Arsip & Tracker Termin): Tabel daftar kontrak yang telah diterbitkan, status tanda tangan kedua pihak, dan tombol simpan kontrak baru',
-      'Dokumen yang disusun di Studio Editor dapat langsung disimpan ke Brankas Arsip di Halaman 3',
+      'Halaman 1 (IT Legal Template Library): Katalog produk dokumen SPK, NDA, SLA Maintenance, dan Lisensi Kode Sumber dengan modal ringkasan klausul perlindungan hukum',
+      'Halaman 2 (Split-Pane A4 Contract Studio): Editor variabel pihak pertama/kedua, ruang lingkup deliverable, kalkulator otomatis nominal DP/Termin, dan pratinjau lembar A4 siap cetak PDF',
+      'Halaman 3 (Contract Vault & Milestone Ledger): Tabel direktori kontrak aktif, indikator status tanda tangan basah/digital, dan pemantauan jatuh tempo pembayaran termin',
+      'Naskah yang dirampungkan di Studio Editor dapat langsung diarsipkan ke dalam tabel brankas di halaman ketiga dalam satu klik',
     ],
     pages: [
       {
         pageNumber: 1,
         label: 'Halaman 1 · Katalog Dokumen',
-        title: 'Etalase Template SPK, NDA & Lisensi Perangkat Lunak',
-        summary: 'Katalog jenis perjanjian hukum bisnis teknologi beserta modal pratinjau pasal-pasal krusial sebelum diedit.',
+        title: 'Pustaka Template SPK, NDA & Perjanjian Lisensi IT',
+        summary:
+          'Etalase dokumen hukum bisnis teknologi dengan pratinjau struktur pasal, cakupan perlindungan HAKI, dan rekomendasi penggunaan.',
       },
       {
         pageNumber: 2,
         label: 'Halaman 2 · Studio Editor A4',
-        title: 'Split-Pane Contract Builder & Kalkulator Termin',
-        summary: 'Editor interaktif untuk menyusun pasal kontrak Bahasa Indonesia secara otomatis di atas lembar kertas A4 siap cetak.',
+        title: 'Live A4 Contract Builder & Kalkulator Termin Proyek',
+        summary:
+          'Studio interaktif untuk mengisi parameter klien dan nilai proyek dengan pratinjau naskah kontrak Bahasa Indonesia secara langsung.',
       },
       {
         pageNumber: 3,
         label: 'Halaman 3 · Arsip & Termin',
-        title: 'Brankas Dokumen Klien & Pelacak Pembayaran',
-        summary: 'Tabel manajemen kontrak aktif, status pencairan Termin I/II, serta akses cepat pencetakan ulang PDF.',
+        title: 'Brankas Dokumen Klien & Pelacak Pencairan Termin',
+        summary:
+          'Manajemen arsip perjanjian yang telah diterbitkan, status tanda tangan para pihak, dan jadwal penagihan termin.',
       },
     ],
     status: 'ACTIVE',
@@ -636,38 +676,41 @@ export function enrichProduct(raw: any): ProductItem {
     problem:
       matched?.problem ||
       raw.problem ||
-      'Bisnis membutuhkan fondasi website multi-halaman teruji agar tidak membuang waktu membangun arsitektur dasar dari nol.',
+      'Bisnis membutuhkan fondasi aplikasi web multi-halaman yang teruji agar tidak membuang waktu membangun arsitektur dasar dari nol.',
     solution:
       matched?.solution ||
       raw.solution ||
-      'Website 3 halaman siap pakai dengan katalog preview produk, aplikasi operasional utama, dan halaman manajemen.',
+      'Arsitektur web tiga halaman siap pakai yang mencakup etalase produk, ruang kerja operasional utama, dan halaman manajemen backoffice.',
     features:
       matched?.features ||
       (Array.isArray(raw.features) && raw.features.length > 0
         ? raw.features
         : [
-            'Website utuh 3 halaman (Storefront Katalog, Aplikasi Utama, & Backoffice)',
-            'Skema database dan panduan environment variable siap deploy',
-            'Desain responsif untuk desktop maupun mobile',
+            'Arsitektur web 3 halaman terpadu (Storefront Katalog, Aplikasi Utama, dan Backoffice)',
+            'Skema database PostgreSQL/SQLite dan konfigurasi environment variable siap deploy',
+            'Antarmuka responsif untuk layar kasir desktop, tablet, maupun perangkat mobile',
           ]),
     pages: matched?.pages || [
       {
         pageNumber: 1,
         label: 'Halaman 1 · Storefront',
-        title: 'Katalog & Preview Produk Visual',
-        summary: 'Halaman depan website dengan daftar produk, filter kategori, dan modal spesifikasi.',
+        title: 'Katalog & Pratinjau Spesifikasi Produk',
+        summary:
+          'Halaman depan dengan daftar produk visual, penyaring kategori, dan modal spesifikasi mendalam.',
       },
       {
         pageNumber: 2,
         label: 'Halaman 2 · Aplikasi Utama',
-        title: 'Terminal Operasional / Workspace Interaktif',
-        summary: 'Ruang kerja utama aplikasi untuk transaksi atau pemrosesan data.',
+        title: 'Terminal Operasional & Workspace Interaktif',
+        summary:
+          'Ruang kerja utama aplikasi untuk transaksi kasir, kalkulasi data, atau penyusunan dokumen.',
       },
       {
         pageNumber: 3,
         label: 'Halaman 3 · Manajemen',
         title: 'Monitor Antrean, Inventaris & Laporan',
-        summary: 'Halaman kontrol backoffice untuk memantau status pesanan dan laporan.',
+        summary:
+          'Halaman kontrol backoffice untuk memantau status pesanan, stok, serta ringkasan metrik harian.',
       },
     ],
     status: raw.status || 'ACTIVE',

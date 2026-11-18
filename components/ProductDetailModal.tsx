@@ -11,6 +11,7 @@ import {
   Layers,
   Server,
   FileCode2,
+  ArrowUpRight,
 } from 'lucide-react';
 import {
   ProductItem,
@@ -69,25 +70,26 @@ export default function ProductDetailModal({
       : product.price;
 
   const waUrl = buildWhatsAppOrderUrl(product, licenseType);
+  const demoBase = product.demo_url || `/demo/${product.slug}`;
 
   const pages = product.pages || [
     {
       pageNumber: 1 as const,
-      label: 'Halaman 1 · Storefront',
+      label: '01 · Storefront',
       title: 'Katalog & Preview Produk Visual',
       summary: 'Halaman depan website dengan daftar produk, filter kategori, dan modal spesifikasi.',
     },
     {
       pageNumber: 2 as const,
-      label: 'Halaman 2 · Aplikasi Utama',
-      title: 'Terminal Operasional / POS Interaktif',
-      summary: 'Ruang kerja utama aplikasi untuk transaksi atau pemrosesan data.',
+      label: '02 · POS / Studio',
+      title: 'Terminal Operasional Interaktif',
+      summary: 'Ruang kerja utama aplikasi untuk transaksi kasir atau pemrosesan data.',
     },
     {
       pageNumber: 3 as const,
-      label: 'Halaman 3 · Manajemen',
+      label: '03 · Backoffice',
       title: 'Monitor Antrean, Inventaris & Laporan',
-      summary: 'Halaman kontrol backoffice untuk memantau status pesanan dan laporan.',
+      summary: 'Halaman kontrol backoffice untuk memantau status pesanan dan metrik bisnis.',
     },
   ];
 
@@ -100,31 +102,31 @@ export default function ProductDetailModal({
     >
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-[#0B2545]/70 backdrop-blur-sm transition-opacity"
+        className="fixed inset-0 bg-[#111315]/75 backdrop-blur-sm transition-opacity"
         onClick={onClose}
         aria-hidden="true"
       />
 
-      {/* Dialog Sheet */}
-      <div className="relative z-10 w-full max-w-4xl max-h-[92vh] bg-white rounded-3xl border border-slate-200 shadow-2xl flex flex-col overflow-hidden">
+      {/* Archival Specification Sheet */}
+      <div className="relative z-10 w-full max-w-4xl max-h-[92vh] bg-[#F8F7F4] border border-[#111315] shadow-2xl flex flex-col overflow-hidden">
         {/* Top Metadata Bar */}
-        <div className="flex items-center justify-between gap-4 px-5 sm:px-8 py-4 border-b border-slate-200 bg-slate-50/80 shrink-0">
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="font-mono text-[11px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-md bg-[#0B2545] text-white">
+        <div className="flex items-center justify-between gap-4 px-5 sm:px-8 py-3.5 border-b border-[#E4E2DD] bg-white shrink-0">
+          <div className="flex flex-wrap items-center gap-2.5 font-mono text-[11px]">
+            <span className="font-bold uppercase tracking-wider px-2.5 py-1 bg-[#111315] text-[#F8F7F4]">
               {product.sku || 'BM-APP'}
             </span>
-            <span className="text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-md bg-blue-50 text-[#1D4ED8] border border-blue-200">
+            <span className="font-semibold uppercase tracking-wider px-2.5 py-1 border border-[#E4E2DD] text-[#111315]">
               {product.category}
             </span>
-            <span className="text-[11px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-md bg-emerald-50 text-emerald-800 border border-emerald-200">
-              WEBSITE UTUH 3 HALAMAN
+            <span className="font-semibold uppercase tracking-wider px-2.5 py-1 bg-[#EFF6FF] text-[#1D4ED8] border border-blue-200">
+              3-PAGE WEB ARCHITECTURE
             </span>
           </div>
 
           <button
             type="button"
             onClick={onClose}
-            className="w-10 h-10 rounded-full bg-white border border-slate-200 text-slate-700 hover:bg-[#0B2545] hover:text-white hover:border-[#0B2545] flex items-center justify-center transition focus-visible:outline-2 focus-visible:outline-[#1D4ED8] focus-visible:outline-offset-2 shrink-0"
+            className="w-9 h-9 border border-[#E4E2DD] bg-white text-[#111315] hover:bg-[#111315] hover:text-white flex items-center justify-center transition shrink-0"
             aria-label="Tutup detail produk"
           >
             <X className="w-4 h-4" />
@@ -132,77 +134,51 @@ export default function ProductDetailModal({
         </div>
 
         {/* Scrollable Content */}
-        <div className="overflow-y-auto p-5 sm:p-8 space-y-7">
+        <div className="overflow-y-auto p-5 sm:p-8 space-y-8">
           {/* Header & Title */}
-          <div>
+          <div className="space-y-2">
             <h2
               id="modal-product-title"
-              className="font-['Syne',sans-serif] text-2xl sm:text-3xl font-extrabold text-[#0B2545] tracking-tight leading-tight"
+              className="font-['Syne',sans-serif] text-2xl sm:text-3xl font-extrabold text-[#111315] tracking-tight leading-tight"
             >
-              {product.title}
+              {product.title.replace(/\s*\(3 Halaman\)/gi, '')}
             </h2>
-            <p className="text-slate-600 text-sm sm:text-base mt-2 leading-relaxed">
+            <p className="text-[#525860] text-sm sm:text-base leading-relaxed max-w-3xl">
               {product.tagline || product.description}
             </p>
           </div>
 
-          {/* 3-Page Architecture Quick Preview Cards */}
-          <div className="p-4 sm:p-5 rounded-2xl bg-[#0B2545] text-white space-y-3">
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <span className="font-mono text-xs font-bold uppercase tracking-wider text-blue-300">
-                ARSITEKTUR WEBSITE 3 HALAMAN (KLIK UNTUK UJI LIVE TIAP HALAMAN):
-              </span>
-              {product.demo_url && (
-                <Link
-                  href={product.demo_url}
-                  className="font-mono text-xs font-bold text-white underline"
-                >
-                  Buka Fullscreen →
-                </Link>
-              )}
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-              {pages.map((pg) => (
-                <div
-                  key={pg.pageNumber}
-                  className="p-3.5 rounded-xl bg-white/10 border border-white/15 flex flex-col justify-between gap-3"
-                >
-                  <div className="space-y-1">
-                    <span className="font-mono text-[10px] font-bold uppercase text-blue-300 block">
-                      {pg.label}
-                    </span>
-                    <div className="font-bold text-sm text-white leading-snug">
-                      {pg.title}
-                    </div>
-                    <p className="text-xs text-slate-300 leading-relaxed">
-                      {pg.summary}
-                    </p>
-                  </div>
-                  {product.demo_url && (
-                    <Link
-                      href={`${product.demo_url}?page=${pg.pageNumber}`}
-                      className="w-full py-2 px-3 rounded-lg bg-white hover:bg-blue-50 text-[#0B2545] font-mono text-xs font-bold text-center transition block"
-                    >
-                      Buka Halaman {pg.pageNumber} →
-                    </Link>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Visual Preview Stage */}
+          {/* Browser-Framed Visual Preview Stage */}
           <div className="space-y-3">
-            <div className="relative w-full aspect-[16/9] rounded-2xl overflow-hidden bg-slate-900 border border-slate-200">
-              <img
-                src={currentImage}
-                alt={product.title}
-                onError={(e) => {
-                  (e.target as HTMLImageElement).src = '/products/shot-pos-kuro.png';
-                }}
-                className="w-full h-full object-cover"
-              />
+            <div className="border border-[#E4E2DD] bg-white overflow-hidden">
+              <div className="h-8 px-3.5 border-b border-[#E4E2DD] bg-[#F3F1EC] flex items-center justify-between gap-3">
+                <div className="flex items-center gap-1.5" aria-hidden="true">
+                  <span className="w-2.5 h-2.5 rounded-full bg-[#D0CDC6]" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-[#D0CDC6]" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-[#D0CDC6]" />
+                </div>
+                <span className="font-mono text-[11px] text-[#525860] truncate">
+                  https://birumarket.web.id{demoBase}
+                </span>
+                <Link
+                  href={demoBase}
+                  className="font-mono text-[10px] font-bold uppercase text-[#1D4ED8] hover:underline inline-flex items-center gap-1 shrink-0"
+                >
+                  <span>Fullscreen</span>
+                  <ArrowUpRight className="w-3 h-3" />
+                </Link>
+              </div>
+
+              <div className="relative w-full aspect-[16/9] bg-[#111315] overflow-hidden">
+                <img
+                  src={currentImage}
+                  alt={product.title}
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = '/products/shot-pos-kuro.png';
+                  }}
+                  className="w-full h-full object-cover object-top"
+                />
+              </div>
             </div>
 
             {images.length > 1 && (
@@ -212,10 +188,10 @@ export default function ProductDetailModal({
                     key={idx}
                     type="button"
                     onClick={() => setActiveImageIdx(idx)}
-                    className={`relative w-20 h-14 rounded-lg overflow-hidden border-2 transition shrink-0 focus-visible:outline-2 focus-visible:outline-[#1D4ED8] ${
+                    className={`relative w-20 h-14 overflow-hidden border transition shrink-0 ${
                       activeImageIdx === idx
-                        ? 'border-[#1D4ED8]'
-                        : 'border-slate-200 opacity-70 hover:opacity-100'
+                        ? 'border-[#111315] ring-1 ring-[#111315]'
+                        : 'border-[#E4E2DD] opacity-70 hover:opacity-100'
                     }`}
                   >
                     <img
@@ -229,51 +205,95 @@ export default function ProductDetailModal({
             )}
           </div>
 
+          {/* 3-Page Architecture Quick-Jump Index */}
+          <div className="bg-white border border-[#E4E2DD] p-5 space-y-4">
+            <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#E4E2DD] pb-3">
+              <span className="font-mono text-xs font-bold uppercase tracking-wider text-[#111315]">
+                Indeks Arsitektur 3 Halaman · Klik untuk Uji Langsung
+              </span>
+              <Link
+                href={demoBase}
+                className="font-mono text-xs font-semibold text-[#1D4ED8] hover:underline inline-flex items-center gap-1"
+              >
+                <span>Buka Mode Studio</span>
+                <ArrowUpRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5">
+              {pages.map((pg, i) => (
+                <div
+                  key={pg.pageNumber}
+                  className="p-4 bg-[#F8F7F4] border border-[#E4E2DD] flex flex-col justify-between gap-4"
+                >
+                  <div className="space-y-1.5">
+                    <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-[#1D4ED8] block">
+                      0{i + 1} / {pg.label.replace(/^Halaman \d+ · /i, '')}
+                    </span>
+                    <div className="font-['Syne',sans-serif] font-bold text-sm text-[#111315] leading-snug">
+                      {pg.title}
+                    </div>
+                    <p className="text-xs text-[#525860] leading-relaxed">
+                      {pg.summary}
+                    </p>
+                  </div>
+                  <Link
+                    href={`${demoBase}?page=${pg.pageNumber}`}
+                    className="w-full py-2 px-3 bg-[#111315] hover:bg-[#1D4ED8] text-[#F8F7F4] font-mono text-[11px] font-semibold text-center transition inline-flex items-center justify-center gap-1.5"
+                  >
+                    <span>Uji Halaman 0{pg.pageNumber}</span>
+                    <ArrowUpRight className="w-3.5 h-3.5" />
+                  </Link>
+                </div>
+              ))}
+            </div>
+          </div>
+
           {/* Main 12-Col Breakdown */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-7 items-start">
             {/* Left Specs (7 Cols) */}
             <div className="lg:col-span-7 space-y-6">
               <div>
-                <h3 className="font-mono text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">
-                  01 / Ringkasan Sistem (3 Halaman)
+                <h3 className="font-mono text-xs font-bold uppercase tracking-wider text-[#687078] mb-2">
+                  01 / Deskripsi Sistem
                 </h3>
-                <p className="text-sm text-slate-700 leading-relaxed">
+                <p className="text-sm text-[#262A2E] leading-relaxed">
                   {product.description}
                 </p>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200">
-                  <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-slate-500 block mb-1.5">
-                    Tantangan Bisnis
+                <div className="p-4 bg-white border border-[#E4E2DD]">
+                  <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-[#687078] block mb-1.5">
+                    Tantangan Operasional
                   </span>
-                  <p className="text-xs sm:text-sm text-slate-700 leading-relaxed">
+                  <p className="text-xs sm:text-sm text-[#262A2E] leading-relaxed">
                     {product.problem}
                   </p>
                 </div>
 
-                <div className="p-4 rounded-2xl bg-[#EFF6FF] border border-blue-200">
+                <div className="p-4 bg-white border border-[#111315]">
                   <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-[#1D4ED8] block mb-1.5">
-                    Solusi Arsitektur
+                    Solusi Rekayasa
                   </span>
-                  <p className="text-xs sm:text-sm text-slate-800 leading-relaxed">
+                  <p className="text-xs sm:text-sm text-[#111315] leading-relaxed">
                     {product.solution}
                   </p>
                 </div>
               </div>
 
               <div>
-                <h3 className="font-mono text-xs font-bold uppercase tracking-wider text-slate-500 mb-3">
-                  02 / Fitur &amp; Kapabilitas Utama
+                <h3 className="font-mono text-xs font-bold uppercase tracking-wider text-[#687078] mb-3">
+                  02 / Kapabilitas &amp; Modul
                 </h3>
                 <ul className="space-y-2.5">
                   {product.features.map((feat, idx) => (
                     <li
                       key={idx}
-                      className="flex items-start gap-3 text-sm text-slate-700"
+                      className="flex items-start gap-3 text-sm text-[#262A2E]"
                     >
-                      <span className="w-5 h-5 rounded-md bg-blue-50 text-[#1D4ED8] border border-blue-200 flex items-center justify-center shrink-0 mt-0.5 font-mono text-[10px] font-bold">
-                        {idx + 1}
+                      <span className="w-5 h-5 bg-white text-[#111315] border border-[#E4E2DD] flex items-center justify-center shrink-0 mt-0.5 font-mono text-[10px] font-bold">
+                        0{idx + 1}
                       </span>
                       <span className="leading-relaxed">{feat}</span>
                     </li>
@@ -282,14 +302,14 @@ export default function ProductDetailModal({
               </div>
 
               <div>
-                <h3 className="font-mono text-xs font-bold uppercase tracking-wider text-slate-500 mb-2.5">
-                  03 / Tech Stack
+                <h3 className="font-mono text-xs font-bold uppercase tracking-wider text-[#687078] mb-2.5">
+                  03 / Spesifikasi Tech Stack
                 </h3>
                 <div className="flex flex-wrap gap-2">
                   {product.tech_stack.map((tech, idx) => (
                     <span
                       key={idx}
-                      className="font-mono text-xs font-medium px-3 py-1.5 rounded-lg bg-slate-100 text-slate-800 border border-slate-200"
+                      className="font-mono text-xs font-medium px-3 py-1.5 bg-white text-[#111315] border border-[#E4E2DD]"
                     >
                       {tech}
                     </span>
@@ -299,13 +319,13 @@ export default function ProductDetailModal({
             </div>
 
             {/* Right Licensing & Order Card (5 Cols) */}
-            <div className="lg:col-span-5 bg-slate-50 rounded-2xl p-5 border border-slate-200 space-y-5">
+            <div className="lg:col-span-5 bg-white p-5 sm:p-6 border border-[#E4E2DD] space-y-5">
               <div>
-                <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-slate-500 block">
-                  {product.is_portfolio ? 'Status Akses' : 'Pilih Paket Akuisisi'}
+                <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-[#687078] block">
+                  {product.is_portfolio ? 'Status Akses' : 'Lisensi & Serah Terima'}
                 </span>
                 <div className="mt-1 flex items-baseline gap-2">
-                  <span className="font-['Syne',sans-serif] text-2xl sm:text-3xl font-extrabold text-[#0B2545]">
+                  <span className="font-['Syne',sans-serif] text-2xl sm:text-3xl font-extrabold text-[#111315]">
                     {product.is_portfolio
                       ? 'Custom Quote'
                       : `Rp ${computedPrice.toLocaleString('id-ID')}`}
@@ -318,37 +338,37 @@ export default function ProductDetailModal({
                   <button
                     type="button"
                     onClick={() => setLicenseType('source')}
-                    className={`w-full text-left p-3.5 rounded-xl border transition focus-visible:outline-2 focus-visible:outline-[#1D4ED8] ${
+                    className={`w-full text-left p-3.5 border transition ${
                       licenseType === 'source'
-                        ? 'bg-white border-[#1D4ED8] ring-1 ring-[#1D4ED8]'
-                        : 'bg-white/60 border-slate-200 hover:border-slate-300'
+                        ? 'bg-[#F8F7F4] border-[#111315]'
+                        : 'bg-white border-[#E4E2DD] hover:border-[#9CA3AF]'
                     }`}
                   >
                     <div className="flex items-center justify-between gap-2">
-                      <div className="flex items-center gap-2 font-bold text-sm text-[#0B2545]">
+                      <div className="flex items-center gap-2 font-bold text-sm text-[#111315]">
                         <FileCode2 className="w-4 h-4 text-[#1D4ED8]" />
                         <span>Source Code 3 Halaman + DB</span>
                       </div>
                       {licenseType === 'source' && (
-                        <Check className="w-4 h-4 text-[#1D4ED8]" />
+                        <Check className="w-4 h-4 text-[#111315]" />
                       )}
                     </div>
-                    <p className="text-xs text-slate-600 mt-1.5 leading-relaxed">
-                      Full Git repository (Storefront + Aplikasi POS/Studio + Backoffice), SQL/Supabase schema, dan panduan setup.
+                    <p className="text-xs text-[#525860] mt-1.5 leading-relaxed">
+                      Full Git repository (Storefront + Aplikasi POS/Studio + Backoffice), skema SQL/Supabase, dan dokumentasi setup.
                     </p>
                   </button>
 
                   <button
                     type="button"
                     onClick={() => setLicenseType('turnkey')}
-                    className={`w-full text-left p-3.5 rounded-xl border transition focus-visible:outline-2 focus-visible:outline-[#1D4ED8] ${
+                    className={`w-full text-left p-3.5 border transition ${
                       licenseType === 'turnkey'
-                        ? 'bg-white border-[#1D4ED8] ring-1 ring-[#1D4ED8]'
-                        : 'bg-white/60 border-slate-200 hover:border-slate-300'
+                        ? 'bg-[#F8F7F4] border-[#111315]'
+                        : 'bg-white border-[#E4E2DD] hover:border-[#9CA3AF]'
                     }`}
                   >
                     <div className="flex items-center justify-between gap-2">
-                      <div className="flex items-center gap-2 font-bold text-sm text-[#0B2545]">
+                      <div className="flex items-center gap-2 font-bold text-sm text-[#111315]">
                         <Server className="w-4 h-4 text-[#1D4ED8]" />
                         <span>Turnkey Deploy + Domain</span>
                       </div>
@@ -356,16 +376,16 @@ export default function ProductDetailModal({
                         +Rp {(TURNKEY_DEPLOY_FEE / 1000).toFixed(0)}k
                       </span>
                     </div>
-                    <p className="text-xs text-slate-600 mt-1.5 leading-relaxed">
-                      Terima beres: deploy ke Vercel/VPS, setup database cloud, dan sambung domain Anda.
+                    <p className="text-xs text-[#525860] mt-1.5 leading-relaxed">
+                      Terima beres: instalasi ke Vercel/VPS, provisioning database cloud, dan konfigurasi domain kustom Anda.
                     </p>
                   </button>
                 </div>
               ) : (
-                <div className="p-3.5 rounded-xl bg-white border border-slate-200 text-xs text-slate-700 leading-relaxed flex items-start gap-2.5">
+                <div className="p-3.5 bg-[#F8F7F4] border border-[#E4E2DD] text-xs text-[#262A2E] leading-relaxed flex items-start gap-2.5">
                   <Layers className="w-4 h-4 text-[#1D4ED8] shrink-0 mt-0.5" />
                   <span>
-                    Proyek ini tersedia sebagai referensi arsitektur untuk pembangunan ulang atau penyesuaian khusus kebutuhan perusahaan Anda.
+                    Sistem ini tersedia sebagai referensi arsitektur untuk pembangunan ulang atau kustomisasi perusahaan Anda.
                   </span>
                 </div>
               )}
@@ -375,34 +395,30 @@ export default function ProductDetailModal({
                   href={waUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full min-h-[44px] bg-[#1D4ED8] hover:bg-[#1E40AF] text-white font-bold text-sm px-5 py-3 rounded-xl flex items-center justify-center gap-2 transition shadow-sm focus-visible:outline-2 focus-visible:outline-[#0B2545] focus-visible:outline-offset-2"
+                  className="w-full min-h-[44px] bg-[#111315] hover:bg-[#1D4ED8] text-[#F8F7F4] font-mono font-semibold text-xs uppercase tracking-wider px-5 py-3 flex items-center justify-center gap-2 transition"
                 >
                   <MessageCircle className="w-4 h-4" />
                   <span>
                     {product.is_portfolio
                       ? 'Diskusi Proyek via WhatsApp'
-                      : 'Pesan Lisensi via WhatsApp'}
+                      : 'Akuisisi Lisensi via WhatsApp'}
                   </span>
                 </a>
 
                 <div className="grid grid-cols-2 gap-2.5">
-                  {product.demo_url && (
-                    <Link
-                      href={product.demo_url}
-                      className="min-h-[44px] bg-white hover:bg-slate-100 border border-slate-200 text-slate-800 font-semibold text-xs px-3 py-2.5 rounded-xl flex items-center justify-center gap-1.5 transition focus-visible:outline-2 focus-visible:outline-[#1D4ED8]"
-                    >
-                      <ExternalLink className="w-3.5 h-3.5" />
-                      <span>Buka Website (3 Hal)</span>
-                    </Link>
-                  )}
+                  <Link
+                    href={demoBase}
+                    className="min-h-[42px] bg-[#F8F7F4] hover:bg-[#ECEAE4] border border-[#E4E2DD] text-[#111315] font-mono font-semibold text-xs px-3 py-2.5 flex items-center justify-center gap-1.5 transition"
+                  >
+                    <ExternalLink className="w-3.5 h-3.5" />
+                    <span>Live Demo</span>
+                  </Link>
                   {product.github_url && (
                     <a
                       href={product.github_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className={`min-h-[44px] bg-white hover:bg-slate-100 border border-slate-200 text-slate-800 font-semibold text-xs px-3 py-2.5 rounded-xl flex items-center justify-center gap-1.5 transition focus-visible:outline-2 focus-visible:outline-[#1D4ED8] ${
-                        !product.demo_url ? 'col-span-2' : ''
-                      }`}
+                      className="min-h-[42px] bg-[#F8F7F4] hover:bg-[#ECEAE4] border border-[#E4E2DD] text-[#111315] font-mono font-semibold text-xs px-3 py-2.5 flex items-center justify-center gap-1.5 transition"
                     >
                       <Code2 className="w-3.5 h-3.5" />
                       <span>GitHub Repo</span>
@@ -411,8 +427,8 @@ export default function ProductDetailModal({
                 </div>
               </div>
 
-              <p className="text-[11px] text-slate-500 leading-relaxed border-t border-slate-200 pt-3">
-                Serah terima kode dilakukan via akses repositori GitHub privat atau arsip ZIP terverifikasi setelah uji live demo disepakati.
+              <p className="text-[11px] text-[#687078] leading-relaxed border-t border-[#E4E2DD] pt-3">
+                Serah terima kode dilakukan via repositori GitHub privat atau arsip terverifikasi setelah verifikasi live demo selesai.
               </p>
             </div>
           </div>

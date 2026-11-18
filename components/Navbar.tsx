@@ -3,109 +3,124 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { MessageCircle, Settings } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 import { CONTACT_INFO } from '@/lib/catalog-data';
 
 export default function Navbar() {
   const pathname = usePathname();
 
   const navLinks = [
-    { href: '/', label: 'Home' },
-    { href: '/catalog', label: 'Catalog' },
-    { href: '/about', label: 'About & Lisensi' },
+    { index: '00', href: '/', label: 'Beranda' },
+    { index: '01', href: '/catalog', label: 'Katalog' },
+    { index: '02', href: '/about', label: 'Arsitektur' },
+    { index: '03', href: '/admin', label: 'Admin' },
   ];
 
   return (
-    <header className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4 mb-6 md:mb-8">
-      {/* Left: Brand Logo + Navigation */}
-      <div className="flex flex-wrap sm:flex-nowrap items-center justify-between sm:justify-start gap-3 sm:gap-4">
-        <Link
-          href="/"
-          className="group relative flex items-center gap-3 shrink-0 rounded-xl p-1 pr-2 transition [&:hover_.logo-default]:opacity-0 [&:hover_.logo-default]:scale-90 [&:hover_.logo-hover]:opacity-100 [&:hover_.logo-hover]:scale-100"
-          title="BiruMarket Home"
-        >
-          <div className="relative w-10 h-10 sm:w-11 sm:h-11 flex items-center justify-center shrink-0">
-            <Image
-              src="/logo/logo-1.webp"
-              alt="BiruMarket Logo"
-              width={44}
-              height={44}
-              className="logo-default w-10 h-10 object-contain transition-all duration-300"
-              priority
-            />
-            <Image
-              src="/logo/logo-2.webp"
-              alt="BiruMarket Logo Active"
-              width={44}
-              height={44}
-              className="logo-hover w-10 h-10 object-contain absolute transition-all duration-300 opacity-0 scale-90"
-              priority
-            />
-          </div>
-          <div className="leading-none">
-            <span className="font-['Syne',sans-serif] font-extrabold text-base sm:text-lg text-[#0B2545] tracking-tight block">
-              BiruMarket
-            </span>
-            <span className="font-mono text-[10px] font-medium text-slate-500 tracking-wide">
-              {CONTACT_INFO.domain}
-            </span>
-          </div>
-        </Link>
-
-        {/* Pill Menu */}
-        <nav
-          aria-label="Navigasi utama"
-          className="bg-white p-1 rounded-full border border-slate-200 flex items-center gap-1 overflow-x-auto max-w-full no-scrollbar"
-        >
-          {navLinks.map((item) => {
-            const active = pathname === item.href;
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`min-h-[40px] px-4 sm:px-5 py-2 rounded-full font-bold text-xs sm:text-sm tracking-wide transition whitespace-nowrap flex items-center ${
-                  active
-                    ? 'bg-[#0B2545] text-white'
-                    : 'text-slate-600 hover:text-[#0B2545] hover:bg-slate-50'
-                }`}
-              >
-                {item.label}
-              </Link>
-            );
-          })}
+    <header className="sticky top-0 z-40 w-full border-b border-[#E4E2DD] bg-[#F8F7F4]/90 backdrop-blur-md">
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-8 lg:px-12 h-16 sm:h-[74px] flex items-center justify-between gap-4">
+        {/* Left: Brand Identity */}
+        <div className="flex items-center gap-6 lg:gap-10 min-w-0">
           <Link
-            href="/admin"
-            className={`min-h-[40px] px-3.5 py-2 rounded-full font-semibold text-xs transition whitespace-nowrap flex items-center gap-1.5 ${
-              pathname === '/admin'
-                ? 'bg-[#1D4ED8] text-white'
-                : 'text-slate-500 hover:text-[#0B2545] hover:bg-slate-50'
-            }`}
-            title="Admin Backoffice"
+            href="/"
+            className="group relative flex items-center gap-3 shrink-0 transition [&:hover_.logo-default]:opacity-0 [&:hover_.logo-default]:scale-90 [&:hover_.logo-hover]:opacity-100 [&:hover_.logo-hover]:scale-100"
+            title="BiruMarket Editorial Archive"
           >
-            <Settings className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Admin</span>
+            <div className="relative w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center shrink-0 border border-[#E4E2DD] bg-white rounded-lg">
+              <Image
+                src="/logo/logo-1.webp"
+                alt="BiruMarket Logo"
+                width={36}
+                height={36}
+                className="logo-default w-7 h-7 sm:w-8 sm:h-8 object-contain transition-all duration-300"
+                priority
+              />
+              <Image
+                src="/logo/logo-2.webp"
+                alt="BiruMarket Logo Active"
+                width={36}
+                height={36}
+                className="logo-hover w-7 h-7 sm:w-8 sm:h-8 object-contain absolute transition-all duration-300 opacity-0 scale-90"
+                priority
+              />
+            </div>
+            <div className="leading-none">
+              <div className="flex items-baseline gap-1.5">
+                <span className="font-['Syne',sans-serif] font-extrabold text-base sm:text-lg text-[#111315] tracking-tight">
+                  BiruMarket
+                </span>
+                <span className="hidden xl:inline font-serif-editorial italic text-base text-[#525860]">
+                  Archive
+                </span>
+              </div>
+              <span className="font-mono text-[10px] text-[#687078] tracking-wider uppercase block mt-0.5">
+                {CONTACT_INFO.domain}
+              </span>
+            </div>
           </Link>
-        </nav>
-      </div>
 
-      {/* Right: Direct WhatsApp CTA */}
-      <div className="flex items-center justify-end gap-2.5">
-        <a
-          href={`https://wa.me/${CONTACT_INFO.whatsappNumber}?text=${encodeURIComponent(
-            `Halo Fikri, saya ingin konsultasi produk atau custom project di BiruMarket (${CONTACT_INFO.domain}).`
-          )}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="w-full sm:w-auto min-h-[44px] bg-white hover:bg-slate-50 border border-slate-200 text-[#0B2545] font-bold px-4 sm:px-5 py-2.5 rounded-full flex items-center justify-center gap-2.5 text-xs sm:text-sm transition group"
-        >
-          <span className="w-7 h-7 rounded-full bg-blue-50 text-[#1D4ED8] flex items-center justify-center group-hover:bg-[#1D4ED8] group-hover:text-white transition shrink-0">
-            <MessageCircle className="w-3.5 h-3.5" />
-          </span>
-          <span>Konsultasi WA</span>
-          <span className="hidden md:inline font-mono text-[11px] text-slate-500">
-            {CONTACT_INFO.whatsappDisplay}
-          </span>
-        </a>
+          {/* Architectural Hairline Divider */}
+          <span className="hidden md:block h-6 w-px bg-[#E4E2DD]" aria-hidden="true" />
+
+          {/* Indexed Editorial Navigation */}
+          <nav
+            aria-label="Navigasi utama"
+            className="flex items-center gap-1 sm:gap-2 overflow-x-auto no-scrollbar"
+          >
+            {navLinks.map((item) => {
+              const active =
+                item.href === '/'
+                  ? pathname === '/'
+                  : pathname.startsWith(item.href);
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`relative px-2.5 sm:px-3.5 py-2 text-xs sm:text-[13px] transition whitespace-nowrap flex items-baseline gap-1.5 ${
+                    active
+                      ? 'text-[#111315] font-bold'
+                      : 'text-[#5C6269] hover:text-[#111315] font-medium'
+                  }`}
+                >
+                  <span
+                    className={`font-mono text-[10px] ${
+                      active ? 'text-[#1D4ED8] font-bold' : 'text-[#8C929A]'
+                    }`}
+                  >
+                    {item.index}
+                  </span>
+                  <span>{item.label}</span>
+                  {active && (
+                    <span
+                      className="absolute bottom-0 left-2.5 right-2.5 h-[2px] bg-[#111315]"
+                      aria-hidden="true"
+                    />
+                  )}
+                </Link>
+              );
+            })}
+          </nav>
+        </div>
+
+        {/* Right: Edition Spec & Direct WhatsApp Inquiry */}
+        <div className="flex items-center gap-3 shrink-0">
+          <div className="hidden lg:flex items-center gap-2 px-3 py-1.5 border border-[#E4E2DD] bg-white/70 text-[11px] font-mono text-[#525860]">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-600" />
+            <span>10 SISTEM · 3 HALAMAN</span>
+          </div>
+
+          <a
+            href={`https://wa.me/${CONTACT_INFO.whatsappNumber}?text=${encodeURIComponent(
+              `Halo Fikri, saya ingin konsultasi akuisisi produk atau custom project di BiruMarket (${CONTACT_INFO.domain}).`
+            )}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="min-h-[38px] sm:min-h-[40px] px-3.5 sm:px-4 py-2 bg-[#111315] hover:bg-[#1D4ED8] text-[#F8F7F4] font-mono text-[11px] sm:text-xs font-semibold tracking-wide inline-flex items-center gap-1.5 transition"
+          >
+            <span>Konsultasi WA</span>
+            <ArrowUpRight className="w-3.5 h-3.5" />
+          </a>
+        </div>
       </div>
     </header>
   );

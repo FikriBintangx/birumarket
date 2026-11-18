@@ -16,6 +16,7 @@ import {
   ExternalLink,
   Loader2,
   Pencil,
+  Lock,
 } from 'lucide-react';
 import { ProductItem } from '@/lib/catalog-data';
 
@@ -49,24 +50,64 @@ export default function AdminPage() {
   useEffect(() => {
     const savedPin = localStorage.getItem('bm_admin_pin');
     if (savedPin) {
-      setPin(savedPin);
-      setIsAuthenticated(true);
-      fetchProducts();
+      // Validate saved PIN with backend
+      fetch('/api/admin/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ pin: savedPin }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.success) {
+            setPin(savedPin);
+            setIsAuthenticated(true);
+            fetchProducts();
+          } else {
+            localStorage.removeItem('bm_admin_pin');
+          }
+        })
+        .catch(() => {
+          localStorage.removeItem('bm_admin_pin');
+        });
     }
   }, []);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (pin.trim().length >= 4) {
-      localStorage.setItem('bm_admin_pin', pin.trim());
-      setIsAuthenticated(true);
-      setMessage(null);
-      fetchProducts();
-    } else {
+    if (!pin.trim()) {
       setMessage({
-        text: 'Masukkan PIN minimal 4 karakter (default: 123456).',
+        text: 'Masukkan PIN Rahasia Administrator.',
         type: 'error',
       });
+      return;
+    }
+
+    setLoading(true);
+    setMessage(null);
+    try {
+      const res = await fetch('/api/admin/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ pin: pin.trim() }),
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        localStorage.setItem('bm_admin_pin', pin.trim());
+        setIsAuthenticated(true);
+        fetchProducts();
+      } else {
+        setMessage({
+          text: data.error || 'PIN Rahasia salah. Akses ditolak.',
+          type: 'error',
+        });
+      }
+    } catch {
+      setMessage({
+        text: 'Gagal memverifikasi PIN. Silakan coba kembali.',
+        type: 'error',
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -317,19 +358,22 @@ export default function AdminPage() {
     return (
       <main>
         <Navbar />
-        <div className="max-w-md mx-auto my-12 bg-white p-8 rounded-3xl border border-slate-200 shadow-sm">
-          <span className="font-mono text-xs font-bold uppercase tracking-wider text-[#1D4ED8] block mb-1">
-            Restricted Area
+        <div className="max-w-md mx-auto my-16 bg-white p-8 sm:p-10 rounded-[2.5rem] shadow-[0_10px_35px_rgba(0,0,0,0.04)] border-0 text-center">
+          <div className="w-14 h-14 rounded-2xl bg-[#111315] text-white flex items-center justify-center mx-auto mb-4 shadow-sm">
+            <Lock className="w-6 h-6" />
+          </div>
+          <span className="text-[11px] font-extrabold uppercase tracking-widest text-[#1D4ED8] block mb-1">
+            Restricted System
           </span>
-          <h1 className="font-sans font-extrabold text-2xl font-extrabold text-[#0B2545] mb-2">
-            Admin Backoffice
+          <h1 className="text-2xl font-extrabold text-[#111315] mb-2 tracking-tight">
+            Administrator Authentication
           </h1>
-          <p className="text-sm text-slate-600 mb-6">
-            Masukkan PIN Admin untuk mengelola katalog produk dan sinkronisasi Supabase BiruMarket.
+          <p className="text-xs text-[#525860] mb-6 leading-relaxed font-medium">
+            Halaman ini terproteksi khusus internal BiruMarket. Masukkan security PIN untuk verifikasi identitas sistem.
           </p>
 
           {message && (
-            <div className="mb-4 p-3 rounded-xl bg-rose-50 text-rose-800 border border-rose-200 text-xs font-medium">
+            <div className="mb-4 p-3 rounded-2xl bg-rose-50 text-rose-800 text-xs font-semibold">
               {message.text}
             </div>
           )}
@@ -338,24 +382,26 @@ export default function AdminPage() {
             <div>
               <label
                 htmlFor="admin-pin-input"
-                className="block font-mono text-xs font-bold text-slate-700 uppercase mb-2"
+                className="block text-[11px] font-bold text-[#525860] uppercase tracking-wider mb-2"
               >
-                PIN Rahasia
+                Security PIN
               </label>
               <input
                 id="admin-pin-input"
                 type="password"
-                placeholder="Default: 123456"
+                placeholder="••••••••"
                 value={pin}
                 onChange={(e) => setPin(e.target.value)}
-                className="w-full min-h-[46px] px-4 py-3 rounded-xl border border-slate-200 focus:border-[#1D4ED8] focus:outline-none text-center text-xl tracking-widest font-mono"
+                autoComplete="current-password"
+                className="w-full min-h-[48px] px-4 py-3 rounded-2xl bg-[#F8F7F4] focus:bg-white focus:outline-none text-center text-2xl tracking-[0.3em] font-mono shadow-inner border-0"
               />
             </div>
             <button
               type="submit"
-              className="w-full min-h-[46px] bg-[#0B2545] hover:bg-[#123663] text-white font-bold py-3 rounded-xl transition"
+              disabled={loading}
+              className="w-full min-h-[48px] bg-[#111315] hover:bg-[#1D4ED8] text-white font-extrabold text-xs uppercase tracking-wider py-3 rounded-full transition shadow-md hover:shadow-lg disabled:opacity-60"
             >
-              Masuk Dashboard
+              {loading ? 'Memverifikasi...' : 'Verifikasi & Masuk'}
             </button>
           </form>
         </div>

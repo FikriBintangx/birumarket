@@ -14,7 +14,6 @@ export default function Navbar() {
     { index: '01', href: '/catalog', label: 'Katalog' },
     { index: '02', href: '/about', label: 'Arsitektur' },
     { index: '03', href: '/skripsi', label: 'Joki Skripsi' },
-    { index: '04', href: '/admin', label: 'Admin' },
   ];
 
   return (

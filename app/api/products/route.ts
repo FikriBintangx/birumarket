@@ -17,7 +17,7 @@ function verifyAdminPin(candidate: unknown): boolean {
   if (typeof candidate !== 'string' || candidate.length === 0) {
     return false;
   }
-  const validPin = process.env.ADMIN_PIN || '123456';
+  const validPin = process.env.ADMIN_PIN || 'BiruMarket7F3A#Secure2026';
   const candidateDigest = crypto.createHash('sha256').update(candidate).digest();
   const validDigest = crypto.createHash('sha256').update(validPin).digest();
   return crypto.timingSafeEqual(candidateDigest, validDigest);

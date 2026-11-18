@@ -14,6 +14,20 @@ import {
   ProductItem,
 } from '@/lib/catalog-data';
 import {
+  KuroBentoPos,
+  BrewLabPos,
+  ApotekMedikaPos,
+  AtelierLuxePos,
+  PitStopBengkelPos,
+} from '@/components/demos/PosDemos';
+import {
+  PulseOpsDemo,
+  BagiRataDemo,
+  KelasKilatDemo,
+  AntreMedDemo,
+  LegalDraftDemo,
+} from '@/components/demos/WebAppDemos';
+import {
   ArrowUpRight,
   ChevronLeft,
   ChevronRight,
@@ -35,6 +49,10 @@ export default function Home() {
   const [highlightIdx, setHighlightIdx] = useState(0);
   const [heroSearch, setHeroSearch] = useState('');
   const [selectedProduct, setSelectedProduct] = useState<ProductItem | null>(null);
+
+  // Interactive Live 3-Page Website Previewer State on Homepage
+  const [liveSlug, setLiveSlug] = useState('pos-kuro');
+  const [livePage, setLivePage] = useState<1 | 2 | 3>(1);
 
   // Boarding pass inquiry state
   const [inquiryScope, setInquiryScope] = useState('Custom Web / AI SaaS');
@@ -65,6 +83,9 @@ export default function Home() {
   const currentHighlight =
     products[highlightIdx % Math.max(products.length, 1)] || DEFAULT_PRODUCTS[0];
 
+  const activeLiveProduct =
+    products.find((p) => p.slug === liveSlug) || DEFAULT_PRODUCTS[0];
+
   const filteredPreview =
     activeCategory === 'ALL'
       ? products.slice(0, 10)
@@ -92,6 +113,37 @@ export default function Home() {
     );
   };
 
+  const renderInlineWebsite = () => {
+    const props = {
+      activePage: livePage,
+      onPageChange: (p: 1 | 2 | 3) => setLivePage(p),
+    };
+    switch (liveSlug) {
+      case 'pos-kuro':
+        return <KuroBentoPos {...props} />;
+      case 'pos-brew':
+        return <BrewLabPos {...props} />;
+      case 'pos-medika':
+        return <ApotekMedikaPos {...props} />;
+      case 'pos-atelier':
+        return <AtelierLuxePos {...props} />;
+      case 'pos-bengkel':
+        return <PitStopBengkelPos {...props} />;
+      case 'app-pulseops':
+        return <PulseOpsDemo {...props} />;
+      case 'app-splitbill':
+        return <BagiRataDemo {...props} />;
+      case 'app-kursus':
+        return <KelasKilatDemo {...props} />;
+      case 'app-klinik':
+        return <AntreMedDemo {...props} />;
+      case 'app-kontrak':
+        return <LegalDraftDemo {...props} />;
+      default:
+        return <KuroBentoPos {...props} />;
+    }
+  };
+
   return (
     <main>
       <Navbar />
@@ -103,17 +155,17 @@ export default function Home() {
           <div className="lg:col-span-7 space-y-6">
             <div className="inline-flex items-center gap-2 bg-white/10 border border-white/15 px-3.5 py-1.5 rounded-full">
               <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-blue-200">
-                {CONTACT_INFO.domain} · Katalog Resmi {CONTACT_INFO.ownerName}
+                {CONTACT_INFO.domain} · Katalog Website 3 Halaman Siap Pakai
               </span>
             </div>
 
-            <h1 className="font-['Syne',sans-serif] text-3xl sm:text-5xl lg:text-[3.4rem] font-extrabold uppercase tracking-tight leading-[1.06]">
-              SOURCE CODE &amp; APLIKASI{' '}
-              <span className="text-blue-300">SIAP DEPLOY</span>
+            <h1 className="font-['Syne',sans-serif] text-3xl sm:text-5xl lg:text-[3.25rem] font-extrabold uppercase tracking-tight leading-[1.06]">
+              WEBSITE UTUH &amp; POS{' '}
+              <span className="text-blue-300">LENGKAP PREVIEW PRODUK</span>
             </h1>
 
             <p className="text-slate-200 text-sm sm:text-base max-w-xl leading-relaxed">
-              Koleksi web app, AI SaaS, e-commerce, dan otomasi yang dirancang dan dibangun langsung oleh {CONTACT_INFO.ownerName}. Uji setiap live demo di browser sebelum melakukan akuisisi source code.
+              Setiap produk di BiruMarket adalah <strong>website utuh 3 halaman</strong>: mulai dari <strong>Halaman 1 (Storefront &amp; Katalog Preview Produk)</strong>, <strong>Halaman 2 (Terminal POS / Studio Aplikasi)</strong>, hingga <strong>Halaman 3 (Monitor KDS / Backoffice / Laporan)</strong>.
             </p>
 
             {/* Quick Search Bar */}
@@ -127,7 +179,7 @@ export default function Home() {
                   type="text"
                   value={heroSearch}
                   onChange={(e) => setHeroSearch(e.target.value)}
-                  placeholder="Cari produk atau tech stack (contoh: Next.js, RAG, Laravel)..."
+                  placeholder="Cari website 3 halaman (contoh: Ramen, Roastery, Apotek, Bengkel)..."
                   aria-label="Cari produk di katalog"
                   className="w-full min-h-[46px] pl-11 pr-4 py-2.5 rounded-xl bg-white text-[#0B2545] placeholder:text-slate-400 text-sm font-medium border border-transparent focus:border-blue-300 focus:outline-none"
                 />
@@ -164,8 +216,8 @@ export default function Home() {
                   <span className="font-mono text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-md bg-[#0B2545] text-white shrink-0">
                     {currentHighlight.sku || 'FEATURED'}
                   </span>
-                  <span className="font-mono text-[11px] font-semibold text-[#1D4ED8] truncate">
-                    {currentHighlight.category}
+                  <span className="font-mono text-[10px] font-bold px-2 py-0.5 rounded bg-blue-50 text-[#1D4ED8] border border-blue-200 shrink-0">
+                    3 HALAMAN UTUH
                   </span>
                 </div>
                 <div className="flex items-center gap-1.5 shrink-0">
@@ -212,31 +264,33 @@ export default function Home() {
               </button>
 
               {/* Details */}
-              <div className="mt-4 space-y-2">
+              <div className="mt-4 space-y-2.5">
                 <div className="flex items-start justify-between gap-3">
-                  <h2 className="font-['Syne',sans-serif] font-extrabold text-lg leading-snug text-[#0B2545]">
+                  <h2 className="font-['Syne',sans-serif] font-extrabold text-base sm:text-lg leading-snug text-[#0B2545]">
                     {currentHighlight.title}
                   </h2>
                   <span className="font-mono text-xs font-bold text-[#1D4ED8] shrink-0 pt-0.5">
-                    {currentHighlight.is_portfolio
-                      ? 'Showcase'
-                      : `Rp ${Number(currentHighlight.price).toLocaleString('id-ID')}`}
+                    Rp {Number(currentHighlight.price).toLocaleString('id-ID')}
                   </span>
                 </div>
                 <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed">
                   {currentHighlight.tagline || currentHighlight.description}
                 </p>
 
-                <div className="flex flex-wrap gap-1.5 pt-1">
-                  {currentHighlight.tech_stack.slice(0, 4).map((t, idx) => (
-                    <span
-                      key={idx}
-                      className="font-mono text-[10px] px-2 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-200"
-                    >
-                      {t}
-                    </span>
-                  ))}
-                </div>
+                {/* 3-Page Quick Links inside Hero */}
+                {currentHighlight.demo_url && (
+                  <div className="grid grid-cols-3 gap-1.5 pt-1 font-mono text-[10px]">
+                    {(currentHighlight.pages || []).map((pg) => (
+                      <Link
+                        key={pg.pageNumber}
+                        href={`${currentHighlight.demo_url}?page=${pg.pageNumber}`}
+                        className="px-2 py-1.5 rounded-lg bg-slate-100 hover:bg-[#0B2545] text-[#0B2545] hover:text-white border border-slate-200 font-bold text-center truncate transition"
+                      >
+                        {pg.label.replace('Halaman ', 'Hal ')}
+                      </Link>
+                    ))}
+                  </div>
+                )}
               </div>
 
               {/* Actions */}
@@ -246,18 +300,16 @@ export default function Home() {
                   onClick={() => setSelectedProduct(currentHighlight)}
                   className="min-h-[42px] px-3 py-2 rounded-xl bg-[#0B2545] hover:bg-[#123663] text-white font-bold text-xs transition"
                 >
-                  Spesifikasi Lengkap
+                  Preview &amp; Spesifikasi
                 </button>
                 {currentHighlight.demo_url ? (
-                  <a
+                  <Link
                     href={currentHighlight.demo_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
                     className="min-h-[42px] px-3 py-2 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-[#0B2545] font-bold text-xs inline-flex items-center justify-center gap-1.5 transition"
                   >
-                    <span>Uji Live Demo</span>
+                    <span>Buka Website Utuh</span>
                     <ExternalLink className="w-3.5 h-3.5" />
-                  </a>
+                  </Link>
                 ) : (
                   <Link
                     href="/catalog"
@@ -273,15 +325,99 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Section 2: Curated Marketplace Catalog Preview */}
+      {/* Section 2: Interactive Live 3-Page Website Stage right on Homepage */}
+      <section className="mt-10 sm:mt-14 bg-white rounded-[1.75rem] sm:rounded-[2.25rem] border border-slate-200 p-4 sm:p-7 space-y-5 shadow-sm">
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4 border-b border-slate-200 pb-5">
+          <div>
+            <span className="font-mono text-xs font-bold uppercase tracking-wider text-[#1D4ED8]">
+              Interactive Multi-Page Website Previewer
+            </span>
+            <h2 className="font-['Syne',sans-serif] text-2xl sm:text-3xl font-extrabold text-[#0B2545] uppercase tracking-tight mt-1">
+              Simulasi Langsung Website 3 Halaman (Katalog + POS/App + Monitor)
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-600 mt-1 max-w-3xl">
+              Pilih produk di bawah, lalu berpindah antar <strong>Halaman 1 (Katalog &amp; Preview Produk)</strong>, <strong>Halaman 2 (Terminal POS / Studio Utama)</strong>, dan <strong>Halaman 3 (Monitor KDS / Backoffice)</strong> langsung di halaman ini.
+            </p>
+          </div>
+
+          <Link
+            href={`/demo/${liveSlug}?page=${livePage}`}
+            className="min-h-[42px] px-4 py-2 rounded-xl bg-[#0B2545] hover:bg-[#1D4ED8] text-white font-mono text-xs font-bold inline-flex items-center gap-2 shrink-0 self-start lg:self-auto transition"
+          >
+            <span>Buka Layar Penuh (/demo/{liveSlug})</span>
+            <ExternalLink className="w-3.5 h-3.5" />
+          </Link>
+        </div>
+
+        {/* Product Selector Strip */}
+        <div className="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar">
+          {products.map((p) => {
+            const isSelected = p.slug === liveSlug;
+            return (
+              <button
+                key={p.id}
+                type="button"
+                onClick={() => {
+                  setLiveSlug(p.slug);
+                  setLivePage(1);
+                }}
+                className={`px-3.5 py-2 rounded-xl font-mono text-xs font-bold whitespace-nowrap border transition shrink-0 ${
+                  isSelected
+                    ? 'bg-[#0B2545] text-white border-[#0B2545]'
+                    : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
+                }`}
+              >
+                {p.sku} · {p.title.split('·')[0].trim()}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* 3-Page Tabs for Selected Website */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 bg-slate-100 p-2.5 rounded-2xl border border-slate-200">
+          {(activeLiveProduct.pages || []).map((pg) => {
+            const isCurr = livePage === pg.pageNumber;
+            return (
+              <button
+                key={pg.pageNumber}
+                type="button"
+                onClick={() => setLivePage(pg.pageNumber)}
+                className={`p-3 rounded-xl text-left transition border ${
+                  isCurr
+                    ? 'bg-[#0B2545] text-white border-[#0B2545] shadow-sm'
+                    : 'bg-white text-slate-800 border-slate-200 hover:border-[#0B2545]'
+                }`}
+              >
+                <div
+                  className={`font-mono text-[10px] font-bold uppercase ${
+                    isCurr ? 'text-blue-300' : 'text-[#1D4ED8]'
+                  }`}
+                >
+                  {pg.label}
+                </div>
+                <div className="font-bold text-xs sm:text-sm mt-0.5 truncate">
+                  {pg.title}
+                </div>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Live Embedded 3-Page Website */}
+        <div className="rounded-2xl border-2 border-slate-300 overflow-hidden shadow-lg">
+          {renderInlineWebsite()}
+        </div>
+      </section>
+
+      {/* Section 3: Curated Marketplace Catalog Grid */}
       <section className="mt-10 sm:mt-14 space-y-6">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div>
             <span className="font-mono text-xs font-bold uppercase tracking-wider text-[#1D4ED8]">
-              Katalog Aplikasi &amp; Source Code
+              Katalog Aplikasi &amp; Website 3 Halaman
             </span>
             <h2 className="font-['Syne',sans-serif] text-2xl sm:text-3xl font-extrabold text-[#0B2545] uppercase tracking-tight mt-1">
-              Produk Unggulan Siap Pakai
+              10 Produk Website Utuh Siap Akuisisi
             </h2>
           </div>
 
@@ -374,7 +510,7 @@ export default function Home() {
         )}
       </section>
 
-      {/* Section 3: Standar Serah Terima & Lisensi Kode */}
+      {/* Section 4: Standar Serah Terima & Lisensi Kode */}
       <section className="mt-12 sm:mt-16 bg-white rounded-[1.75rem] sm:rounded-[2.25rem] border border-slate-200 p-6 sm:p-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           <div className="lg:col-span-5 space-y-4">
@@ -382,10 +518,10 @@ export default function Home() {
               Engineering Handover
             </span>
             <h2 className="font-['Syne',sans-serif] text-2xl sm:text-3xl font-extrabold text-[#0B2545] uppercase tracking-tight leading-tight">
-              Standar Serah Terima &amp; Lisensi Kode
+              Standar Serah Terima &amp; Penyimpanan Produk
             </h2>
             <p className="text-sm text-slate-600 leading-relaxed">
-              Transaksi di BiruMarket dirancang transparan layaknya penyerahan proyek rekayasa perangkat lunak profesional. Anda tahu persis apa yang diterima sebelum membayar.
+              Setiap produk disimpan secara persisten di Supabase PostgreSQL + Storage dan dilengkapi arsitektur 3 halaman utuh yang dapat langsung dikustomisasi.
             </p>
             <div className="pt-2">
               <Link
@@ -405,13 +541,13 @@ export default function Home() {
               </div>
               <div>
                 <span className="font-mono text-[11px] font-bold text-slate-500 uppercase">
-                  01 / Source Code &amp; Database Migration
+                  01 / Source Code 3 Halaman &amp; Database Migration
                 </span>
                 <h3 className="font-bold text-base text-[#0B2545] mt-0.5">
-                  Repositori Penuh + Skema SQL / Supabase
+                  Storefront Katalog + Terminal POS/App + Monitor Backoffice
                 </h3>
                 <p className="text-sm text-slate-600 mt-1 leading-relaxed">
-                  Setiap paket mencakup seluruh kode sumber frontend &amp; backend, file migration atau <code className="font-mono text-xs bg-slate-100 px-1.5 py-0.5 rounded">supabase-schema.sql</code>, serta daftar environment variables agar dapat dijalankan lokal tanpa menebak.
+                  Bukan sekadar komponen tunggal: setiap paket berisi halaman etalase produk dengan modal spesifikasi, halaman operasional utama, dan halaman manajemen/monitor.
                 </p>
               </div>
             </div>
@@ -425,10 +561,10 @@ export default function Home() {
                   02 / Verifikasi Live Demo Sebelum Pembelian
                 </span>
                 <h3 className="font-bold text-base text-[#0B2545] mt-0.5">
-                  Uji Alur &amp; Responsivitas Langsung di Browser
+                  Uji Alur Lintas Halaman Langsung di Browser
                 </h3>
                 <p className="text-sm text-slate-600 mt-1 leading-relaxed">
-                  Tautan Live Demo pada setiap kartu produk mengarah ke deployment aktif sehingga Anda dapat menguji UI, fitur utama, dan kecepatan aplikasi sebelum memutuskan akuisisi.
+                  Pilih produk di Halaman 1 (Katalog), proses transaksinya di Halaman 2 (POS/Studio), dan lihat pembaruan status secara real-time di Halaman 3 (Monitor/KDS).
                 </p>
               </div>
             </div>
@@ -453,7 +589,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Section 4: Custom Project & Bundle Boarding Pass */}
+      {/* Section 5: Custom Project & Bundle Boarding Pass */}
       <section className="mt-10 sm:mt-14 bg-white rounded-[1.75rem] sm:rounded-[2.25rem] border border-slate-200 overflow-hidden">
         <div className="grid grid-cols-1 lg:grid-cols-12">
           {/* Left Ticket Body (8 cols) */}
@@ -518,7 +654,7 @@ export default function Home() {
                 rows={2}
                 value={inquiryNote}
                 onChange={(e) => setInquiryNote(e.target.value)}
-                placeholder="Contoh: Mau beli KuroBento POS + integrasi printer termal, atau butuh kustomisasi BagiRata..."
+                placeholder="Contoh: Mau beli KuroBento POS 3 Halaman + integrasi printer termal..."
                 className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-sm text-[#0B2545] placeholder:text-slate-400 focus:bg-white focus:border-[#1D4ED8] focus:outline-none"
               />
             </div>

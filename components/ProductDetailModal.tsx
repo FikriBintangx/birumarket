@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import {
   X,
   ExternalLink,
@@ -69,6 +70,27 @@ export default function ProductDetailModal({
 
   const waUrl = buildWhatsAppOrderUrl(product, licenseType);
 
+  const pages = product.pages || [
+    {
+      pageNumber: 1 as const,
+      label: 'Halaman 1 · Storefront',
+      title: 'Katalog & Preview Produk Visual',
+      summary: 'Halaman depan website dengan daftar produk, filter kategori, dan modal spesifikasi.',
+    },
+    {
+      pageNumber: 2 as const,
+      label: 'Halaman 2 · Aplikasi Utama',
+      title: 'Terminal Operasional / POS Interaktif',
+      summary: 'Ruang kerja utama aplikasi untuk transaksi atau pemrosesan data.',
+    },
+    {
+      pageNumber: 3 as const,
+      label: 'Halaman 3 · Manajemen',
+      title: 'Monitor Antrean, Inventaris & Laporan',
+      summary: 'Halaman kontrol backoffice untuk memantau status pesanan dan laporan.',
+    },
+  ];
+
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6"
@@ -94,14 +116,8 @@ export default function ProductDetailModal({
             <span className="text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-md bg-blue-50 text-[#1D4ED8] border border-blue-200">
               {product.category}
             </span>
-            <span
-              className={`text-[11px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-md ${
-                product.is_portfolio
-                  ? 'bg-slate-200 text-slate-800'
-                  : 'bg-emerald-50 text-emerald-800 border border-emerald-200'
-              }`}
-            >
-              {product.is_portfolio ? 'Portfolio Showcase' : 'Ready to Deploy'}
+            <span className="text-[11px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-md bg-emerald-50 text-emerald-800 border border-emerald-200">
+              WEBSITE UTUH 3 HALAMAN
             </span>
           </div>
 
@@ -128,6 +144,52 @@ export default function ProductDetailModal({
             <p className="text-slate-600 text-sm sm:text-base mt-2 leading-relaxed">
               {product.tagline || product.description}
             </p>
+          </div>
+
+          {/* 3-Page Architecture Quick Preview Cards */}
+          <div className="p-4 sm:p-5 rounded-2xl bg-[#0B2545] text-white space-y-3">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <span className="font-mono text-xs font-bold uppercase tracking-wider text-blue-300">
+                ARSITEKTUR WEBSITE 3 HALAMAN (KLIK UNTUK UJI LIVE TIAP HALAMAN):
+              </span>
+              {product.demo_url && (
+                <Link
+                  href={product.demo_url}
+                  className="font-mono text-xs font-bold text-white underline"
+                >
+                  Buka Fullscreen →
+                </Link>
+              )}
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+              {pages.map((pg) => (
+                <div
+                  key={pg.pageNumber}
+                  className="p-3.5 rounded-xl bg-white/10 border border-white/15 flex flex-col justify-between gap-3"
+                >
+                  <div className="space-y-1">
+                    <span className="font-mono text-[10px] font-bold uppercase text-blue-300 block">
+                      {pg.label}
+                    </span>
+                    <div className="font-bold text-sm text-white leading-snug">
+                      {pg.title}
+                    </div>
+                    <p className="text-xs text-slate-300 leading-relaxed">
+                      {pg.summary}
+                    </p>
+                  </div>
+                  {product.demo_url && (
+                    <Link
+                      href={`${product.demo_url}?page=${pg.pageNumber}`}
+                      className="w-full py-2 px-3 rounded-lg bg-white hover:bg-blue-50 text-[#0B2545] font-mono text-xs font-bold text-center transition block"
+                    >
+                      Buka Halaman {pg.pageNumber} →
+                    </Link>
+                  )}
+                </div>
+              ))}
+            </div>
           </div>
 
           {/* Visual Preview Stage */}
@@ -173,7 +235,7 @@ export default function ProductDetailModal({
             <div className="lg:col-span-7 space-y-6">
               <div>
                 <h3 className="font-mono text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">
-                  01 / Ringkasan Sistem
+                  01 / Ringkasan Sistem (3 Halaman)
                 </h3>
                 <p className="text-sm text-slate-700 leading-relaxed">
                   {product.description}
@@ -202,7 +264,7 @@ export default function ProductDetailModal({
 
               <div>
                 <h3 className="font-mono text-xs font-bold uppercase tracking-wider text-slate-500 mb-3">
-                  02 / Fitur & Kapabilitas Utama
+                  02 / Fitur &amp; Kapabilitas Utama
                 </h3>
                 <ul className="space-y-2.5">
                   {product.features.map((feat, idx) => (
@@ -265,14 +327,14 @@ export default function ProductDetailModal({
                     <div className="flex items-center justify-between gap-2">
                       <div className="flex items-center gap-2 font-bold text-sm text-[#0B2545]">
                         <FileCode2 className="w-4 h-4 text-[#1D4ED8]" />
-                        <span>Source Code + Skema DB</span>
+                        <span>Source Code 3 Halaman + DB</span>
                       </div>
                       {licenseType === 'source' && (
                         <Check className="w-4 h-4 text-[#1D4ED8]" />
                       )}
                     </div>
                     <p className="text-xs text-slate-600 mt-1.5 leading-relaxed">
-                      Full Git repository, SQL/Supabase schema, dan panduan env setup.
+                      Full Git repository (Storefront + Aplikasi POS/Studio + Backoffice), SQL/Supabase schema, dan panduan setup.
                     </p>
                   </button>
 
@@ -325,15 +387,13 @@ export default function ProductDetailModal({
 
                 <div className="grid grid-cols-2 gap-2.5">
                   {product.demo_url && (
-                    <a
+                    <Link
                       href={product.demo_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
                       className="min-h-[44px] bg-white hover:bg-slate-100 border border-slate-200 text-slate-800 font-semibold text-xs px-3 py-2.5 rounded-xl flex items-center justify-center gap-1.5 transition focus-visible:outline-2 focus-visible:outline-[#1D4ED8]"
                     >
                       <ExternalLink className="w-3.5 h-3.5" />
-                      <span>Buka Live Demo</span>
-                    </a>
+                      <span>Buka Website (3 Hal)</span>
+                    </Link>
                   )}
                   {product.github_url && (
                     <a

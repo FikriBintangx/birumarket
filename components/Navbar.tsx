@@ -13,7 +13,8 @@ export default function Navbar() {
     { index: '00', href: '/', label: 'Beranda' },
     { index: '01', href: '/catalog', label: 'Katalog' },
     { index: '02', href: '/about', label: 'Arsitektur' },
-    { index: '03', href: '/admin', label: 'Admin' },
+    { index: '03', href: '/skripsi', label: 'Joki Skripsi' },
+    { index: '04', href: '/admin', label: 'Admin' },
   ];
 
   return (

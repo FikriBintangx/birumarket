@@ -68,6 +68,15 @@ export default function Footer() {
                   <span>Legal &amp; Document Generators</span>
                 </Link>
               </li>
+              <li>
+                <Link
+                  href="/skripsi"
+                  className="hover:text-white transition inline-flex items-center gap-2"
+                >
+                  <span className="text-[10px] font-extrabold px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-400">01.E</span>
+                  <span>Bimbingan &amp; Joki Skripsi</span>
+                </Link>
+              </li>
             </ul>
           </div>
 

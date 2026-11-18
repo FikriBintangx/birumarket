@@ -32,7 +32,9 @@ export default function ProductCard({ product, onSelect }: ProductCardProps) {
             </div>
 
             <div className="text-[11px] font-semibold text-[#5C6269] truncate">
-              birumarket.web.id/demo/{product.slug}
+              {demoBase.startsWith('http')
+                ? demoBase.replace(/^https?:\/\//, '')
+                : `birumarket.web.id/demo/${product.slug}`}
             </div>
 
             <span className="text-[10px] uppercase tracking-wider text-[#111315] font-bold px-2 py-0.5 rounded-full bg-white/70 border border-[#E4E2DD] shrink-0">
@@ -135,13 +137,15 @@ export default function ProductCard({ product, onSelect }: ProductCardProps) {
             >
               Detail
             </button>
-            <Link
+            <a
               href={demoBase}
+              target={demoBase.startsWith('http') ? '_blank' : undefined}
+              rel={demoBase.startsWith('http') ? 'noopener noreferrer' : undefined}
               className="min-h-[38px] px-4 py-2 bg-[#111315] hover:bg-[#1D4ED8] text-[#F8F7F4] inline-flex items-center gap-1.5 rounded-full transition shadow-sm hover:shadow-md hover:scale-[1.02]"
             >
               <span>Live Demo</span>
               <ArrowUpRight className="w-3.5 h-3.5" />
-            </Link>
+            </a>
           </div>
         </div>
       </div>

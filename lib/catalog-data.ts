@@ -106,7 +106,7 @@ export const DEFAULT_PRODUCTS: ProductItem[] = [
     is_portfolio: false,
     thumbnail_url: '/products/shot-pos-kuro.png',
     preview_images: ['/products/shot-pos-kuro.png'],
-    demo_url: '/demo/pos-kuro',
+    demo_url: 'https://kurobento-pos.vercel.app',
     github_url: 'https://github.com/FikriBintangx/birumarket',
     description:
       'Platform web operasional untuk restoran ramen dan izakaya modern yang menyatukan tiga alur layanan dalam satu state sinkron. Halaman pertama menyajikan katalog visual hidangan dengan rincian kaldu, profil bahan, dan pratinjau komposisi mangkok. Halaman kedua berfungsi sebagai terminal kasir sentuh bergaya Shokuken dengan pemetaan booth meja dan kustomisasi tekstur mie. Halaman ketiga menampilkan antrean tiket masak dapur (KDS) beserta pemantauan porsi bahan baku.',
@@ -158,7 +158,7 @@ export const DEFAULT_PRODUCTS: ProductItem[] = [
     is_portfolio: false,
     thumbnail_url: '/products/shot-pos-brew.png',
     preview_images: ['/products/shot-pos-brew.png'],
-    demo_url: '/demo/pos-brew',
+    demo_url: 'https://brewlab-pos.vercel.app',
     github_url: 'https://github.com/FikriBintangx/birumarket',
     description:
       'Aplikasi web terpadu untuk kedai kopi spesialti dan micro-roastery dengan palet visual hangat dan tipografi bersih. Halaman pertama menampilkan etalase minuman espresso, manual brew V60, artisan pastry, dan kemasan biji kopi 250g lengkap dengan catatan sangrai serta parameter ekstraksi. Halaman kedua adalah terminal Speed-Bar POS untuk barista meracik modifier susu, es, dan shot dalam hitungan detik. Halaman ketiga menyediakan layar panggilan cup pelanggan dan ringkasan penjualan harian.',
@@ -210,7 +210,7 @@ export const DEFAULT_PRODUCTS: ProductItem[] = [
     is_portfolio: false,
     thumbnail_url: '/products/shot-pos-medika.png',
     preview_images: ['/products/shot-pos-medika.png'],
-    demo_url: '/demo/pos-medika',
+    demo_url: 'https://medika-pos.vercel.app',
     github_url: 'https://github.com/FikriBintangx/birumarket',
     description:
       'Platform web operasional apotek modern dan klinik farmasi yang dirancang dengan presisi informasi medis. Halaman pertama menyajikan katalog obat, suplemen, dan alat kesehatan dengan modal monografi lengkap (komposisi zat aktif, indikasi, kontraindikasi, dosis, nomor izin edar BPOM, dan klasifikasi golongan). Halaman kedua adalah terminal kasir SIMRS yang mengurutkan stok secara First-Expired-First-Out (FEFO) serta mencetak stiker etiket aturan pakai. Halaman ketiga memfasilitasi pengawasan tanggal kadaluarsa per nomor batch dan buku defekta.',
@@ -262,7 +262,7 @@ export const DEFAULT_PRODUCTS: ProductItem[] = [
     is_portfolio: false,
     thumbnail_url: '/products/shot-pos-atelier.png',
     preview_images: ['/products/shot-pos-atelier.png'],
-    demo_url: '/demo/pos-atelier',
+    demo_url: 'https://atelier-luxe-pos.vercel.app',
     github_url: 'https://github.com/FikriBintangx/birumarket',
     description:
       'Sistem web retail untuk rumah mode, label pakaian independen, dan butik barang kulit dengan pendekatan visual editorial. Halaman pertama menampilkan lookbook musiman berformat galeri, lengkap dengan modal spesifikasi konstruksi bahan, instruksi perawatan, dan matriks ukuran. Halaman kedua adalah terminal Clienteling POS yang mendukung pemilihan ukuran per artikel, kalkulasi privilese member VIP, dan opsi kemasan eksklusif. Halaman ketiga memuat direktori klien pribadi (Private Client Book) serta ketersediaan ukuran di berbagai lokasi cabang.',
@@ -314,7 +314,7 @@ export const DEFAULT_PRODUCTS: ProductItem[] = [
     is_portfolio: false,
     thumbnail_url: '/products/shot-pos-bengkel.png',
     preview_images: ['/products/shot-pos-bengkel.png'],
-    demo_url: '/demo/pos-bengkel',
+    demo_url: 'https://pitstop-pos.vercel.app',
     github_url: 'https://github.com/FikriBintangx/birumarket',
     description:
       'Platform web operasional untuk bengkel perawatan mobil modern dan distributor suku cadang resmi. Halaman pertama menampilkan etalase komponen OEM (oli sintetik, sistem pengereman keramik, filter udara, busi iridium) dan paket servis berkala dengan modal kompatibilitas tipe sasis/mesin. Halaman kedua merupakan terminal Perintah Kerja Bengkel (PKB) yang mengelola 4 stall hydraulic lift aktif serta memisahkan rincian biaya jasa mekanik dari harga komponen. Halaman ketiga adalah layar pelacakan progres servis berbasis pelat nomor untuk ruang tunggu pelanggan.',
@@ -368,7 +368,7 @@ export const DEFAULT_PRODUCTS: ProductItem[] = [
     is_portfolio: false,
     thumbnail_url: '/products/shot-app-pulseops.png',
     preview_images: ['/products/shot-app-pulseops.png'],
-    demo_url: '/demo/app-pulseops',
+    demo_url: 'https://pulseops-sre.vercel.app',
     github_url: 'https://github.com/FikriBintangx/birumarket',
     description:
       'Aplikasi web SaaS untuk pemantauan ketersediaan layanan (uptime) dan manajemen komunikasi insiden teknis. Halaman pertama berfungsi sebagai Public Status Page yang bersih bagi pelanggan untuk memeriksa kesehatan klaster API, database, payment gateway, dan CDN beserta histori SLA 30 hari. Halaman kedua adalah konsol Network Operations Center (NOC) internal dengan kurva latensi RTT berbasis SVG dan simulator health-check probe. Halaman ketiga menyediakan ruang penulisan postmortem insiden dan pengaturan routing notifikasi webhook.',
@@ -420,7 +420,7 @@ export const DEFAULT_PRODUCTS: ProductItem[] = [
     is_portfolio: false,
     thumbnail_url: '/products/shot-app-splitbill.png',
     preview_images: ['/products/shot-app-splitbill.png'],
-    demo_url: '/demo/app-splitbill',
+    demo_url: 'https://bagirata-bill.vercel.app',
     github_url: 'https://github.com/FikriBintangx/birumarket',
     description:
       'Aplikasi web consumer fintech untuk menghitung pembagian tagihan makan bersama secara transparan dan bebas selisih. Halaman pertama menyajikan katalog preset paket restoran populer (Izakaya Dinner, Specialty Coffee Hangout, Korean BBQ, Artisan Pizzeria) lengkap dengan foto hidangan untuk simulasi instan. Halaman kedua adalah studio interaktif tempat pengguna menandai pemesan tiap item pada struk dan menghitung PPN 11% serta biaya layanan secara proporsional. Halaman ketiga menghasilkan kartu tagihan per peserta lengkap dengan pelacak status lunas dan format pesan WhatsApp siap kirim.',
@@ -472,7 +472,7 @@ export const DEFAULT_PRODUCTS: ProductItem[] = [
     is_portfolio: false,
     thumbnail_url: '/products/shot-app-kursus.png',
     preview_images: ['/products/shot-app-kursus.png'],
-    demo_url: '/demo/app-kursus',
+    demo_url: 'https://kelaskilat-app.vercel.app',
     github_url: 'https://github.com/FikriBintangx/birumarket',
     description:
       'Platform web edukasi teknologi dan akademi koding independen yang merangkum seluruh perjalanan siswa dalam tiga halaman terstruktur. Halaman pertama menampilkan storefront program bootcamp (Next.js App Router Security, Production RAG Engineering, High-Concurrency PostgreSQL, Flutter Clean Architecture) dengan modal silabus per bab dan profil instruktur. Halaman kedua adalah ruang belajar split-pane yang menyandingkan materi arsitektur, blok kode produksi, dan evaluasi kuis interaktif. Halaman ketiga menampilkan transkrip capaian modul serta generator sertifikat kelulusan bernomor seri.',
@@ -524,7 +524,7 @@ export const DEFAULT_PRODUCTS: ProductItem[] = [
     is_portfolio: false,
     thumbnail_url: '/products/shot-app-klinik.png',
     preview_images: ['/products/shot-app-klinik.png'],
-    demo_url: '/demo/app-klinik',
+    demo_url: 'https://antremed-app.vercel.app',
     github_url: 'https://github.com/FikriBintangx/birumarket',
     description:
       'Sistem web pelayanan pasien rawat jalan dan reservasi poliklinik dengan estetika medis yang tenang dan informatif. Halaman pertama menyajikan katalog paket Medical Check-Up (MCU), layanan poli gigi, anak, dan penyakit dalam beserta profil dokter spesialis, rincian tahapan tindakan, serta tarif transparan. Halaman kedua adalah modul pendaftaran mandiri untuk memilih slot jam praktik dan menerbitkan tiket antrean digital ber-QR. Halaman ketiga merupakan tampilan layar TV ruang tunggu yang menampilkan nomor panggilan aktif per ruang poliklinik.',
@@ -576,7 +576,7 @@ export const DEFAULT_PRODUCTS: ProductItem[] = [
     is_portfolio: false,
     thumbnail_url: '/products/shot-app-kontrak.png',
     preview_images: ['/products/shot-app-kontrak.png'],
-    demo_url: '/demo/app-kontrak',
+    demo_url: 'https://legaldraft-app.vercel.app',
     github_url: 'https://github.com/FikriBintangx/birumarket',
     description:
       'Aplikasi web legal-tech yang dirancang khusus untuk software house, konsultan IT, dan studio desain digital di Indonesia. Halaman pertama menyajikan perpustakaan template perjanjian komersial (Surat Perintah Kerja Pengembangan Software, Mutual NDA, Kontrak Retainer Pemeliharaan Sistem, dan Perjanjian Lisensi HAKI Source Code) dengan modal pratinjau pasal krusial. Halaman kedua adalah studio penyusunan kontrak berformat split-pane yang menghitung nilai termin pembayaran secara otomatis di atas kanvas kertas A4 siap cetak. Halaman ketiga berfungsi sebagai brankas arsip dokumen klien dan pemantau status pencairan termin.',

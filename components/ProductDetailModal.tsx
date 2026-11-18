@@ -158,15 +158,17 @@ export default function ProductDetailModal({
                   <span className="w-2.5 h-2.5 rounded-full bg-[#81C784]" />
                 </div>
                 <span className="text-xs font-semibold text-[#525860] truncate">
-                  https://birumarket.web.id{demoBase}
+                  {demoBase.startsWith('http') ? demoBase : `https://birumarket.web.id${demoBase}`}
                 </span>
-                <Link
+                <a
                   href={demoBase}
+                  target={demoBase.startsWith('http') ? '_blank' : undefined}
+                  rel={demoBase.startsWith('http') ? 'noopener noreferrer' : undefined}
                   className="text-xs font-bold uppercase text-[#1D4ED8] hover:underline inline-flex items-center gap-1 shrink-0"
                 >
                   <span>Fullscreen</span>
                   <ArrowUpRight className="w-3.5 h-3.5" />
-                </Link>
+                </a>
               </div>
 
               <div className="relative w-full aspect-[16/9] bg-[#111315] overflow-hidden">
@@ -406,13 +408,15 @@ export default function ProductDetailModal({
                 </a>
 
                 <div className="grid grid-cols-2 gap-3">
-                  <Link
+                  <a
                     href={demoBase}
+                    target={demoBase.startsWith('http') ? '_blank' : undefined}
+                    rel={demoBase.startsWith('http') ? 'noopener noreferrer' : undefined}
                     className="min-h-[42px] bg-[#F8F7F4] hover:bg-[#ECEAE4] border border-[#E4E2DD] text-[#111315] font-bold text-xs px-3 py-2.5 rounded-full flex items-center justify-center gap-1.5 transition shadow-sm"
                   >
                     <ExternalLink className="w-3.5 h-3.5" />
                     <span>Live Demo</span>
-                  </Link>
+                  </a>
                   {product.github_url && (
                     <a
                       href={product.github_url}

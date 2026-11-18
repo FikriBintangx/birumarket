@@ -13,7 +13,8 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const validPin = process.env.ADMIN_PIN || 'BiruMarket7F3A#Secure2026';
+    const envPin = process.env.ADMIN_PIN;
+    const validPin = (envPin && envPin !== '123456') ? envPin : 'BiruMarket7F3A#Secure2026';
     const candidateDigest = crypto.createHash('sha256').update(candidate).digest();
     const validDigest = crypto.createHash('sha256').update(validPin).digest();
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import Link from 'next/link';
 import {
   ArrowLeft,
@@ -29,6 +29,7 @@ import {
   AntreMedDemo,
   LegalDraftDemo,
 } from '@/components/demos/WebAppDemos';
+import { gsap } from 'gsap';
 
 interface DemoSandboxClientProps {
   slug: string;
@@ -37,28 +38,37 @@ interface DemoSandboxClientProps {
 export default function DemoSandboxClient({ slug }: DemoSandboxClientProps) {
   const product = DEFAULT_PRODUCTS.find((p) => p.slug === slug || p.id === slug);
   const [activePage, setActivePage] = useState<1 | 2 | 3>(1);
-  const [prevPage, setPrevPage] = useState<1 | 2 | 3>(1);
-  const [isAnimating, setIsAnimating] = useState(false);
   const [viewport, setViewport] = useState<'desktop' | 'tablet' | 'mobile'>('desktop');
   const [copiedUrl, setCopiedUrl] = useState(false);
+  const contentRef = useRef<HTMLDivElement>(null);
 
   const handlePageSwitch = useCallback(
     (nextPage: 1 | 2 | 3) => {
       if (nextPage === activePage) return;
-      setPrevPage(activePage);
-      setIsAnimating(true);
-      setActivePage(nextPage);
 
-      if (typeof window !== 'undefined') {
-        const url = new URL(window.location.href);
-        url.searchParams.set('page', String(nextPage));
-        window.history.replaceState({}, '', url.toString());
+      if (contentRef.current && typeof window !== 'undefined') {
+        gsap.to(contentRef.current, {
+          opacity: 0,
+          y: 8,
+          duration: 0.15,
+          ease: 'power2.in',
+          onComplete: () => {
+            setActivePage(nextPage);
+            if (typeof window !== 'undefined') {
+              const url = new URL(window.location.href);
+              url.searchParams.set('page', String(nextPage));
+              window.history.replaceState({}, '', url.toString());
+            }
+            gsap.fromTo(
+              contentRef.current,
+              { opacity: 0, y: -8 },
+              { opacity: 1, y: 0, duration: 0.25, ease: 'power2.out' }
+            );
+          },
+        });
+      } else {
+        setActivePage(nextPage);
       }
-
-      const timer = setTimeout(() => {
-        setIsAnimating(false);
-      }, 220);
-      return () => clearTimeout(timer);
     },
     [activePage]
   );
@@ -69,7 +79,6 @@ export default function DemoSandboxClient({ slug }: DemoSandboxClientProps) {
       const p = Number(params.get('page'));
       if (p === 1 || p === 2 || p === 3) {
         setActivePage(p);
-        setPrevPage(p);
       }
     }
   }, []);
@@ -124,16 +133,16 @@ export default function DemoSandboxClient({ slug }: DemoSandboxClientProps) {
         return <LegalDraftDemo {...props} />;
       default:
         return (
-          <div className="bg-white p-14 text-center space-y-4">
-            <h1 className="font-serif text-3xl font-bold text-slate-900">
+          <div className="bg-white p-14 text-center space-y-4 rounded-3xl">
+            <h1 className="text-3xl font-extrabold text-slate-900">
               Demo Sandbox Tidak Ditemukan
             </h1>
-            <p className="text-sm text-slate-600 max-w-md mx-auto">
-              Slug demo <code className="font-mono bg-slate-100 px-2 py-0.5 rounded">{slug}</code> belum terdaftar di katalog aktif.
+            <p className="text-sm text-slate-600 max-w-md mx-auto font-medium">
+              Slug demo <code className="bg-slate-100 px-2 py-0.5 rounded-full font-bold">{slug}</code> belum terdaftar di katalog aktif.
             </p>
             <Link
               href="/catalog"
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-slate-900 text-white text-xs font-mono font-semibold rounded-full"
+              className="inline-flex items-center gap-2 px-6 py-2.5 bg-slate-900 text-white text-xs font-bold rounded-full"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
               Kembali ke Katalog
@@ -164,23 +173,17 @@ export default function DemoSandboxClient({ slug }: DemoSandboxClientProps) {
     },
   ];
 
-  const slideDirectionClass = isAnimating
-    ? activePage > prevPage
-      ? 'opacity-90 translate-x-1.5 scale-[0.997]'
-      : 'opacity-90 -translate-x-1.5 scale-[0.997]'
-    : 'opacity-100 translate-x-0 scale-100';
-
   return (
     <div className="space-y-4">
       {/* Modern Browser Studio Top Bar */}
-      <div className="bg-[#111315] text-white rounded-2xl border border-white/10 shadow-2xl overflow-hidden">
+      <div className="bg-[#111315] text-white rounded-[2rem] border border-white/10 shadow-2xl overflow-hidden">
         {/* Row 1: Browser Chrome, Address Bar & Viewport Controls */}
-        <div className="px-4 sm:px-5 py-3 flex flex-wrap items-center justify-between gap-3 border-b border-white/10 bg-[#16181B]">
+        <div className="px-5 py-3.5 flex flex-wrap items-center justify-between gap-3 border-b border-white/10 bg-[#16181B]">
           {/* Left: Back Link & Window Dots */}
           <div className="flex items-center gap-3 min-w-0">
             <Link
               href="/catalog"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/15 text-xs font-medium text-zinc-200 hover:text-white transition shrink-0"
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white/10 hover:bg-white/20 text-xs font-bold text-zinc-200 hover:text-white transition shrink-0"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
               <span>Katalog</span>
@@ -194,10 +197,10 @@ export default function DemoSandboxClient({ slug }: DemoSandboxClientProps) {
 
             <div className="hidden lg:block min-w-0 pl-1">
               <div className="flex items-center gap-2">
-                <span className="font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 border border-blue-400/20 font-semibold">
+                <span className="text-[10px] uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-blue-500/20 text-blue-300 border border-blue-400/20 font-extrabold">
                   {product?.sku || slug.toUpperCase()}
                 </span>
-                <span className="text-xs font-semibold text-zinc-100 truncate max-w-[220px]">
+                <span className="text-xs font-bold text-zinc-100 truncate max-w-[220px]">
                   {product ? product.title : slug}
                 </span>
               </div>
@@ -206,20 +209,20 @@ export default function DemoSandboxClient({ slug }: DemoSandboxClientProps) {
 
           {/* Center: Interactive Browser Address Bar */}
           <div className="flex-1 max-w-xl min-w-[240px] mx-auto">
-            <div className="flex items-center justify-between gap-2 px-3 py-1.5 rounded-xl bg-black/50 border border-white/10 font-mono text-[11px] text-zinc-300">
+            <div className="flex items-center justify-between gap-2 px-4 py-1.5 rounded-full bg-black/50 border border-white/10 text-xs text-zinc-300 shadow-inner">
               <div className="flex items-center gap-2 min-w-0">
                 <span className="w-2 h-2 rounded-full bg-emerald-400 shrink-0 animate-pulse" />
                 <Lock className="w-3 h-3 text-emerald-400 shrink-0" />
-                <span className="truncate text-zinc-400">
+                <span className="truncate text-zinc-400 font-medium">
                   https://birumarket.web.id/demo/
-                  <span className="text-white font-semibold">{slug}</span>
-                  <span className="text-blue-400 font-semibold">?page={activePage}</span>
+                  <span className="text-white font-bold">{slug}</span>
+                  <span className="text-blue-400 font-bold">?page={activePage}</span>
                 </span>
               </div>
               <button
                 type="button"
                 onClick={handleCopyUrl}
-                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-white/5 hover:bg-white/15 text-[10px] text-zinc-300 hover:text-white transition shrink-0"
+                className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-white/10 hover:bg-white/20 text-[10px] font-bold text-zinc-300 hover:text-white transition shrink-0"
                 title="Salin URL halaman demo"
               >
                 {copiedUrl ? (
@@ -240,7 +243,7 @@ export default function DemoSandboxClient({ slug }: DemoSandboxClientProps) {
           {/* Right: Viewport Switcher & Acquisition Button */}
           <div className="flex items-center gap-2.5">
             <div
-              className="hidden md:flex items-center bg-black/40 p-1 rounded-xl border border-white/10 text-[11px] font-mono"
+              className="hidden md:flex items-center bg-black/40 p-1 rounded-full border border-white/10 text-xs"
               role="group"
               aria-label="Pilih ukuran layar preview"
             >
@@ -258,9 +261,9 @@ export default function DemoSandboxClient({ slug }: DemoSandboxClientProps) {
                     key={vp.id}
                     type="button"
                     onClick={() => setViewport(vp.id)}
-                    className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg font-medium transition ${
+                    className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full font-bold transition ${
                       active
-                        ? 'bg-white text-[#111315] shadow-sm font-semibold'
+                        ? 'bg-white text-[#111315] shadow-sm'
                         : 'text-zinc-400 hover:text-white'
                     }`}
                   >
@@ -276,7 +279,7 @@ export default function DemoSandboxClient({ slug }: DemoSandboxClientProps) {
                 href={buildWhatsAppOrderUrl(product, 'source')}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#1D4ED8] hover:bg-blue-600 text-white text-xs font-semibold transition shadow-sm shrink-0"
+                className="inline-flex items-center gap-1.5 px-5 py-2 rounded-full bg-[#1D4ED8] hover:bg-blue-600 text-white text-xs font-bold transition shadow-md shrink-0 hover:scale-[1.02]"
               >
                 <span>Akuisisi Rp {product.price.toLocaleString('id-ID')}</span>
                 <ExternalLink className="w-3.5 h-3.5" />
@@ -286,7 +289,7 @@ export default function DemoSandboxClient({ slug }: DemoSandboxClientProps) {
         </div>
 
         {/* Row 2: Segmented 3-Page Pill Switcher */}
-        <div className="px-4 sm:px-5 py-3 bg-[#111315] flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+        <div className="px-5 py-3.5 bg-[#111315] flex flex-col lg:flex-row lg:items-center justify-between gap-3">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 flex-1">
             {pages.map((pg) => {
               const isCurrent = activePage === pg.pageNumber;
@@ -295,17 +298,17 @@ export default function DemoSandboxClient({ slug }: DemoSandboxClientProps) {
                   key={pg.pageNumber}
                   type="button"
                   onClick={() => handlePageSwitch(pg.pageNumber)}
-                  className={`group relative px-3.5 py-2.5 rounded-xl text-left transition-all duration-200 border flex items-center justify-between gap-3 ${
+                  className={`group relative px-4 py-2.5 rounded-2xl text-left transition-all duration-200 border flex items-center justify-between gap-3 ${
                     isCurrent
-                      ? 'bg-white text-[#111315] border-white shadow-md scale-[1.005]'
+                      ? 'bg-white text-[#111315] border-white shadow-lg scale-[1.01]'
                       : 'bg-white/[0.04] hover:bg-white/[0.08] text-zinc-300 border-white/10'
                   }`}
                 >
                   <div className="flex items-center gap-3 min-w-0">
                     <span
-                      className={`w-7 h-7 rounded-lg font-mono text-xs font-bold flex items-center justify-center shrink-0 transition ${
+                      className={`w-8 h-8 rounded-xl text-xs font-extrabold flex items-center justify-center shrink-0 transition ${
                         isCurrent
-                          ? 'bg-[#111315] text-white'
+                          ? 'bg-[#111315] text-white shadow-sm'
                           : 'bg-white/10 text-zinc-300 group-hover:bg-white/20'
                       }`}
                     >
@@ -313,20 +316,20 @@ export default function DemoSandboxClient({ slug }: DemoSandboxClientProps) {
                     </span>
                     <div className="min-w-0">
                       <div
-                        className={`font-mono text-[10px] font-semibold uppercase tracking-wider truncate ${
+                        className={`text-[11px] font-bold uppercase tracking-wider truncate ${
                           isCurrent ? 'text-[#1D4ED8]' : 'text-zinc-400'
                         }`}
                       >
                         {pg.label}
                       </div>
-                      <div className="font-semibold text-xs truncate mt-0.5">
+                      <div className="font-bold text-xs truncate mt-0.5">
                         {pg.title}
                       </div>
                     </div>
                   </div>
 
                   <span
-                    className={`inline-flex items-center gap-1 font-mono text-[10px] px-2 py-0.5 rounded-full font-semibold shrink-0 ${
+                    className={`inline-flex items-center gap-1 text-[11px] px-2.5 py-0.5 rounded-full font-bold shrink-0 ${
                       isCurrent
                         ? 'bg-emerald-500/15 text-emerald-700 border border-emerald-500/30'
                         : 'text-zinc-400 group-hover:text-white'
@@ -346,16 +349,16 @@ export default function DemoSandboxClient({ slug }: DemoSandboxClientProps) {
             })}
           </div>
 
-          <div className="hidden xl:flex items-center gap-2 pl-2 text-[11px] font-mono text-zinc-400 shrink-0">
+          <div className="hidden xl:flex items-center gap-2 pl-2 text-xs font-semibold text-zinc-400 shrink-0">
             <Sparkles className="w-3.5 h-3.5 text-blue-400" />
             <span>Pintasan: Alt+1 / Alt+2 / Alt+3</span>
           </div>
         </div>
       </div>
 
-      {/* Live Website Viewport Frame with Smooth Directional Motion */}
+      {/* Live Website Viewport Frame with Smooth GSAP transition */}
       <div
-        className={`mx-auto transition-all duration-300 ease-out border border-slate-200/90 shadow-2xl overflow-hidden rounded-2xl bg-white ${
+        className={`mx-auto transition-all duration-300 ease-out border border-slate-200/90 shadow-2xl overflow-hidden rounded-[2rem] bg-white ${
           viewport === 'mobile'
             ? 'max-w-[420px]'
             : viewport === 'tablet'
@@ -363,9 +366,7 @@ export default function DemoSandboxClient({ slug }: DemoSandboxClientProps) {
               : 'w-full'
         }`}
       >
-        <div
-          className={`transition-all duration-200 ease-out will-change-transform ${slideDirectionClass}`}
-        >
+        <div ref={contentRef} className="will-change-transform">
           {renderDemo()}
         </div>
       </div>

@@ -321,7 +321,7 @@ export default function AdminPage() {
           <span className="font-mono text-xs font-bold uppercase tracking-wider text-[#1D4ED8] block mb-1">
             Restricted Area
           </span>
-          <h1 className="font-['Syne',sans-serif] text-2xl font-extrabold text-[#0B2545] mb-2">
+          <h1 className="font-sans font-extrabold text-2xl font-extrabold text-[#0B2545] mb-2">
             Admin Backoffice
           </h1>
           <p className="text-sm text-slate-600 mb-6">
@@ -373,7 +373,7 @@ export default function AdminPage() {
           <span className="font-mono text-xs font-bold uppercase tracking-wider text-[#1D4ED8]">
             Supabase CMS &amp; Inventory
           </span>
-          <h1 className="font-['Syne',sans-serif] text-2xl sm:text-3xl font-extrabold text-[#0B2545] uppercase mt-1">
+          <h1 className="font-sans font-extrabold text-2xl sm:text-3xl font-extrabold text-[#0B2545] uppercase mt-1">
             Backoffice BiruMarket
           </h1>
           <p className="text-slate-600 text-xs sm:text-sm mt-1">
@@ -440,7 +440,7 @@ export default function AdminPage() {
         {/* Form Tambah / Edit Produk */}
         <div className="lg:col-span-5 bg-white p-6 sm:p-7 rounded-2xl border border-slate-200">
           <div className="flex items-center justify-between gap-2 mb-5">
-            <h2 className="font-['Syne',sans-serif] font-extrabold text-lg text-[#0B2545] flex items-center gap-2">
+            <h2 className="font-sans font-extrabold font-extrabold text-lg text-[#0B2545] flex items-center gap-2">
               {editingId ? (
                 <>
                   <Pencil className="w-4 h-4 text-[#1D4ED8]" />
@@ -726,7 +726,7 @@ export default function AdminPage() {
         {/* Product List Table */}
         <div className="lg:col-span-7 bg-white p-6 rounded-2xl border border-slate-200">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="font-['Syne',sans-serif] font-extrabold text-lg text-[#0B2545]">
+            <h2 className="font-sans font-extrabold font-extrabold text-lg text-[#0B2545]">
               Daftar Produk Aktif ({products.length})
             </h2>
             <a

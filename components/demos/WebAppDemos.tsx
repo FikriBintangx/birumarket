@@ -1678,7 +1678,7 @@ export function KelasKilatDemo({ activePage, onPageChange }: MultiPageDemoProps)
                     type="text"
                     value={studentName}
                     onChange={(e) => setStudentName(e.target.value)}
-                    className="w-full text-center font-serif text-2xl sm:text-3xl font-bold text-slate-900 bg-white border-b-2 border-slate-900 px-4 py-2 focus:outline-none"
+                    className="w-full text-center font-sans text-2xl sm:text-3xl font-bold text-slate-900 bg-white border-b-2 border-slate-900 px-4 py-2 focus:outline-none"
                   />
                   <span className="text-[11px] text-slate-400 block mt-1">
                     Klik nama di atas untuk menyesuaikan nama pada sertifikat
@@ -2308,7 +2308,7 @@ export function LegalDraftDemo({ activePage, onPageChange }: MultiPageDemoProps)
         {/* Stripe Atlas Inspired Header */}
         <header className="bg-white border-b border-slate-200 px-6 py-4 flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-serif font-bold text-base shadow-sm">
+            <div className="w-9 h-9 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-sans font-bold text-base shadow-sm">
               §
             </div>
             <div>
@@ -2523,7 +2523,7 @@ export function LegalDraftDemo({ activePage, onPageChange }: MultiPageDemoProps)
 
             {/* Lembar Kertas A4 Berbayang Lembut */}
             <div className="lg:col-span-8">
-              <div className="bg-white rounded-2xl border border-slate-200/90 shadow-[0_20px_50px_rgba(15,23,42,0.08)] p-8 sm:p-12 space-y-6 font-serif text-slate-900">
+              <div className="bg-white rounded-2xl border border-slate-200/90 shadow-[0_20px_50px_rgba(15,23,42,0.08)] p-8 sm:p-12 space-y-6 font-sans text-slate-900">
                 <div className="text-center border-b border-slate-300 pb-5 space-y-1.5">
                   <div className="font-mono text-[10px] uppercase tracking-widest text-slate-400">
                     Dokumen Perjanjian Komersial · Standar Hukum Republik Indonesia

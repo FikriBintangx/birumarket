@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState, Suspense } from 'react';
+import { useEffect, useMemo, useState, Suspense, useRef } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import Navbar from '@/components/Navbar';
@@ -17,6 +17,7 @@ import {
   List,
   ArrowUpRight,
 } from 'lucide-react';
+import { gsap } from 'gsap';
 
 function CatalogContent() {
   const searchParams = useSearchParams();
@@ -37,6 +38,8 @@ function CatalogContent() {
   const [sortBy, setSortBy] = useState<'default' | 'price_asc' | 'price_desc'>('default');
   const [viewMode, setViewMode] = useState<'grid' | 'index'>('grid');
   const [selectedProduct, setSelectedProduct] = useState<ProductItem | null>(null);
+
+  const listRef = useRef<HTMLDivElement>(null);
 
   const fetchCatalog = async () => {
     setLoading(true);
@@ -107,6 +110,26 @@ function CatalogContent() {
     return list;
   }, [allProducts, category, statusFilter, search, sortBy]);
 
+  // GSAP animation for catalog items
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        '.gsap-catalog-card',
+        { opacity: 0, y: 30 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.55,
+          ease: 'power2.out',
+          stagger: 0.08,
+        }
+      );
+    }, listRef);
+
+    return () => ctx.revert();
+  }, [filteredProducts, viewMode]);
+
   const resetFilters = () => {
     setCategory('ALL');
     setSearch('');
@@ -115,42 +138,42 @@ function CatalogContent() {
   };
 
   return (
-    <div className="max-w-[1400px] mx-auto px-4 sm:px-8 lg:px-12 py-10 sm:py-14 space-y-8">
+    <div ref={listRef} className="max-w-[1400px] mx-auto px-4 sm:px-8 lg:px-12 py-10 sm:py-14 space-y-8">
       {/* Editorial Masthead */}
       <div className="border-b border-[#E4E2DD] pb-8 flex flex-col lg:flex-row lg:items-end justify-between gap-6">
         <div className="space-y-2">
-          <span className="font-mono text-xs font-bold uppercase tracking-wider text-[#1D4ED8] block">
+          <span className="text-xs font-extrabold uppercase tracking-wider text-[#1D4ED8] block">
             01 / Direktori Sistem &amp; Source Code
           </span>
-          <h1 className="font-['Syne',sans-serif] text-3xl sm:text-5xl font-extrabold text-[#111315] tracking-tight">
+          <h1 className="text-3xl sm:text-5xl font-extrabold text-[#111315] tracking-tight">
             Katalog Sistem Web{' '}
-            <span className="font-serif-editorial italic font-normal text-4xl sm:text-5xl text-[#525860]">
+            <span className="text-[#525860] font-bold">
               3 halaman utuh.
             </span>
           </h1>
-          <p className="text-[#525860] text-xs sm:text-sm max-w-2xl leading-relaxed">
+          <p className="text-[#525860] text-xs sm:text-sm max-w-2xl leading-relaxed font-medium">
             Setiap entri di bawah merupakan aplikasi 3 halaman lengkap (Storefront, Terminal POS/Studio, dan Monitor Backoffice). Gunakan mode Galeri 2-Kolom atau Indeks Arsip Ringkas.
           </p>
         </div>
 
         {/* View Mode Switcher + Counter */}
         <div className="flex flex-wrap items-center gap-3 self-start lg:self-auto">
-          <div className="font-mono text-xs bg-white border border-[#E4E2DD] px-3.5 py-2 text-[#111315]">
+          <div className="text-xs font-bold bg-white border border-[#E4E2DD] px-4 py-2 rounded-full text-[#111315] shadow-sm">
             Menampilkan <strong>{filteredProducts.length}</strong> /{' '}
             <strong>{allProducts.length}</strong> sistem
           </div>
 
           <div
-            className="inline-flex border border-[#111315] bg-white p-0.5"
+            className="inline-flex border border-[#111315] bg-white p-1 rounded-full shadow-sm"
             role="group"
             aria-label="Mode tampilan katalog"
           >
             <button
               type="button"
               onClick={() => setViewMode('grid')}
-              className={`px-3 py-1.5 font-mono text-xs font-semibold inline-flex items-center gap-1.5 transition ${
+              className={`px-4 py-1.5 text-xs font-bold rounded-full inline-flex items-center gap-1.5 transition ${
                 viewMode === 'grid'
-                  ? 'bg-[#111315] text-[#F8F7F4]'
+                  ? 'bg-[#111315] text-[#F8F7F4] shadow-sm'
                   : 'text-[#525860] hover:text-[#111315]'
               }`}
             >
@@ -160,9 +183,9 @@ function CatalogContent() {
             <button
               type="button"
               onClick={() => setViewMode('index')}
-              className={`px-3 py-1.5 font-mono text-xs font-semibold inline-flex items-center gap-1.5 transition ${
+              className={`px-4 py-1.5 text-xs font-bold rounded-full inline-flex items-center gap-1.5 transition ${
                 viewMode === 'index'
-                  ? 'bg-[#111315] text-[#F8F7F4]'
+                  ? 'bg-[#111315] text-[#F8F7F4] shadow-sm'
                   : 'text-[#525860] hover:text-[#111315]'
               }`}
             >
@@ -188,7 +211,7 @@ function CatalogContent() {
                 key={cat}
                 type="button"
                 onClick={() => setCategory(cat)}
-                className={`min-h-[40px] px-4 py-2 font-mono text-xs font-semibold tracking-wider transition whitespace-nowrap inline-flex items-center gap-2 shrink-0 border ${
+                className={`min-h-[40px] px-4 py-2 text-xs font-bold rounded-full transition whitespace-nowrap inline-flex items-center gap-2 shrink-0 border shadow-sm ${
                   active
                     ? 'bg-[#111315] text-[#F8F7F4] border-[#111315]'
                     : 'bg-white text-[#3B4046] border-[#E4E2DD] hover:border-[#111315]'
@@ -196,7 +219,7 @@ function CatalogContent() {
               >
                 <span>{cat}</span>
                 <span
-                  className={`px-1.5 py-0.5 text-[10px] ${
+                  className={`px-2 py-0.5 rounded-full text-[10px] font-extrabold ${
                     active
                       ? 'bg-white/20 text-white'
                       : 'bg-[#F8F7F4] text-[#687078]'
@@ -219,13 +242,13 @@ function CatalogContent() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               aria-label="Cari produk"
-              className="w-full min-h-[44px] pl-11 pr-10 py-2.5 bg-white border border-[#D5D2CA] text-sm text-[#111315] placeholder:text-[#8C929A] focus:border-[#111315] focus:outline-none"
+              className="w-full min-h-[46px] pl-11 pr-10 py-2.5 bg-white border border-[#D5D2CA] rounded-full text-sm font-medium text-[#111315] placeholder:text-[#8C929A] focus:border-[#111315] focus:outline-none shadow-sm"
             />
             {search && (
               <button
                 type="button"
                 onClick={() => setSearch('')}
-                className="w-8 h-8 text-[#8C929A] hover:text-[#111315] flex items-center justify-center absolute right-2 top-1/2 -translate-y-1/2"
+                className="w-8 h-8 text-[#8C929A] hover:text-[#111315] flex items-center justify-center absolute right-3 top-1/2 -translate-y-1/2"
                 aria-label="Hapus kata kunci pencarian"
               >
                 <X className="w-4 h-4" />
@@ -233,7 +256,7 @@ function CatalogContent() {
             )}
           </div>
 
-          <div className="md:col-span-3 flex items-center gap-2 bg-white border border-[#D5D2CA] px-3 min-h-[44px]">
+          <div className="md:col-span-3 flex items-center gap-2 bg-white border border-[#D5D2CA] px-4 min-h-[46px] rounded-full shadow-sm">
             <SlidersHorizontal className="w-4 h-4 text-[#8C929A] shrink-0" />
             <select
               value={statusFilter}
@@ -241,7 +264,7 @@ function CatalogContent() {
                 setStatusFilter(e.target.value as 'ALL' | 'SALE' | 'PORTFOLIO')
               }
               aria-label="Filter tipe lisensi"
-              className="w-full bg-transparent font-mono text-xs font-medium text-[#111315] focus:outline-none py-2"
+              className="w-full bg-transparent text-xs font-semibold text-[#111315] focus:outline-none py-2"
             >
               <option value="ALL">Semua Tipe Lisensi</option>
               <option value="SALE">Siap Akuisisi (Ready)</option>
@@ -249,14 +272,14 @@ function CatalogContent() {
             </select>
           </div>
 
-          <div className="md:col-span-3 bg-white border border-[#D5D2CA] px-3 min-h-[44px] flex items-center">
+          <div className="md:col-span-3 bg-white border border-[#D5D2CA] px-4 min-h-[46px] rounded-full flex items-center shadow-sm">
             <select
               value={sortBy}
               onChange={(e) =>
                 setSortBy(e.target.value as 'default' | 'price_asc' | 'price_desc')
               }
               aria-label="Urutkan produk"
-              className="w-full bg-transparent font-mono text-xs font-medium text-[#111315] focus:outline-none py-2"
+              className="w-full bg-transparent text-xs font-semibold text-[#111315] focus:outline-none py-2"
             >
               <option value="default">Urutan: Indeks Kurasi</option>
               <option value="price_asc">Harga: Terendah → Tertinggi</option>
@@ -268,12 +291,12 @@ function CatalogContent() {
 
       {/* Error State Banner */}
       {errorMsg && (
-        <div className="p-4 bg-amber-50 border border-amber-300 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs sm:text-sm text-amber-950">
+        <div className="p-4 bg-amber-50 border border-amber-300 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs sm:text-sm text-amber-950 font-medium">
           <span>{errorMsg}</span>
           <button
             type="button"
             onClick={fetchCatalog}
-            className="min-h-[36px] px-4 py-1.5 bg-white border border-amber-400 font-mono font-semibold text-xs inline-flex items-center gap-1.5 hover:bg-amber-100 transition self-start sm:self-auto"
+            className="min-h-[38px] px-5 py-2 bg-white border border-amber-400 font-bold text-xs rounded-full inline-flex items-center gap-1.5 hover:bg-amber-100 transition self-start sm:self-auto shadow-sm"
           >
             <RefreshCw className="w-3.5 h-3.5" />
             <span>Muat Ulang</span>
@@ -283,25 +306,25 @@ function CatalogContent() {
 
       {/* Loading State */}
       {loading ? (
-        <div className="bg-white border border-[#E4E2DD] p-16 text-center space-y-3">
-          <div className="animate-spin h-7 w-7 border-2 border-[#111315] border-t-transparent mx-auto" />
-          <p className="font-mono text-xs uppercase tracking-wider text-[#687078]">
+        <div className="bg-white border border-[#E4E2DD] rounded-3xl p-16 text-center space-y-3 shadow-sm">
+          <div className="animate-spin h-7 w-7 border-2 border-[#111315] border-t-transparent mx-auto rounded-full" />
+          <p className="text-xs font-bold uppercase tracking-wider text-[#687078]">
             Menyinkronkan arsip katalog dari Supabase...
           </p>
         </div>
       ) : filteredProducts.length === 0 ? (
         /* Empty State */
-        <div className="bg-white border border-[#E4E2DD] p-12 text-center space-y-4">
-          <h2 className="font-['Syne',sans-serif] text-xl font-bold text-[#111315]">
+        <div className="bg-white border border-[#E4E2DD] rounded-3xl p-12 text-center space-y-4 shadow-sm">
+          <h2 className="text-xl font-extrabold text-[#111315]">
             Tidak Ada Sistem yang Cocok
           </h2>
-          <p className="text-sm text-[#525860] max-w-md mx-auto">
+          <p className="text-sm font-medium text-[#525860] max-w-md mx-auto">
             Filter kategori atau kata kunci pencarian tidak menemukan hasil. Atur ulang filter untuk menampilkan seluruh 10 sistem.
           </p>
           <button
             type="button"
             onClick={resetFilters}
-            className="min-h-[42px] px-5 py-2.5 bg-[#111315] hover:bg-[#1D4ED8] text-[#F8F7F4] font-mono text-xs font-semibold transition"
+            className="min-h-[44px] px-6 py-2.5 bg-[#111315] hover:bg-[#1D4ED8] text-[#F8F7F4] text-xs font-bold rounded-full transition shadow-sm"
           >
             Reset Semua Filter
           </button>
@@ -310,18 +333,19 @@ function CatalogContent() {
         /* 2-Column Large Editorial Grid */
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {filteredProducts.map((p) => (
-            <ProductCard
-              key={p.id}
-              product={p}
-              onSelect={(prod) => setSelectedProduct(prod)}
-            />
+            <div key={p.id} className="gsap-catalog-card">
+              <ProductCard
+                product={p}
+                onSelect={(prod) => setSelectedProduct(prod)}
+              />
+            </div>
           ))}
         </div>
       ) : (
         /* Compact Archival Index List View */
-        <div className="bg-white border border-[#111315] divide-y divide-[#E4E2DD]">
+        <div className="bg-white border border-[#111315]/20 rounded-3xl overflow-hidden divide-y divide-[#E4E2DD] shadow-sm">
           {/* Table Header */}
-          <div className="hidden lg:grid lg:grid-cols-12 gap-4 px-5 py-3 bg-[#F3F1EC] font-mono text-[10px] font-bold uppercase tracking-wider text-[#525860]">
+          <div className="hidden lg:grid lg:grid-cols-12 gap-4 px-6 py-3.5 bg-[#F3F1EC] text-xs font-extrabold uppercase tracking-wider text-[#525860]">
             <div className="col-span-1">NO / SKU</div>
             <div className="col-span-4">SISTEM &amp; DESKRIPSI</div>
             <div className="col-span-2">KATEGORI</div>
@@ -334,14 +358,14 @@ function CatalogContent() {
             return (
               <div
                 key={p.id}
-                className="p-4 sm:p-5 lg:grid lg:grid-cols-12 gap-4 items-center hover:bg-[#F8F7F4] transition space-y-3 lg:space-y-0"
+                className="gsap-catalog-card p-5 sm:p-6 lg:grid lg:grid-cols-12 gap-4 items-center hover:bg-[#F8F7F4] transition space-y-3 lg:space-y-0"
               >
                 {/* Index & SKU */}
-                <div className="lg:col-span-1 font-mono text-xs flex lg:block items-center justify-between">
+                <div className="lg:col-span-1 text-xs flex lg:block items-center justify-between font-semibold">
                   <span className="text-[#8C929A] block">
                     {String(idx + 1).padStart(2, '0')}
                   </span>
-                  <span className="font-bold text-[#111315]">
+                  <span className="font-extrabold text-[#111315]">
                     {p.sku || p.id.toUpperCase()}
                   </span>
                 </div>
@@ -351,24 +375,24 @@ function CatalogContent() {
                   <button
                     type="button"
                     onClick={() => setSelectedProduct(p)}
-                    className="text-left font-['Syne',sans-serif] font-bold text-base text-[#111315] hover:text-[#1D4ED8] transition block"
+                    className="text-left font-extrabold text-base text-[#111315] hover:text-[#1D4ED8] transition block"
                   >
                     {p.title.replace(/\s*\(3 Halaman\)/gi, '')}
                   </button>
-                  <p className="text-xs text-[#525860] line-clamp-1 mt-0.5">
+                  <p className="text-xs text-[#525860] line-clamp-1 mt-0.5 font-medium">
                     {p.tagline || p.description}
                   </p>
                 </div>
 
                 {/* Category */}
-                <div className="lg:col-span-2 font-mono text-[11px] text-[#3B4046]">
-                  <span className="px-2 py-1 bg-[#F8F7F4] border border-[#E4E2DD]">
+                <div className="lg:col-span-2 text-xs font-semibold text-[#3B4046]">
+                  <span className="px-3 py-1 bg-[#F8F7F4] border border-[#E4E2DD] rounded-full">
                     {p.category}
                   </span>
                 </div>
 
                 {/* 3-Page Deep Jump */}
-                <div className="lg:col-span-3 flex flex-wrap items-center gap-1.5 font-mono text-[10px]">
+                <div className="lg:col-span-3 flex flex-wrap items-center gap-1.5 text-[11px]">
                   {([
                     { num: 1, label: '01 Storefront' },
                     { num: 2, label: '02 POS/App' },
@@ -377,7 +401,7 @@ function CatalogContent() {
                     <Link
                       key={pg.num}
                       href={`${demoBase}?page=${pg.num}`}
-                      className="px-2 py-1 bg-white hover:bg-[#111315] text-[#111315] hover:text-[#F8F7F4] border border-[#D5D2CA] transition font-semibold"
+                      className="px-2.5 py-1 bg-white hover:bg-[#111315] text-[#111315] hover:text-[#F8F7F4] border border-[#D5D2CA] rounded-full transition font-bold"
                     >
                       {pg.label}
                     </Link>
@@ -386,20 +410,20 @@ function CatalogContent() {
 
                 {/* Price & Actions */}
                 <div className="lg:col-span-2 flex items-center lg:justify-end justify-between gap-2.5 pt-2 lg:pt-0 border-t lg:border-t-0 border-[#E4E2DD]">
-                  <span className="font-mono text-xs font-bold text-[#111315]">
+                  <span className="text-xs font-extrabold text-[#111315]">
                     Rp {(Number(p.price) / 1000).toFixed(0)}k
                   </span>
-                  <div className="flex items-center gap-1.5 font-mono text-[11px] font-semibold">
+                  <div className="flex items-center gap-1.5 text-xs font-bold">
                     <button
                       type="button"
                       onClick={() => setSelectedProduct(p)}
-                      className="px-2.5 py-1.5 border border-[#D5D2CA] bg-white hover:border-[#111315] text-[#111315]"
+                      className="px-3 py-1.5 border border-[#D5D2CA] bg-white hover:border-[#111315] text-[#111315] rounded-full transition"
                     >
                       Detail
                     </button>
                     <Link
                       href={demoBase}
-                      className="px-2.5 py-1.5 bg-[#111315] hover:bg-[#1D4ED8] text-[#F8F7F4] inline-flex items-center gap-1"
+                      className="px-3 py-1.5 bg-[#111315] hover:bg-[#1D4ED8] text-[#F8F7F4] rounded-full inline-flex items-center gap-1 transition"
                     >
                       <span>Demo</span>
                       <ArrowUpRight className="w-3 h-3" />
@@ -426,7 +450,7 @@ export default function CatalogPage() {
       <Navbar />
       <Suspense
         fallback={
-          <div className="max-w-[1400px] mx-auto px-4 sm:px-8 lg:px-12 py-16 text-center font-mono text-xs uppercase tracking-wider text-[#687078]">
+          <div className="max-w-[1400px] mx-auto px-4 sm:px-8 lg:px-12 py-16 text-center text-xs font-bold uppercase tracking-wider text-[#687078]">
             Menyiapkan direktori katalog...
           </div>
         }

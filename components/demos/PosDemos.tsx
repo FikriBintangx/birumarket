@@ -312,7 +312,7 @@ export function KuroBentoPos({ activePage, onPageChange }: MultiPageDemoProps) {
         <header className="border-b border-white/10 bg-[#121318]/95 backdrop-blur-md sticky top-0 z-30">
           <div className="px-5 sm:px-8 py-4 flex flex-wrap items-center justify-between gap-4">
             <div className="flex items-center gap-3.5">
-              <div className="w-10 h-10 rounded-xl bg-[#E11D48] text-white flex items-center justify-center font-serif font-bold text-xl shadow-lg shadow-[#E11D48]/25">
+              <div className="w-10 h-10 rounded-xl bg-[#E11D48] text-white flex items-center justify-center font-sans font-bold text-xl shadow-lg shadow-[#E11D48]/25">
                 黒
               </div>
               <div>
@@ -1215,7 +1215,7 @@ export function BrewLabPos({ activePage, onPageChange }: MultiPageDemoProps) {
               <span className="font-mono text-[10px] tracking-widest uppercase text-[#C85A32] font-semibold block">
                 Small-Batch Roastery &amp; Espresso Bar
               </span>
-              <div className="font-serif text-2xl font-bold tracking-tight text-stone-900">
+              <div className="font-sans text-2xl font-bold tracking-tight text-stone-900">
                 BrewLab Roastery · Bandung
               </div>
             </div>
@@ -1263,7 +1263,7 @@ export function BrewLabPos({ activePage, onPageChange }: MultiPageDemoProps) {
                 <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white text-[#C85A32] text-xs font-semibold border border-stone-200">
                   Sangrai Segar Tiap Pekan · La Marzocco KB90
                 </span>
-                <h1 className="font-serif text-3xl sm:text-4xl font-bold text-stone-900 leading-tight">
+                <h1 className="font-sans text-3xl sm:text-4xl font-bold text-stone-900 leading-tight">
                   Ekstraksi Presisi dari Petani Hulu ke Cangkir Pagi Anda.
                 </h1>
                 <p className="text-sm text-stone-600 max-w-xl leading-relaxed">
@@ -1332,7 +1332,7 @@ export function BrewLabPos({ activePage, onPageChange }: MultiPageDemoProps) {
                       <div className="font-mono text-[11px] text-[#C85A32] font-semibold">
                         {item.origin}
                       </div>
-                      <h2 className="font-serif text-xl font-bold text-stone-900">{item.name}</h2>
+                      <h2 className="font-sans text-xl font-bold text-stone-900">{item.name}</h2>
                       <p className="text-xs text-stone-600 leading-relaxed line-clamp-2">{item.desc}</p>
                       <div className="flex flex-wrap gap-1.5 pt-1">
                         {item.notes.map((n) => (
@@ -1394,7 +1394,7 @@ export function BrewLabPos({ activePage, onPageChange }: MultiPageDemoProps) {
                       <span className="font-mono text-xs font-semibold text-[#C85A32]">
                         {previewBean.origin}
                       </span>
-                      <h3 className="font-serif text-2xl font-bold text-stone-900 mt-0.5">
+                      <h3 className="font-sans text-2xl font-bold text-stone-900 mt-0.5">
                         {previewBean.name}
                       </h3>
                     </div>
@@ -1551,7 +1551,7 @@ export function BrewLabPos({ activePage, onPageChange }: MultiPageDemoProps) {
                       <div className="font-mono text-[10px] text-[#C85A32] font-semibold truncate">
                         {item.origin}
                       </div>
-                      <div className="font-serif font-bold text-sm text-stone-900 truncate">
+                      <div className="font-sans font-bold text-sm text-stone-900 truncate">
                         {item.name}
                       </div>
                       <div className="pt-1 flex items-center justify-between">
@@ -1579,7 +1579,7 @@ export function BrewLabPos({ activePage, onPageChange }: MultiPageDemoProps) {
                       type="text"
                       value={cupName}
                       onChange={(e) => setCupName(e.target.value.toUpperCase())}
-                      className="font-serif font-bold text-lg text-stone-900 bg-transparent border-b border-stone-300 focus:border-[#C85A32] focus:outline-none w-40"
+                      className="font-sans font-bold text-lg text-stone-900 bg-transparent border-b border-stone-300 focus:border-[#C85A32] focus:outline-none w-40"
                     />
                   </div>
                   <span className="px-2.5 py-1 rounded-full bg-[#F3EFE6] font-mono text-xs font-bold text-stone-800">
@@ -1599,7 +1599,7 @@ export function BrewLabPos({ activePage, onPageChange }: MultiPageDemoProps) {
                         className="w-12 h-12 rounded-lg object-cover shrink-0"
                       />
                       <div className="min-w-0 flex-1">
-                        <div className="font-serif font-bold text-xs text-stone-900 truncate">
+                        <div className="font-sans font-bold text-xs text-stone-900 truncate">
                           {o.name}
                         </div>
                         <div className="font-mono text-[10px] text-stone-500">{o.meta}</div>
@@ -1632,7 +1632,7 @@ export function BrewLabPos({ activePage, onPageChange }: MultiPageDemoProps) {
               <div className="space-y-4 pt-4 border-t border-stone-200">
                 <div className="flex justify-between items-baseline">
                   <span className="text-xs text-stone-500 font-medium">Total Pembayaran</span>
-                  <span className="font-serif text-2xl font-bold text-stone-900">
+                  <span className="font-sans text-2xl font-bold text-stone-900">
                     Rp {total.toLocaleString('id-ID')}
                   </span>
                 </div>
@@ -1681,7 +1681,7 @@ export function BrewLabPos({ activePage, onPageChange }: MultiPageDemoProps) {
                     <span className="font-mono text-[10px] uppercase tracking-wider text-[#C85A32] font-semibold">
                       Live Espresso Bar Display
                     </span>
-                    <h2 className="font-serif text-2xl font-bold text-stone-900">
+                    <h2 className="font-sans text-2xl font-bold text-stone-900">
                       Status Panggilan Cup Pelanggan
                     </h2>
                   </div>
@@ -1698,7 +1698,7 @@ export function BrewLabPos({ activePage, onPageChange }: MultiPageDemoProps) {
                     >
                       <div>
                         <div className="font-mono text-xs text-stone-500">{c.code}</div>
-                        <div className="font-serif text-xl font-bold text-stone-900">{c.guest}</div>
+                        <div className="font-sans text-xl font-bold text-stone-900">{c.guest}</div>
                         <div className="text-xs text-stone-600">{c.drink}</div>
                       </div>
                       <div className="text-right">
@@ -1735,7 +1735,7 @@ export function BrewLabPos({ activePage, onPageChange }: MultiPageDemoProps) {
                   <div className="font-mono text-[10px] uppercase tracking-wider text-[#C85A32] font-semibold">
                     Roastery Telemetry
                   </div>
-                  <div className="font-serif text-xl font-bold text-stone-900">
+                  <div className="font-sans text-xl font-bold text-stone-900">
                     Gramasi Hopper &amp; Rekap Shift
                   </div>
                 </div>
@@ -2525,7 +2525,7 @@ export function AtelierLuxePos({ activePage, onPageChange }: MultiPageDemoProps)
       <div>
         <header className="px-6 sm:px-8 py-5 border-b border-stone-200 bg-white flex flex-wrap items-center justify-between gap-4">
           <div>
-            <h1 className="font-serif text-2xl tracking-[0.24em] text-stone-950">ATELIER LUXE</h1>
+            <h1 className="font-sans text-2xl tracking-[0.24em] text-stone-950">ATELIER LUXE</h1>
             <span className="font-mono text-[10px] uppercase tracking-widest text-stone-500">
               Autumn / Winter 2026 Archive · Senayan &amp; Plaza Indonesia
             </span>
@@ -2570,7 +2570,7 @@ export function AtelierLuxePos({ activePage, onPageChange }: MultiPageDemoProps)
                 <span className="font-mono text-[11px] tracking-widest uppercase text-stone-500">
                   Autumn / Winter 2026 Ready-to-Wear &amp; Leather Goods
                 </span>
-                <h2 className="font-serif text-3xl sm:text-4xl text-stone-950 leading-tight">
+                <h2 className="font-sans text-3xl sm:text-4xl text-stone-950 leading-tight">
                   Siluet Monokrom Arsitektural &amp; Cashmere Terbaik dari Milan.
                 </h2>
                 <p className="text-sm text-stone-600 leading-relaxed">
@@ -2614,7 +2614,7 @@ export function AtelierLuxePos({ activePage, onPageChange }: MultiPageDemoProps)
                         <div className="font-mono text-[10px] uppercase tracking-wider text-stone-500">
                           {item.cat} · {item.origin}
                         </div>
-                        <h3 className="font-serif text-lg font-bold text-stone-950">{item.name}</h3>
+                        <h3 className="font-sans text-lg font-bold text-stone-950">{item.name}</h3>
                         <p className="text-xs text-stone-600 line-clamp-2">{item.fabric}</p>
                         <div className="font-mono text-sm font-bold text-stone-950 pt-1">
                           IDR {item.price.toLocaleString('id-ID')}
@@ -2683,7 +2683,7 @@ export function AtelierLuxePos({ activePage, onPageChange }: MultiPageDemoProps)
                       <span className="font-mono text-xs text-stone-500">
                         {previewPiece.ref} · {previewPiece.origin}
                       </span>
-                      <h3 className="font-serif text-2xl font-bold text-stone-950 mt-0.5">
+                      <h3 className="font-sans text-2xl font-bold text-stone-950 mt-0.5">
                         {previewPiece.name}
                       </h3>
                     </div>
@@ -2744,7 +2744,7 @@ export function AtelierLuxePos({ activePage, onPageChange }: MultiPageDemoProps)
                 <div className="font-mono text-[10px] uppercase tracking-wider text-stone-500">
                   Private Client Tier
                 </div>
-                <div className="font-serif text-lg font-bold">Clarissa V. · #0841</div>
+                <div className="font-sans text-lg font-bold">Clarissa V. · #0841</div>
                 <div className="space-y-1.5">
                   {(['REGULAR', 'SILVER 5%', 'BLACK 15%'] as const).map((tier) => (
                     <button
@@ -2783,7 +2783,7 @@ export function AtelierLuxePos({ activePage, onPageChange }: MultiPageDemoProps)
                         />
                         <div className="mt-3 space-y-1">
                           <div className="font-mono text-[10px] text-stone-500">{item.ref}</div>
-                          <div className="font-serif font-bold text-sm text-stone-950">{item.name}</div>
+                          <div className="font-sans font-bold text-sm text-stone-950">{item.name}</div>
                           <div className="font-mono text-xs font-bold">
                             IDR {item.price.toLocaleString('id-ID')}
                           </div>
@@ -2829,7 +2829,7 @@ export function AtelierLuxePos({ activePage, onPageChange }: MultiPageDemoProps)
                     <span className="font-mono text-[10px] uppercase text-stone-500 block">
                       Clienteling Bag
                     </span>
-                    <h2 className="font-serif text-xl font-bold">Clarissa V.</h2>
+                    <h2 className="font-sans text-xl font-bold">Clarissa V.</h2>
                   </div>
                   <span className="px-2.5 py-1 rounded-full bg-stone-950 text-white font-mono text-xs">
                     {vip}
@@ -2848,7 +2848,7 @@ export function AtelierLuxePos({ activePage, onPageChange }: MultiPageDemoProps)
                         className="w-12 h-12 rounded-lg object-cover shrink-0"
                       />
                       <div className="min-w-0 flex-1">
-                        <div className="font-serif font-bold text-xs text-stone-950 truncate">
+                        <div className="font-sans font-bold text-xs text-stone-950 truncate">
                           {b.name}
                         </div>
                         <div className="font-mono text-[10px] text-stone-500">
@@ -2926,7 +2926,7 @@ export function AtelierLuxePos({ activePage, onPageChange }: MultiPageDemoProps)
                     className="p-4 rounded-xl border border-stone-200 bg-[#FAF9F6] flex justify-between items-center text-xs"
                   >
                     <div>
-                      <div className="font-serif text-lg font-bold">{c.name}</div>
+                      <div className="font-sans text-lg font-bold">{c.name}</div>
                       <div className="font-mono text-[11px] text-stone-500">
                         Size: {c.size} · Advisor: {c.stylist}
                       </div>

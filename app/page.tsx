@@ -28,6 +28,7 @@ import {
   LegalDraftDemo,
 } from '@/components/demos/WebAppDemos';
 import {
+  ArrowUp,
   ArrowUpRight,
   ChevronLeft,
   ChevronRight,
@@ -86,48 +87,105 @@ export default function Home() {
     loadProducts();
   }, []);
 
-  // GSAP Animations
+  // GSAP Animations with ScrollTrigger
   useEffect(() => {
     if (typeof window === 'undefined') return;
     gsap.registerPlugin(ScrollTrigger);
 
     const ctx = gsap.context(() => {
-      // Hero Entrance
+      // 1. Reading Progress Bar pinned at top of Navbar
+      gsap.to('#navbar-scroll-progress', {
+        scaleX: 1,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: document.body,
+          start: 'top top',
+          end: 'bottom bottom',
+          scrub: 0.15,
+        },
+      });
+
+      // 2. Hero Initial Entrance
+      const heroTl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+      heroTl
+        .fromTo(
+          '.gsap-hero-elem',
+          { opacity: 0, y: 32 },
+          { opacity: 1, y: 0, duration: 0.8, stagger: 0.1 }
+        )
+        .fromTo(
+          '.gsap-hero-card',
+          { opacity: 0, scale: 0.95, y: 35 },
+          { opacity: 1, scale: 1, y: 0, duration: 0.9 },
+          '-=0.45'
+        );
+
+      // 3. Hero Parallax Scrub on Scroll
+      if (heroRef.current) {
+        gsap.to('.gsap-hero-left', {
+          y: -35,
+          opacity: 0.9,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: heroRef.current,
+            start: 'top top',
+            end: 'bottom top',
+            scrub: true,
+          },
+        });
+        gsap.to('.gsap-hero-card', {
+          y: -20,
+          scale: 0.98,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: heroRef.current,
+            start: 'top top',
+            end: 'bottom top',
+            scrub: true,
+          },
+        });
+      }
+
+      // 4. Section 01: Interactive 3-Page System Stage Entrance
       gsap.fromTo(
-        '.gsap-hero-elem',
+        '.gsap-stage-header',
         { opacity: 0, y: 35 },
         {
           opacity: 1,
           y: 0,
           duration: 0.75,
           ease: 'power3.out',
-          stagger: 0.12,
+          scrollTrigger: {
+            trigger: '.gsap-stage-section',
+            start: 'top 85%',
+          },
         }
       );
 
-      // Hero Specimen Card
       gsap.fromTo(
-        '.gsap-hero-card',
-        { opacity: 0, scale: 0.96, y: 30 },
+        '.gsap-stage-strip',
+        { opacity: 0, y: 20 },
         {
           opacity: 1,
-          scale: 1,
           y: 0,
-          duration: 0.85,
-          ease: 'power3.out',
-          delay: 0.25,
+          duration: 0.65,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: '.gsap-stage-strip',
+            start: 'top 88%',
+          },
         }
       );
 
-      // Stage Entrance
       gsap.fromTo(
         '.gsap-stage-box',
-        { opacity: 0, y: 40 },
+        { opacity: 0, y: 55, scale: 0.97 },
         {
           opacity: 1,
           y: 0,
-          duration: 0.75,
-          ease: 'power2.out',
+          scale: 1,
+          duration: 0.85,
+          ease: 'power3.out',
           scrollTrigger: {
             trigger: '.gsap-stage-box',
             start: 'top 85%',
@@ -135,25 +193,152 @@ export default function Home() {
         }
       );
 
-      // Product Grid Entrance
+      // 5. Section 02: Catalog Grid Header & Staggered Cards
+      gsap.fromTo(
+        '.gsap-grid-header',
+        { opacity: 0, y: 30 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.7,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: '.gsap-grid-container',
+            start: 'top 88%',
+          },
+        }
+      );
+
+      gsap.fromTo(
+        '.gsap-category-strip',
+        { opacity: 0, y: 20 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.6,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: '.gsap-category-strip',
+            start: 'top 88%',
+          },
+        }
+      );
+
       gsap.fromTo(
         '.gsap-grid-card',
-        { opacity: 0, y: 45 },
+        { opacity: 0, y: 40 },
         {
           opacity: 1,
           y: 0,
           duration: 0.65,
           ease: 'power2.out',
-          stagger: 0.1,
+          stagger: 0.08,
           scrollTrigger: {
             trigger: '.gsap-grid-container',
-            start: 'top 85%',
+            start: 'top 80%',
           },
         }
       );
+
+      // 6. Section 03: Architectural Handover Matrix (Timeline Progression)
+      gsap.fromTo(
+        '.gsap-handover-left',
+        { opacity: 0, x: -30 },
+        {
+          opacity: 1,
+          x: 0,
+          duration: 0.75,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: '.gsap-handover-section',
+            start: 'top 80%',
+          },
+        }
+      );
+
+      gsap.fromTo(
+        '.gsap-handover-item',
+        { opacity: 0, y: 30, x: 20 },
+        {
+          opacity: 1,
+          y: 0,
+          x: 0,
+          duration: 0.65,
+          stagger: 0.16,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: '.gsap-handover-container',
+            start: 'top 80%',
+          },
+        }
+      );
+
+      // 7. Section 04: Commission & Order Ticket
+      gsap.fromTo(
+        '.gsap-ticket-box',
+        { opacity: 0, y: 45, scale: 0.98 },
+        {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 0.8,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: '.gsap-ticket-box',
+            start: 'top 82%',
+          },
+        }
+      );
+
+      gsap.fromTo(
+        '.gsap-ticket-stub',
+        { opacity: 0, x: 25 },
+        {
+          opacity: 1,
+          x: 0,
+          duration: 0.65,
+          delay: 0.15,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: '.gsap-ticket-box',
+            start: 'top 82%',
+          },
+        }
+      );
+
+      // 8. Floating Scroll to Top Pill Visibility
+      ScrollTrigger.create({
+        trigger: heroRef.current,
+        start: 'bottom top',
+        onEnter: () => {
+          gsap.to('#floating-scroll-top', {
+            opacity: 1,
+            y: 0,
+            pointerEvents: 'auto',
+            duration: 0.3,
+            ease: 'power2.out',
+          });
+        },
+        onLeaveBack: () => {
+          gsap.to('#floating-scroll-top', {
+            opacity: 0,
+            y: 16,
+            pointerEvents: 'none',
+            duration: 0.25,
+            ease: 'power2.in',
+          });
+        },
+      });
     });
 
-    return () => ctx.revert();
+    const timer = setTimeout(() => {
+      ScrollTrigger.refresh();
+    }, 150);
+
+    return () => {
+      clearTimeout(timer);
+      ctx.revert();
+    };
   }, [products]);
 
   const currentHighlight =
@@ -235,7 +420,7 @@ export default function Home() {
         <div className="max-w-[1400px] mx-auto px-4 sm:px-8 lg:px-12 py-12 sm:py-16 lg:py-20">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-start">
             {/* Left Column (7 cols): Editorial Positioning & Search */}
-            <div className="lg:col-span-7 space-y-7">
+            <div className="gsap-hero-left lg:col-span-7 space-y-7">
               <div className="gsap-hero-elem inline-flex items-center gap-2.5 border border-[#E4E2DD] bg-white px-4 py-1.5 rounded-full text-xs font-semibold text-[#525860] shadow-sm">
                 <span className="text-[#111315] font-extrabold flex items-center gap-1.5">
                   <Sparkles className="w-3.5 h-3.5 text-blue-600" />
@@ -449,9 +634,9 @@ export default function Home() {
       </section>
 
       {/* Section 2: Interactive Browser-Framed 3-Page Showcase */}
-      <section className="w-full border-b border-[#E4E2DD] bg-white/60">
+      <section className="gsap-stage-section w-full border-b border-[#E4E2DD] bg-white/60">
         <div className="max-w-[1400px] mx-auto px-4 sm:px-8 lg:px-12 py-14 sm:py-18 space-y-7">
-          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4">
+          <div className="gsap-stage-header flex flex-col lg:flex-row lg:items-end justify-between gap-4">
             <div className="space-y-2">
               <span className="text-xs font-extrabold uppercase tracking-wider text-[#1D4ED8] block">
                 01 / Interactive 3-Page System Stage
@@ -480,7 +665,7 @@ export default function Home() {
           </div>
 
           {/* 10-Product Selector Index Strip */}
-          <div className="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar">
+          <div className="gsap-stage-strip flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar">
             {products.map((p, idx) => {
               const isSelected = p.slug === liveSlug;
               return (
@@ -580,7 +765,7 @@ export default function Home() {
 
       {/* Section 3: 2-Column Large Editorial Catalog Grid */}
       <section ref={gridRef} className="gsap-grid-container max-w-[1400px] mx-auto px-4 sm:px-8 lg:px-12 py-14 sm:py-20 space-y-8">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-[#E4E2DD] pb-6">
+        <div className="gsap-grid-header flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-[#E4E2DD] pb-6">
           <div className="space-y-2">
             <span className="text-xs font-extrabold uppercase tracking-wider text-[#1D4ED8] block">
               02 / Direktori Katalog Utama
@@ -603,7 +788,7 @@ export default function Home() {
         </div>
 
         {/* Category Filter Tabs */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar">
+        <div className="gsap-category-strip flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar">
           {CATEGORIES.map((cat) => {
             const count =
               cat === 'ALL'
@@ -684,10 +869,10 @@ export default function Home() {
       </section>
 
       {/* Section 4: Architectural Handover Matrix */}
-      <section className="w-full border-y border-[#E4E2DD] bg-white">
+      <section className="gsap-handover-section w-full border-y border-[#E4E2DD] bg-white">
         <div className="max-w-[1400px] mx-auto px-4 sm:px-8 lg:px-12 py-16 sm:py-20">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
-            <div className="lg:col-span-5 space-y-4">
+            <div className="gsap-handover-left lg:col-span-5 space-y-4">
               <span className="text-xs font-extrabold uppercase tracking-wider text-[#1D4ED8] block">
                 03 / Engineering Handover
               </span>
@@ -711,8 +896,8 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="lg:col-span-7 divide-y divide-[#E4E2DD] border-t lg:border-t-0 border-[#E4E2DD]">
-              <div className="py-6 first:pt-0 flex items-start gap-4">
+            <div className="gsap-handover-container lg:col-span-7 divide-y divide-[#E4E2DD] border-t lg:border-t-0 border-[#E4E2DD]">
+              <div className="gsap-handover-item py-6 first:pt-0 flex items-start gap-4">
                 <div className="w-12 h-12 bg-[#F8F7F4] border border-[#E4E2DD] text-[#111315] rounded-2xl flex items-center justify-center shrink-0 shadow-sm">
                   <Database className="w-5 h-5 text-[#1D4ED8]" />
                 </div>
@@ -729,7 +914,7 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="py-6 flex items-start gap-4">
+              <div className="gsap-handover-item py-6 flex items-start gap-4">
                 <div className="w-12 h-12 bg-[#F8F7F4] border border-[#E4E2DD] text-[#111315] rounded-2xl flex items-center justify-center shrink-0 shadow-sm">
                   <Globe className="w-5 h-5 text-[#1D4ED8]" />
                 </div>
@@ -746,7 +931,7 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="pt-6 flex items-start gap-4">
+              <div className="gsap-handover-item pt-6 flex items-start gap-4">
                 <div className="w-12 h-12 bg-[#F8F7F4] border border-[#E4E2DD] text-[#111315] rounded-2xl flex items-center justify-center shrink-0 shadow-sm">
                   <Server className="w-5 h-5 text-[#1D4ED8]" />
                 </div>
@@ -768,8 +953,8 @@ export default function Home() {
       </section>
 
       {/* Section 5: Commission & Order Ticket */}
-      <section className="max-w-[1400px] mx-auto px-4 sm:px-8 lg:px-12 pt-14 sm:pt-20">
-        <div className="bg-white border border-[#111315]/20 rounded-[2.5rem] shadow-xl overflow-hidden">
+      <section className="gsap-ticket-section max-w-[1400px] mx-auto px-4 sm:px-8 lg:px-12 pt-14 sm:pt-20">
+        <div className="gsap-ticket-box bg-white border border-[#111315]/20 rounded-[2.5rem] shadow-xl overflow-hidden">
           <div className="grid grid-cols-1 lg:grid-cols-12">
             {/* Left Ticket Body (8 cols) */}
             <form
@@ -851,7 +1036,7 @@ export default function Home() {
             </form>
 
             {/* Right Archival Stub (4 cols) */}
-            <div className="lg:col-span-4 bg-[#F8F7F4] border-t lg:border-t-0 lg:border-l border-dashed border-[#D5D2CA] p-6 sm:p-8 flex flex-col justify-between gap-6">
+            <div className="gsap-ticket-stub lg:col-span-4 bg-[#F8F7F4] border-t lg:border-t-0 lg:border-l border-dashed border-[#D5D2CA] p-6 sm:p-8 flex flex-col justify-between gap-6">
               <div className="flex items-center gap-4">
                 <img
                   src="/products/fikri-profile.jpg"
@@ -901,6 +1086,22 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Floating Back to Top / Quick Bar */}
+      <div
+        id="floating-scroll-top"
+        className="fixed bottom-6 right-6 z-50 opacity-0 translate-y-4 pointer-events-none"
+      >
+        <button
+          type="button"
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          className="h-11 px-4 bg-[#111315]/95 hover:bg-[#1D4ED8] text-[#F8F7F4] backdrop-blur-md border border-white/10 rounded-full shadow-xl flex items-center gap-2 text-xs font-bold transition hover:scale-105 active:scale-95"
+          aria-label="Kembali ke atas"
+        >
+          <ArrowUp className="w-3.5 h-3.5 text-blue-300" />
+          <span>Ke Atas</span>
+        </button>
+      </div>
 
       <Footer />
 

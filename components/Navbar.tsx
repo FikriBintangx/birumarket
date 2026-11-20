@@ -18,6 +18,12 @@ export default function Navbar() {
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-[#E4E2DD]/80 bg-[#F8F7F4]/90 backdrop-blur-md">
+      {/* Scroll Reading Progress Bar (Driven by GSAP ScrollTrigger) */}
+      <div
+        id="navbar-scroll-progress"
+        className="absolute bottom-0 left-0 h-[2.5px] bg-[#1D4ED8] w-full origin-left scale-x-0 pointer-events-none z-50"
+        aria-hidden="true"
+      />
       <div className="max-w-[1400px] mx-auto px-4 sm:px-8 lg:px-12 h-16 sm:h-[76px] flex items-center justify-between gap-4">
         {/* Left: Brand Identity */}
         <div className="flex items-center gap-6 lg:gap-10 min-w-0">

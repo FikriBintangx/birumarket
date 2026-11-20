@@ -43,6 +43,7 @@ import {
 } from 'lucide-react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import Lenis from 'lenis';
 
 export default function Home() {
   const router = useRouter();
@@ -87,13 +88,31 @@ export default function Home() {
     loadProducts();
   }, []);
 
-  // GSAP Animations with ScrollTrigger
+  // GSAP Animations with Lenis Smooth Scrolling & Bidirectional Scrub
   useEffect(() => {
     if (typeof window === 'undefined') return;
     gsap.registerPlugin(ScrollTrigger);
 
+    // Initialize Lenis Smooth Scroll
+    const lenis = new Lenis({
+      duration: 1.15,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      smoothWheel: true,
+      wheelMultiplier: 1.0,
+      touchMultiplier: 1.5,
+    });
+
+    lenis.on('scroll', ScrollTrigger.update);
+
+    const tickerCallback = (time: number) => {
+      lenis.raf(time * 1000);
+    };
+
+    gsap.ticker.add(tickerCallback);
+    gsap.ticker.lagSmoothing(0);
+
     const ctx = gsap.context(() => {
-      // 1. Reading Progress Bar pinned at top of Navbar
+      // 1. Reading Progress Bar pinned at top of Navbar (Scrubbed on scroll atas-bawah)
       gsap.to('#navbar-scroll-progress', {
         scaleX: 1,
         ease: 'none',
@@ -101,7 +120,7 @@ export default function Home() {
           trigger: document.body,
           start: 'top top',
           end: 'bottom bottom',
-          scrub: 0.15,
+          scrub: 0.1,
         },
       });
 
@@ -110,46 +129,50 @@ export default function Home() {
       heroTl
         .fromTo(
           '.gsap-hero-elem',
-          { opacity: 0, y: 32 },
+          { opacity: 0, y: 36 },
           { opacity: 1, y: 0, duration: 0.8, stagger: 0.1 }
         )
         .fromTo(
           '.gsap-hero-card',
-          { opacity: 0, scale: 0.95, y: 35 },
+          { opacity: 0, scale: 0.94, y: 40 },
           { opacity: 1, scale: 1, y: 0, duration: 0.9 },
           '-=0.45'
         );
 
-      // 3. Hero Parallax Scrub on Scroll
+      // 3. Hero Continuous Kinetic Scrub (Reaktif penuh saat scroll ke bawah & ke atas)
       if (heroRef.current) {
         gsap.to('.gsap-hero-left', {
-          y: -35,
-          opacity: 0.9,
+          y: -80,
+          opacity: 0.65,
           ease: 'none',
           scrollTrigger: {
             trigger: heroRef.current,
             start: 'top top',
             end: 'bottom top',
-            scrub: true,
+            scrub: 1,
           },
         });
+
         gsap.to('.gsap-hero-card', {
-          y: -20,
-          scale: 0.98,
+          y: -50,
+          scale: 0.94,
+          rotate: -2,
+          opacity: 0.75,
           ease: 'none',
           scrollTrigger: {
             trigger: heroRef.current,
             start: 'top top',
             end: 'bottom top',
-            scrub: true,
+            scrub: 1,
           },
         });
       }
 
-      // 4. Section 01: Interactive 3-Page System Stage Entrance
+      // 4. Section 01: Interactive 3-Page System Stage
+      // Bidirectional header entrance (play & reverse saat scroll atas-bawah)
       gsap.fromTo(
         '.gsap-stage-header',
-        { opacity: 0, y: 35 },
+        { opacity: 0, y: 40 },
         {
           opacity: 1,
           y: 0,
@@ -158,13 +181,14 @@ export default function Home() {
           scrollTrigger: {
             trigger: '.gsap-stage-section',
             start: 'top 85%',
+            toggleActions: 'play reverse play reverse',
           },
         }
       );
 
       gsap.fromTo(
         '.gsap-stage-strip',
-        { opacity: 0, y: 20 },
+        { opacity: 0, y: 25 },
         {
           opacity: 1,
           y: 0,
@@ -172,31 +196,33 @@ export default function Home() {
           ease: 'power2.out',
           scrollTrigger: {
             trigger: '.gsap-stage-strip',
-            start: 'top 88%',
+            start: 'top 90%',
+            toggleActions: 'play reverse play reverse',
           },
         }
       );
 
+      // Continuous 3D/Parallax scrub on Stage Chrome Frame (bergerak fisik saat scroll atas-bawah)
       gsap.fromTo(
         '.gsap-stage-box',
-        { opacity: 0, y: 55, scale: 0.97 },
+        { y: 70, scale: 0.95 },
         {
-          opacity: 1,
-          y: 0,
+          y: -35,
           scale: 1,
-          duration: 0.85,
-          ease: 'power3.out',
+          ease: 'none',
           scrollTrigger: {
-            trigger: '.gsap-stage-box',
-            start: 'top 85%',
+            trigger: '.gsap-stage-section',
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: 1.2,
           },
         }
       );
 
-      // 5. Section 02: Catalog Grid Header & Staggered Cards
+      // 5. Section 02: Catalog Grid
       gsap.fromTo(
         '.gsap-grid-header',
-        { opacity: 0, y: 30 },
+        { opacity: 0, y: 35 },
         {
           opacity: 1,
           y: 0,
@@ -204,7 +230,8 @@ export default function Home() {
           ease: 'power3.out',
           scrollTrigger: {
             trigger: '.gsap-grid-container',
-            start: 'top 88%',
+            start: 'top 85%',
+            toggleActions: 'play reverse play reverse',
           },
         }
       );
@@ -220,13 +247,15 @@ export default function Home() {
           scrollTrigger: {
             trigger: '.gsap-category-strip',
             start: 'top 88%',
+            toggleActions: 'play reverse play reverse',
           },
         }
       );
 
+      // Grid cards entrance with bidirectional reveal
       gsap.fromTo(
         '.gsap-grid-card',
-        { opacity: 0, y: 40 },
+        { opacity: 0, y: 45 },
         {
           opacity: 1,
           y: 0,
@@ -235,15 +264,36 @@ export default function Home() {
           stagger: 0.08,
           scrollTrigger: {
             trigger: '.gsap-grid-container',
-            start: 'top 80%',
+            start: 'top 82%',
+            toggleActions: 'play reverse play reverse',
           },
         }
       );
 
-      // 6. Section 03: Architectural Handover Matrix (Timeline Progression)
+      // Kinetic Odd/Even Card Drift on Scroll (efek mengapung halus saat scroll atas-bawah)
+      const gridCards = gsap.utils.toArray<HTMLElement>('.gsap-grid-card');
+      gridCards.forEach((card, idx) => {
+        const drift = idx % 2 === 0 ? -25 : 25;
+        gsap.fromTo(
+          card,
+          { y: drift },
+          {
+            y: -drift,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: card,
+              start: 'top bottom',
+              end: 'bottom top',
+              scrub: 1,
+            },
+          }
+        );
+      });
+
+      // 6. Section 03: Architectural Handover Matrix (Bidirectional Progression)
       gsap.fromTo(
         '.gsap-handover-left',
-        { opacity: 0, x: -30 },
+        { opacity: 0, x: -35 },
         {
           opacity: 1,
           x: 0,
@@ -252,13 +302,14 @@ export default function Home() {
           scrollTrigger: {
             trigger: '.gsap-handover-section',
             start: 'top 80%',
+            toggleActions: 'play reverse play reverse',
           },
         }
       );
 
       gsap.fromTo(
         '.gsap-handover-item',
-        { opacity: 0, y: 30, x: 20 },
+        { opacity: 0, y: 35, x: 25 },
         {
           opacity: 1,
           y: 0,
@@ -268,7 +319,24 @@ export default function Home() {
           ease: 'power2.out',
           scrollTrigger: {
             trigger: '.gsap-handover-container',
-            start: 'top 80%',
+            start: 'top 82%',
+            toggleActions: 'play reverse play reverse',
+          },
+        }
+      );
+
+      // Continuous scrub on Handover Cards
+      gsap.fromTo(
+        '.gsap-handover-container',
+        { y: 30 },
+        {
+          y: -25,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: '.gsap-handover-section',
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: 1.2,
           },
         }
       );
@@ -276,7 +344,7 @@ export default function Home() {
       // 7. Section 04: Commission & Order Ticket
       gsap.fromTo(
         '.gsap-ticket-box',
-        { opacity: 0, y: 45, scale: 0.98 },
+        { opacity: 0, y: 50, scale: 0.96 },
         {
           opacity: 1,
           y: 0,
@@ -285,14 +353,15 @@ export default function Home() {
           ease: 'power3.out',
           scrollTrigger: {
             trigger: '.gsap-ticket-box',
-            start: 'top 82%',
+            start: 'top 85%',
+            toggleActions: 'play reverse play reverse',
           },
         }
       );
 
       gsap.fromTo(
         '.gsap-ticket-stub',
-        { opacity: 0, x: 25 },
+        { opacity: 0, x: 30 },
         {
           opacity: 1,
           x: 0,
@@ -301,7 +370,24 @@ export default function Home() {
           ease: 'power2.out',
           scrollTrigger: {
             trigger: '.gsap-ticket-box',
-            start: 'top 82%',
+            start: 'top 85%',
+            toggleActions: 'play reverse play reverse',
+          },
+        }
+      );
+
+      // Continuous ticket float during scroll atas-bawah
+      gsap.fromTo(
+        '.gsap-ticket-box',
+        { y: 35 },
+        {
+          y: -20,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: '.gsap-ticket-section',
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: 1.2,
           },
         }
       );
@@ -337,6 +423,8 @@ export default function Home() {
 
     return () => {
       clearTimeout(timer);
+      gsap.ticker.remove(tickerCallback);
+      lenis.destroy();
       ctx.revert();
     };
   }, [products]);
